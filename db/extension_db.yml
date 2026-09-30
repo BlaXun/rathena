@@ -1,64 +1,64 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-//
-//########################################################################
-// Extension Database
-//########################################################################
-//
-// Server-side toggles for behaviour that deviates from stock rAthena.
-// Each entry gates a specific code path elsewhere in the server;
-// disabling an extension restores the stock behaviour.
-//
-// Every entry is off by default. To enable one on this server, do NOT
-// edit this file -- copy the Id into db/import/extension_db.yml with
-// Enabled: true and it will be picked up on the next reload. Mods do
-// the same through their own db/ folder.
-//
-//########################################################################
-// - Id            Stable identifier the C code and script commands use.
-//                 Snake_case, lowercase, short.
-//   Name          One-line human-readable label (shown by @extensions).
-//   Description   Multi-line explanation (shown by @extensioninfo).
-//   Enabled       true / false. Defaults to false. Overrides in
-//                 db/import/extension_db.yml only need Id and Enabled.
-//   Values        Optional. Typed settings the extension's code reads,
-//                 so a mod can tune a number or name something without
-//                 a new C++ change. Each entry has a Key and either
-//                 declares it (here, in the base file):
-//                   Type          Int or String.
-//                   Default       Used while the extension is on and
-//                                 nothing sets Value. Default 0 / "".
-//                   Min, Max      Int only, optional. A Value outside
-//                                 them is capped, with a warning.
-//                   Description   Shown by @extensioninfo.
-//                 or sets it (in an import, or a mod's db/ folder):
-//                   Value         The number or string to use.
-//                 Keys merge one at a time, so two mods setting different
-//                 keys of one extension both apply; for the same key, the
-//                 later file wins.
-//
-//                 While an extension is off, its code sees the stock value:
-//                 C++ reads extension_int(id, key, stock) and
-//                 extension_string(id, key, stock); scripts read
-//                 getextensionvalue("<id>", "<key>"{, <stock>}).
-//                 getextension("<id>") returns 1 when it is on.
-//
-//                 Example:
-//                   - Id: example_rate
-//                     Name: Example
-//                     Values:
-//                       - Key: rate
-//                         Type: Int
-//                         Default: 100
-//                         Min: 0
-//                         Max: 1000
-//                 and, to turn it on at 150:
-//                   - Id: example_rate
-//                     Enabled: true
-//                     Values:
-//                       - Key: rate
-//                         Value: 150
-//########################################################################
+# Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
+# For more information, see LICENCE in the main folder
+#
+#########################################################################
+# Extension Database
+#########################################################################
+#
+# Server-side toggles for behaviour that deviates from stock rAthena.
+# Each entry gates a specific code path elsewhere in the server;
+# disabling an extension restores the stock behaviour.
+#
+# Every entry is off by default. To enable one on this server, do NOT
+# edit this file -- copy the Id into db/import/extension_db.yml with
+# Enabled: true and it will be picked up on the next reload. Mods do
+# the same through their own db/ folder.
+#
+#########################################################################
+# - Id            Stable identifier the C code and script commands use.
+#                 Snake_case, lowercase, short.
+#   Name          One-line human-readable label (shown by @extensions).
+#   Description   Multi-line explanation (shown by @extensioninfo).
+#   Enabled       true / false. Defaults to false. Overrides in
+#                 db/import/extension_db.yml only need Id and Enabled.
+#   Values        Optional. Typed settings the extension's code reads,
+#                 so a mod can tune a number or name something without
+#                 a new C++ change. Each entry has a Key and either
+#                 declares it (here, in the base file):
+#                   Type          Int or String.
+#                   Default       Used while the extension is on and
+#                                 nothing sets Value. Default 0 / "".
+#                   Min, Max      Int only, optional. A Value outside
+#                                 them is capped, with a warning.
+#                   Description   Shown by @extensioninfo.
+#                 or sets it (in an import, or a mod's db/ folder):
+#                   Value         The number or string to use.
+#                 Keys merge one at a time, so two mods setting different
+#                 keys of one extension both apply; for the same key, the
+#                 later file wins.
+#
+#                 While an extension is off, its code sees the stock value:
+#                 C++ reads extension_int(id, key, stock) and
+#                 extension_string(id, key, stock); scripts read
+#                 getextensionvalue("<id>", "<key>"{, <stock>}).
+#                 getextension("<id>") returns 1 when it is on.
+#
+#                 Example:
+#                   - Id: example_rate
+#                     Name: Example
+#                     Values:
+#                       - Key: rate
+#                         Type: Int
+#                         Default: 100
+#                         Min: 0
+#                         Max: 1000
+#                 and, to turn it on at 150:
+#                   - Id: example_rate
+#                     Enabled: true
+#                     Values:
+#                       - Key: rate
+#                         Value: 150
+#########################################################################
 
 Header:
   Type: EXTENSION_DB
