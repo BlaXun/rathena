@@ -8226,6 +8226,109 @@ BUILDIN_FUNC(makeitem) {
 }
 
 /**
+ * makeitemowned <item id>,<amount>,"<map name>",<X>,<Y>{,<first_charid>{,<second_charid>{,<third_charid>}}};
+ * makeitemowned "<item name>",<amount>,"<map name>",<X>,<Y>{,<first_charid>{,<second_charid>{,<third_charid>}}};
+ *
+ * Places a flooritem the same way `makeitem` does, but with pickup-priority
+ * character ids set on the flooritem -- so a script can drop something a
+ * specific player owns for a short window, exactly like a mob's own drops
+ * (first_get/second_get/third_get durations are the ones in battle.conf,
+ * shared with regular drops).
+ *
+ * The three char ids are optional and default in the same order used
+ * throughout rAthena's drop pipeline: first_charid defaults to the attached
+ * player's char_id if a player is attached (0 otherwise -- no owner),
+ * second and third default to 0 (no ownership).
+ *
+ * Gated on the `makeitem_owned` extension. If the extension is off, the
+ * command returns failure and logs a one-line explanation so scripts fail
+ * loudly rather than silently placing an unowned drop.
+ */
+BUILDIN_FUNC(makeitemowned) {
+	if (!extension_enabled("makeitem_owned")) {
+		ShowError("buildin_makeitemowned: the 'makeitem_owned' extension is not enabled; enable it in db/import/extension_db.yml\n");
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	t_itemid nameid;
+	uint16 amount, flag = 0, x, y;
+	const char *mapname;
+	int32 m;
+	struct item item_tmp;
+
+	if( script_isstring(st, 2) ){
+		const char *name = script_getstr(st, 2);
+		std::shared_ptr<item_data> item_data = item_db.searchname( name );
+
+		if( item_data )
+			nameid = item_data->nameid;
+		else{
+			ShowError( "buildin_makeitemowned: Unknown item %s\n", name );
+			return SCRIPT_CMD_FAILURE;
+		}
+	}
+	else {
+		int32 val = script_getnum( st, 2 );
+
+		if( val < 0 ){
+			flag = 1;
+			nameid = (t_itemid)( -1 * val );
+		}else{
+			nameid = (t_itemid)val;
+		}
+
+		if( !item_db.exists( nameid ) ){
+			ShowError( "buildin_makeitemowned: Unknown item id %u\n", nameid );
+			return SCRIPT_CMD_FAILURE;
+		}
+	}
+
+	amount  = script_getnum(st,3);
+	mapname = script_getstr(st,4);
+	x       = script_getnum(st,5);
+	y       = script_getnum(st,6);
+
+	// Resolve the map first; a "this" shorthand needs an attached player, so
+	// this step and the first_charid default reuse the same script_rid2sd
+	// lookup where possible.
+	TBL_PC *sd = nullptr;
+	bool has_attached = script_rid2sd(sd);
+
+	if (strcmp(mapname, "this") == 0) {
+		if (!has_attached) {
+			ShowError("buildin_makeitemowned: \"this\" requires an attached player\n");
+			return SCRIPT_CMD_FAILURE;
+		}
+		m = sd->m;
+	} else {
+		m = map_mapname2mapid(mapname);
+	}
+
+	if (m < 0) {
+		ShowError("buildin_makeitemowned: Unknown map name '%s'\n", mapname);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	int32 first_charid  = script_hasdata(st, 7) ? script_getnum(st, 7) : (has_attached ? sd->status.char_id : 0);
+	int32 second_charid = script_hasdata(st, 8) ? script_getnum(st, 8) : 0;
+	int32 third_charid  = script_hasdata(st, 9) ? script_getnum(st, 9) : 0;
+
+	memset(&item_tmp, 0, sizeof(item_tmp));
+	item_tmp.nameid = nameid;
+	if (!flag)
+		item_tmp.identify = 1;
+	else
+		item_tmp.identify = itemdb_isidentified(nameid);
+
+	// Same flags as makeitem (4 = default drop behaviour). Ownership is what
+	// map_addflooritem reads for the pickup-priority window; the durations
+	// come from battle.conf (item_first_get_time et al.), shared with mob
+	// drops so a scripted owned drop and a natural drop age out the same way.
+	map_addflooritem(&item_tmp, amount, m, x, y, first_charid, second_charid, third_charid, 4, 0, false);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
  * makeitem2 <item id>,<amount>,"<map name>",<X>,<Y>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<canShowEffect>};
  * makeitem2 "<item name>",<amount>,"<map name>",<X>,<Y>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<canShowEffect>};
  *
@@ -27983,6 +28086,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getnameditem,"vv"),
 	BUILDIN_DEF2(grouprandomitem,"groupranditem","i?"),
 	BUILDIN_DEF(makeitem,"visii?"),
+	BUILDIN_DEF(makeitemowned,"visii???"),
 	BUILDIN_DEF(makeitem2,"visiiiiiiiii?"),
 	BUILDIN_DEF(delitem,"vi?"),
 	BUILDIN_DEF2(delitem,"storagedelitem","vi?"),

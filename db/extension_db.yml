@@ -28,7 +28,28 @@ Header:
   Version: 1
 
 Body:
-# Populated by extension-specific commits.
+  - Id: makeitem_owned
+    Name: makeitemowned script command
+    Description: |
+      Adds a `makeitemowned` script command that places a flooritem the
+      way `makeitem` does, plus pickup-priority character ids on the
+      flooritem -- so a script can drop an item bound to a specific
+      player for a short window, exactly like a mob's own drops.
+
+      Signature:
+        makeitemowned <item>,<amount>,"<map>",<X>,<Y>
+                     {,<first_charid>{,<second_charid>{,<third_charid>}}};
+
+      The three char ids are optional. first_charid defaults to the
+      attached player's char_id (via script_rid2sd); second and third
+      default to 0 (no priority). The pickup-priority durations for the
+      three slots are the standard battle.conf knobs
+      (item_first_get_time, item_second_get_time, item_third_get_time),
+      shared with regular mob drops.
+
+      Off means stock rAthena: the command is registered but every call
+      returns failure and logs a one-line error, so scripts that reach
+      for it fail loudly rather than silently placing an unowned drop.
 
 Footer:
   Imports:
