@@ -4879,46 +4879,69 @@ bool MobDatabase::parseDropNode( std::string nodeName, const ryml::NodeRef& node
 			exist = false;
 		}
 
-		std::string item_name;
+		// Fields on an override entry (exist=true) are optional: an
+		// unspecified field keeps the existing drop's value. This lets a
+		// mod flip one flag on a stock drop without restating the item and
+		// rate, so two mods that touch the same slot for different reasons
+		// (e.g. one setting StealProtected, one bumping Rate) do not
+		// clobber each other's changes. On a new entry (exist=false),
+		// Item and Rate remain required.
+		if (this->nodeExists(dropit, "Item")) {
+			std::string item_name;
 
-		if (!this->asString(dropit, "Item", item_name))
-			return false;
+			if (!this->asString(dropit, "Item", item_name))
+				return false;
 
-		std::shared_ptr<item_data> item = item_db.search_aegisname( item_name.c_str() );
+			std::shared_ptr<item_data> item = item_db.search_aegisname( item_name.c_str() );
 
-		if (item == nullptr) {
-			this->invalidWarning(dropit["Item"], "Monster %s item %s does not exist, skipping.\n", nodeName.c_str(), item_name.c_str());
+			if (item == nullptr) {
+				this->invalidWarning(dropit["Item"], "Monster %s item %s does not exist, skipping.\n", nodeName.c_str(), item_name.c_str());
+				continue;
+			}
+
+			drop->nameid = item->nameid;
+		} else if (!exist) {
+			this->invalidWarning(dropit, "Monster %s entry has no Item and is not overriding an existing drop, skipping.\n", nodeName.c_str());
 			continue;
 		}
 
-		uint16 rate;
+		if (this->nodeExists(dropit, "Rate")) {
+			uint16 rate;
 
-		if (!this->asUInt16Rate(dropit, "Rate", rate))
-			return false;
-
-		bool steal = false;
-
-		if (this->nodeExists(dropit, "StealProtected")) {
-			if (!this->asBool(dropit, "StealProtected", steal))
+			if (!this->asUInt16Rate(dropit, "Rate", rate))
 				return false;
+
+			drop->rate = rate;
+		} else if (!exist) {
+			this->invalidWarning(dropit, "Monster %s entry has no Rate and is not overriding an existing drop, skipping.\n", nodeName.c_str());
+			continue;
 		}
 
-		uint16 group = 0;
+		if (this->nodeExists(dropit, "StealProtected")) {
+			bool steal = false;
+
+			if (!this->asBool(dropit, "StealProtected", steal))
+				return false;
+
+			drop->steal_protected = steal;
+		} else if (!exist) {
+			drop->steal_protected = false;
+		}
 
 		if (this->nodeExists(dropit, "RandomOptionGroup")) {
 			std::string group_name;
+			uint16 group = 0;
 
 			if (!this->asString(dropit, "RandomOptionGroup", group_name))
 				return false;
 
 			if (!random_option_group.option_get_id(group_name.c_str(), group))
 				this->invalidWarning(dropit["RandomOptionGroup"], "Unknown random option group %s for monster %s, defaulting to no group.\n", group_name.c_str(), nodeName.c_str());
-		}
 
-		drop->nameid = item->nameid;
-		drop->rate = rate;
-		drop->steal_protected = steal;
-		drop->randomopt_group = group;
+			drop->randomopt_group = group;
+		} else if (!exist) {
+			drop->randomopt_group = 0;
+		}
 
 		if( !exist ){
 			drops.push_back( drop );
