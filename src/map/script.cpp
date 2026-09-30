@@ -17073,6 +17073,34 @@ BUILDIN_FUNC(getextension)
 	return SCRIPT_CMD_SUCCESS;
 }
 
+/**
+ * Read a typed value of an extension.
+ * getextensionvalue("<extension id>","<key>"{,<default>})
+ * -> the value (an int or a string, as the key is declared) while the
+ * extension is enabled; otherwise <default>, which should be the stock
+ * number or text, and 0 when none is given. See db/extension_db.yml.
+ */
+BUILDIN_FUNC(getextensionvalue)
+{
+	const char* id = script_getstr(st, 2);
+	const char* key = script_getstr(st, 3);
+	const s_extension_value* value = extension_enabled(id) ? extension_value(id, key) : nullptr;
+
+	if (value == nullptr) {
+		if (!script_hasdata(st, 4))
+			script_pushint(st, 0);
+		else if (script_isstring(st, 4))
+			script_pushstrcopy(st, script_getstr(st, 4));
+		else
+			script_pushint64(st, script_getnum64(st, 4));
+	} else if (value->type == EXTVAL_INT) {
+		script_pushint64(st, value->int_value);
+	} else {
+		script_pushstrcopy(st, value->str_value.c_str());
+	}
+	return SCRIPT_CMD_SUCCESS;
+}
+
 //=======================================================
 // strlen [Valaris]
 //-------------------------------------------------------
@@ -28320,6 +28348,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(setbattleflag,"si?"),
 	BUILDIN_DEF(getbattleflag,"s"),
 	BUILDIN_DEF(getextension,"s"),
+	BUILDIN_DEF(getextensionvalue,"ss?"),
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
 	BUILDIN_DEF(undisguise,"?"), //undisguise player. Lupus
