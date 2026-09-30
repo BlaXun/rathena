@@ -44,3 +44,7 @@ Body:
       past it -- the sticky firewall feel.
       Off by default; stock behaviour is unchanged.
     Enabled: false
+
+Footer:
+  Imports:
+    - Path: db/import/extension_db.yml
