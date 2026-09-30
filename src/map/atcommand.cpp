@@ -11447,12 +11447,12 @@ ACMD_FUNC(extensions){
 	nullpo_retr(-1, sd);
 
 	if (extension_db.empty()) {
-		clif_displaymessage(fd, msg_txt(sd, 1541)); // No extensions are registered.
+		clif_displaymessage(fd, "No extensions are registered.");
 		return 0;
 	}
 
 	char output[CHAT_SIZE_MAX];
-	safesnprintf(output, sizeof(output), msg_txt(sd, 1542), (int)extension_db.size()); // %d extension(s) registered:
+	safesnprintf(output, sizeof(output), "%d extension(s) registered:", (int)extension_db.size());
 	clif_displaymessage(fd, output);
 
 	for (const auto& pair : extension_db) {
@@ -11477,7 +11477,7 @@ ACMD_FUNC(extensioninfo){
 	char id[64];
 
 	if (!message || !*message || sscanf(message, "%63s", id) < 1) {
-		clif_displaymessage(fd, msg_txt(sd, 1543)); // Usage: @extensioninfo <id>
+		clif_displaymessage(fd, "Usage: @extensioninfo <id>");
 		return -1;
 	}
 
@@ -11485,7 +11485,7 @@ ACMD_FUNC(extensioninfo){
 
 	if (ext == nullptr) {
 		char output[CHAT_SIZE_MAX];
-		safesnprintf(output, sizeof(output), msg_txt(sd, 1544), id); // Extension '%s' is not registered.
+		safesnprintf(output, sizeof(output), "Extension '%s' is not registered.", id);
 		clif_displaymessage(fd, output);
 		return -1;
 	}
@@ -11512,6 +11512,16 @@ ACMD_FUNC(extensioninfo){
 			break;
 
 		desc.erase(0, nl + 1);
+	}
+
+	for (const auto& pair : ext->values) {
+		const s_extension_value& value = pair.second;
+
+		if (value.type == EXTVAL_INT)
+			safesnprintf(output, sizeof(output), "  %s = %" PRId64 " (Int, default %" PRId64 ")", pair.first.c_str(), value.int_value, value.int_default);
+		else
+			safesnprintf(output, sizeof(output), "  %s = \"%s\" (String, default \"%s\")", pair.first.c_str(), value.str_value.c_str(), value.str_default.c_str());
+		clif_displaymessage(fd, output);
 	}
 
 	return 0;
