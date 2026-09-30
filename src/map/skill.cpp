@@ -28,6 +28,7 @@
 #include "clif.hpp"
 #include "date.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "intif.hpp"
@@ -1576,7 +1577,17 @@ int32 skill_additional_effect( block_list* src, block_list *bl, uint16 skill_id,
 	}
 
 	//Polymorph
-	if(sd && sd->bonus.classchange && attack_type&BF_WEAPON &&
+	// Extension "blaze_shield_classchange": widen the BF_WEAPON gate to
+	// include NJ_KAENSIN, so an accessory carrying Hylozoist Card (whose
+	// script is bonus bClassChange,100) rolls its 1% polymorph on every
+	// Blaze Shield pillar hit. bClassChange has no magic-attack
+	// counterpart, so a Ninja with Hylozoist otherwise never sees a proc.
+	// Kept skill-specific rather than a blanket "any magic" so Fire Bolt
+	// or Meteor Storm spam does not turn Hylozoist Card into a general
+	// polymorph engine. Off by default.
+	bool classchange_hook = extension_enabled("blaze_shield_classchange") && skill_id == NJ_KAENSIN;
+
+	if(sd && sd->bonus.classchange && (attack_type&BF_WEAPON || classchange_hook) &&
 		dstmd && !status_has_mode(tstatus,MD_STATUSIMMUNE) &&
 		(rnd()%10000 < sd->bonus.classchange))
 	{

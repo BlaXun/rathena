@@ -28,4 +28,16 @@ Header:
   Version: 1
 
 Body:
-# Populated by extension-specific commits.
+  - Id: blaze_shield_classchange
+    Name: "Blaze Shield Hylozoist Card hook"
+    Description: |
+      Widen the bClassChange gate in skill_additional_effect() to include
+      NJ_KAENSIN (Blaze Shield / Blazing Field), so Hylozoist Card
+      (bonus bClassChange,100) rolls its 1% polymorph on every pillar
+      hit. bClassChange has no magic-attack counterpart, so under stock
+      rAthena a Ninja carrying the card never sees a proc.
+      Kept skill-specific rather than a blanket "any magic" so Fire Bolt
+      or Meteor Storm do not turn Hylozoist Card into a general polymorph
+      engine.
+      Off by default; stock behaviour is unchanged.
+    Enabled: false
