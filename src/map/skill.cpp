@@ -28,6 +28,7 @@
 #include "clif.hpp"
 #include "date.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "intif.hpp"
@@ -6906,10 +6907,22 @@ int32 skill_unit_onplace_timer(skill_unit *unit, block_list *bl, t_tick tick)
 			if (skill_id == GN_WALLOFTHORN && battle_check_target(ss, bl, sg->target_flag) <= 0)
 				break;
 
+			// Extension "blaze_shield_drain": route each NJ_KAENSIN pillar
+			// tick through battle_drain(), so item bonuses that sit on the
+			// weapon-attack path (bSPDrainValue and the drain-race /
+			// drain-class family) fire per hit on a Ninja channelling Blaze
+			// Shield. Off by default; when off, the loop body is stock and
+			// the skill_attack call is discarded exactly as before.
+			bool drain_hook = extension_enabled("blaze_shield_drain") && sg->skill_id == NJ_KAENSIN;
+
 			//Take into account these hit more times than the timer interval can handle.
-			do
-				skill_attack(BF_MAGIC,ss,unit,bl,sg->skill_id,sg->skill_lv,tick+(t_tick)count*sg->interval,0);
-			while(sg->interval > 0 && --unit->val2 && x == bl->x && y == bl->y &&
+			do {
+				int64 damage = skill_attack(BF_MAGIC,ss,unit,bl,sg->skill_id,sg->skill_lv,tick+(t_tick)count*sg->interval,0);
+
+				if (drain_hook && ss->type == BL_PC && damage > 0)
+					battle_drain((TBL_PC *)ss, bl, damage, damage,
+						status_get_race(bl), status_get_class_(bl));
+			} while(sg->interval > 0 && --unit->val2 && x == bl->x && y == bl->y &&
 				++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status_isdead(*bl));
 
 			if (unit->val2 <= 0)

@@ -28,4 +28,19 @@ Header:
   Version: 1
 
 Body:
-# Populated by extension-specific commits.
+  - Id: blaze_shield_drain
+    Name: "Blaze Shield SP/HP drain hook"
+    Description: |
+      Route each NJ_KAENSIN (Blaze Shield / Blazing Field) pillar tick
+      through battle_drain(). Item bonuses that sit on the weapon-attack
+      path -- bSPDrainValue, bHPDrainValue, bSPDrainValueRace,
+      bHPDrainValueRace, bSPDrainValueClass, bHPDrainValueClass and the
+      drain-rate variants -- then fire per hit for a Ninja channelling
+      Blaze Shield, as they already do for weapon attacks.
+      Motivating case: Moonlight Dagger's bonus bSPDrainValue,3, which
+      is inert on Blaze Shield under stock rAthena because battle_drain
+      is only called from the weapon-attack path.
+      Gated on sg->skill_id == NJ_KAENSIN, so Fire Wall (which shares the
+      UNT_KAEN branch through UNT_FIREWALL) is unaffected.
+      Off by default; stock behaviour is unchanged.
+    Enabled: false
