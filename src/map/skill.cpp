@@ -48,6 +48,7 @@
 
 // Skill factory is compiled as separate translation units per job category
 // to reduce peak memory usage during compilation
+#include "skill_lua.hpp"
 #include "skills/skill_factory.hpp"
 
 using namespace rathena;
@@ -3158,6 +3159,10 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 
 	shadow_flag = skill_check_shadowform(bl, damage, dmg.div_);
 
+	// A mod's Lua on_hit sees the hit now, while the target is certainly
+	// alive; what it asks for is applied once the hit has been dealt.
+	std::unique_ptr<s_skill_lua_hit> lua_hit = skill_lua_on_hit(src, bl, skill_id, skill_lv, damage, dmg.flag);
+
 	// Instant damage
 	if( !dmg.amotion ) {
 		//Deal damage before knockback to allow stuff like firewall+storm gust combo.
@@ -3187,6 +3192,8 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 		} else
 			battle_delay_damage(tick, dmg.amotion, src, bl, dmg.flag, skill_id, skill_lv, damage, dmg.dmg_lv, dmg.div_, additional_effects, false);
 	}
+
+	skill_lua_apply(lua_hit);
 
 	if (tsc  && skill_id != NPC_EVILLAND && skill_id != SP_SOULEXPLOSION && skill_id != SJ_NOVAEXPLOSING
 #ifndef RENEWAL
@@ -15766,6 +15773,8 @@ void SkillDatabase::loadingFinished(){
 			it.second->impl = std::move( impl );
 		}
 	}
+
+	skill_lua_attach();
 }
 
 /**

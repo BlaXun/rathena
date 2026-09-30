@@ -65,6 +65,9 @@
     <ClInclude Include="extensions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="skill_lua.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="guild.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -200,6 +203,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="extensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lua_vm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="skill_lua.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="guild.cpp">
