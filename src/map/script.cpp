@@ -43,6 +43,7 @@
 #include "clif.hpp"
 #include "date.hpp" // date type enum, date_get()
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "instance.hpp"
@@ -17058,6 +17059,19 @@ BUILDIN_FUNC(getbattleflag)
 	return SCRIPT_CMD_SUCCESS;
 }
 
+/**
+ * Get the current state of a named extension.
+ * getextension("<extension id>") -> 1 if the extension is enabled, 0 otherwise
+ * (or if the id is not registered). See db/extension_db.yml.
+ */
+BUILDIN_FUNC(getextension)
+{
+	const char* id = script_getstr(st, 2);
+
+	script_pushint(st, extension_enabled(id) ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
 //=======================================================
 // strlen [Valaris]
 //-------------------------------------------------------
@@ -28304,6 +28318,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(autoequip,"ii"),
 	BUILDIN_DEF(setbattleflag,"si?"),
 	BUILDIN_DEF(getbattleflag,"s"),
+	BUILDIN_DEF(getextension,"s"),
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
 	BUILDIN_DEF(undisguise,"?"), //undisguise player. Lupus

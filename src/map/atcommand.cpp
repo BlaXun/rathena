@@ -32,6 +32,7 @@
 #include "clif.hpp"
 #include "duel.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "instance.hpp"
@@ -11438,6 +11439,84 @@ int32 atcommand_macrochecker_sub( block_list* bl, va_list ap ){
 	return 1;
 }
 
+/**
+ * @extensions -- list every registered extension with its enabled state.
+ * See db/extension_db.yml.
+ */
+ACMD_FUNC(extensions){
+	nullpo_retr(-1, sd);
+
+	if (extension_db.empty()) {
+		clif_displaymessage(fd, msg_txt(sd, 1541)); // No extensions are registered.
+		return 0;
+	}
+
+	char output[CHAT_SIZE_MAX];
+	safesnprintf(output, sizeof(output), msg_txt(sd, 1542), (int)extension_db.size()); // %d extension(s) registered:
+	clif_displaymessage(fd, output);
+
+	for (const auto& pair : extension_db) {
+		const std::shared_ptr<s_extension>& ext = pair.second;
+
+		safesnprintf(output, sizeof(output), "  %-8s %s -- %s",
+			ext->enabled ? "[ ON ]" : "[ off]",
+			ext->id.c_str(),
+			ext->name.c_str());
+		clif_displaymessage(fd, output);
+	}
+
+	return 0;
+}
+
+/**
+ * @extensioninfo <id> -- show the full description of one extension.
+ */
+ACMD_FUNC(extensioninfo){
+	nullpo_retr(-1, sd);
+
+	char id[64];
+
+	if (!message || !*message || sscanf(message, "%63s", id) < 1) {
+		clif_displaymessage(fd, msg_txt(sd, 1543)); // Usage: @extensioninfo <id>
+		return -1;
+	}
+
+	std::shared_ptr<s_extension> ext = extension_db.find(id);
+
+	if (ext == nullptr) {
+		char output[CHAT_SIZE_MAX];
+		safesnprintf(output, sizeof(output), msg_txt(sd, 1544), id); // Extension '%s' is not registered.
+		clif_displaymessage(fd, output);
+		return -1;
+	}
+
+	char output[CHAT_SIZE_MAX];
+	safesnprintf(output, sizeof(output), "%s (%s) [%s]",
+		ext->name.c_str(),
+		ext->id.c_str(),
+		ext->enabled ? "on" : "off");
+	clif_displaymessage(fd, output);
+
+	// The Description YAML field can be multi-line; the client one-lines
+	// each display, so split on '\n' and send one line at a time.
+	std::string desc = ext->description;
+
+	while (!desc.empty()) {
+		size_t nl = desc.find('\n');
+		std::string line = (nl == std::string::npos) ? desc : desc.substr(0, nl);
+
+		if (!line.empty())
+			clif_displaymessage(fd, line.c_str());
+
+		if (nl == std::string::npos)
+			break;
+
+		desc.erase(0, nl + 1);
+	}
+
+	return 0;
+}
+
 ACMD_FUNC(macrochecker){
 	int16 mapid;
 
@@ -11813,6 +11892,8 @@ void atcommand_basecommands(void) {
 		ACMD_DEFR(roulette, ATCMD_NOCONSOLE|ATCMD_NOAUTOTRADE),
 		ACMD_DEF(setcard),
 		ACMD_DEF(macrochecker),
+		ACMD_DEF(extensions),
+		ACMD_DEF(extensioninfo),
 	};
 	AtCommandInfo* atcommand;
 	int32 i;
