@@ -27,6 +27,44 @@
 #include "unit.hpp" // unit_data
 #include "vending.hpp" // struct s_vending
 
+// RAGNAROKMAC: size indexed bonuses from the complete weapon enum.
+enum weapon_type : uint8 {
+	W_FIST,	//Bare hands
+	W_DAGGER,	//1
+	W_1HSWORD,	//2
+	W_2HSWORD,	//3
+	W_1HSPEAR,	//4
+	W_2HSPEAR,	//5
+	W_1HAXE,	//6
+	W_2HAXE,	//7
+	W_MACE,	//8
+	W_2HMACE,	//9 (unused)
+	W_STAFF,	//10
+	W_BOW,	//11
+	W_KNUCKLE,	//12
+	W_MUSICAL,	//13
+	W_WHIP,	//14
+	W_BOOK,	//15
+	W_KATAR,	//16
+	W_REVOLVER,	//17
+	W_RIFLE,	//18
+	W_GATLING,	//19
+	W_SHOTGUN,	//20
+	W_GRENADE,	//21
+	W_HUUMA,	//22
+	W_2HSTAFF,	//23
+	MAX_WEAPON_TYPE,
+	// dual-wield constants
+	W_DOUBLE_DD, // 2 daggers
+	W_DOUBLE_SS, // 2 swords
+	W_DOUBLE_AA, // 2 axes
+	W_DOUBLE_DS, // dagger + sword
+	W_DOUBLE_DA, // dagger + axe
+	W_DOUBLE_SA, // sword + axe
+	MAX_WEAPON_TYPE_ALL,
+	W_SHIELD = MAX_WEAPON_TYPE,
+};
+
 enum AtCommandType : uint8;
 enum e_instance_mode : uint8;
 //enum e_log_chat_type : uint8;
@@ -55,6 +93,11 @@ class MapGuild;
 #define ROULETTE_SILVER_VAR "RouletteSilver"
 #define ROULETTE_GOLD_VAR "RouletteGold"
 #define COOKMASTERY_VAR "COOK_MASTERY"
+// RAGNAROKMAC: per-character loot and exp display preferences. Stored as
+// ordinary character variables so they persist without a schema change.
+#define AUTOLOOT_RATE_VAR "AUTOLOOT_RATE"
+#define AUTOLOOT_TYPE_VAR "AUTOLOOT_TYPE"
+#define SHOWEXP_VAR "SHOWEXP"
 #define PCDIECOUNTER_VAR "PC_DIE_COUNTER"
 #define JOBCHANGE2ND_VAR "jobchange_level"
 #define JOBCHANGE3RD_VAR "jobchange_level_3rd"
@@ -573,8 +616,8 @@ public:
 		int16 weapon_coma_ele[ELE_MAX];
 		int16 weapon_coma_race[RC_MAX];
 		int16 weapon_coma_class[CLASS_MAX];
-		int32 weapon_atk[16];
-		int32 weapon_damage_rate[16];
+		int32 weapon_atk[MAX_WEAPON_TYPE];
+		int32 weapon_damage_rate[MAX_WEAPON_TYPE];
 		int32 arrow_addele[ELE_MAX];
 		int32 arrow_addrace[RC_MAX];
 		int32 arrow_addclass[CLASS_MAX];
@@ -956,42 +999,7 @@ extern struct eri *str_reg_ers;
 /* Global Expiration Timer ID */
 extern int32 pc_expiration_tid;
 
-enum weapon_type : uint8 {
-	W_FIST,	//Bare hands
-	W_DAGGER,	//1
-	W_1HSWORD,	//2
-	W_2HSWORD,	//3
-	W_1HSPEAR,	//4
-	W_2HSPEAR,	//5
-	W_1HAXE,	//6
-	W_2HAXE,	//7
-	W_MACE,	//8
-	W_2HMACE,	//9 (unused)
-	W_STAFF,	//10
-	W_BOW,	//11
-	W_KNUCKLE,	//12
-	W_MUSICAL,	//13
-	W_WHIP,	//14
-	W_BOOK,	//15
-	W_KATAR,	//16
-	W_REVOLVER,	//17
-	W_RIFLE,	//18
-	W_GATLING,	//19
-	W_SHOTGUN,	//20
-	W_GRENADE,	//21
-	W_HUUMA,	//22
-	W_2HSTAFF,	//23
-	MAX_WEAPON_TYPE,
-	// dual-wield constants
-	W_DOUBLE_DD, // 2 daggers
-	W_DOUBLE_SS, // 2 swords
-	W_DOUBLE_AA, // 2 axes
-	W_DOUBLE_DS, // dagger + sword
-	W_DOUBLE_DA, // dagger + axe
-	W_DOUBLE_SA, // sword + axe
-	MAX_WEAPON_TYPE_ALL,
-	W_SHIELD = MAX_WEAPON_TYPE,
-};
+
 
 #define WEAPON_TYPE_ALL ((1<<MAX_WEAPON_TYPE)-1)
 
@@ -1694,6 +1702,8 @@ void pc_inventory_rental_add(map_session_data *sd, uint32 seconds);
 int32 pc_read_motd(void); // [Valaris]
 int32 pc_disguise(map_session_data *sd, int32 class_);
 bool pc_isautolooting(map_session_data *sd, t_itemid nameid);
+// RAGNAROKMAC: write the current loot/exp preferences to character variables.
+void pc_save_loot_prefs(map_session_data *sd);
 
 void pc_overheat(map_session_data &sd, int16 heat);
 
