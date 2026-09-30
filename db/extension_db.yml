@@ -28,7 +28,25 @@ Header:
   Version: 1
 
 Body:
-# Populated by extension-specific commits.
+  - Id: pc_drop_item_event
+    Name: Fire OnPCDropItemEvent per monster drop
+    Description: |
+      When a monster's regular drop table rolls a drop for a player, fire
+      an NPCE_DROPITEM script event on that player before the flooritem
+      is placed on the map. The event's script label is OnPCDropItemEvent
+      and the following player parameters are set for the duration of the
+      handler:
+
+        killedgid     the mob's unique unit id
+        killedrid     the mob's mob_db id (its class id)
+        killeddropid  the item id that was rolled
+        killedbyme    1 if the drop recipient (this pc) also dealt the
+                      killing blow; 0 if a party mate, merc, homun, or
+                      someone else got the kill
+
+      Fires once per successful drop -- a mob that drops three items in
+      one death fires it three times, once per item. Off means stock
+      rAthena: no such event exists.
 
 Footer:
   Imports:
