@@ -6907,9 +6907,20 @@ int32 skill_unit_onplace_timer(skill_unit *unit, block_list *bl, t_tick tick)
 				break;
 
 			//Take into account these hit more times than the timer interval can handle.
-			do
-				skill_attack(BF_MAGIC,ss,unit,bl,sg->skill_id,sg->skill_lv,tick+(t_tick)count*sg->interval,0);
-			while(sg->interval > 0 && --unit->val2 && x == bl->x && y == bl->y &&
+			do {
+				int64 damage = skill_attack(BF_MAGIC,ss,unit,bl,sg->skill_id,sg->skill_lv,tick+(t_tick)count*sg->interval,0);
+				// Route each Blaze Shield tick through battle_drain, so item
+				// bonuses that sit on the weapon-attack path (Moonlight
+				// Dagger's bSPDrainValue, the drain-race and drain-class
+				// bonuses) fire per hit on a placed magic unit. Without this,
+				// a Ninja channelling NJ_KAENSIN never sees the SP recovery
+				// their dagger already advertises. Gated on NJ_KAENSIN so
+				// Fire Wall (the other user of this branch) keeps stock
+				// behaviour.
+				if (sg->skill_id == NJ_KAENSIN && ss->type == BL_PC && damage > 0)
+					battle_drain((TBL_PC *)ss, bl, damage, damage,
+						status_get_race(bl), status_get_class_(bl));
+			} while(sg->interval > 0 && --unit->val2 && x == bl->x && y == bl->y &&
 				++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status_isdead(*bl));
 
 			if (unit->val2 <= 0)
