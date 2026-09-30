@@ -598,6 +598,8 @@
 	export_parameter("killerrid",SP_KILLERRID);
 	export_parameter("killedrid",SP_KILLEDRID);
 	export_parameter("killedgid",SP_KILLEDGID);
+	export_parameter("killeddropid",SP_KILLEDDROPID);
+	export_parameter("killedbyme",SP_KILLEDBYME);
 	export_parameter("Sitting",SP_SITTING);
 	export_parameter("CharMoves",SP_CHARMOVE);
 	export_parameter("CharRename",SP_CHARRENAME);

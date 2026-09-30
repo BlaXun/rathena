@@ -27,6 +27,7 @@
 #include "battle.hpp"
 #include "clif.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "intif.hpp"
@@ -3352,6 +3353,27 @@ int32 mob_dead(mob_data *md, block_list *src, int32 type)
 			// Announce first, or else ditem will be freed. [Lance]
 			// By popular demand, use base drop rate for autoloot code. [Skotlex]
 			mob_item_drop(md, dlist, ditem, 0, battle_config.autoloot_adjust ? drop_rate : entry->rate, homkillonly || merckillonly);
+
+			// pc_drop_item_event extension: hand the drop to any script listening
+			// for OnPCDropItemEvent, one call per rolled drop. Attached to the
+			// same first_sd rAthena hands the flooritem to, so the event runs on
+			// exactly the player who is entitled to the drop -- mirroring the
+			// scoping of NPCE_KILLNPC. Fires before NPCE_KILLNPC in the same
+			// mob death, so a script that hooks both sees the drops first and
+			// can react to them in the kill handler.
+			//
+			// killedbyme = 1 when the drop recipient also dealt the killing
+			// blow (sd == first_sd); 0 when someone else got the kill (party
+			// mate, merc, homun, someone kill-stealing a mob first_sd already
+			// tagged). Lets a script filter "only my own kills" without
+			// second-guessing rAthena's first_sd / killer split.
+			if (first_sd != nullptr && extension_enabled("pc_drop_item_event")) {
+				pc_setparam(first_sd, SP_KILLEDGID, md->id);
+				pc_setparam(first_sd, SP_KILLEDRID, md->mob_id);
+				pc_setparam(first_sd, SP_KILLEDDROPID, entry->nameid);
+				pc_setparam(first_sd, SP_KILLEDBYME, (sd == first_sd) ? 1 : 0);
+				npc_script_event(*first_sd, NPCE_DROPITEM);
+			}
 		}
 
 		// Ore Discovery (triggers if owner has loot priority, does not require to be the killer)

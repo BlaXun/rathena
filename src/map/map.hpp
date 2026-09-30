@@ -522,6 +522,8 @@ enum _sp {
 	SP_CASHPOINTS, SP_KAFRAPOINTS,
 	SP_PCDIECOUNTER, SP_COOKMASTERY,
 	SP_ACHIEVEMENT_LEVEL,
+	SP_KILLEDDROPID,   // 137 -- item id of the most recent drop from a mob this player killed, set when OnPCDropItemEvent fires
+	SP_KILLEDBYME,     // 138 -- 1 if the drop came from a mob whose killing blow the player also dealt; 0 if a party/merc/homun/anyone else got the kill
 
 	// Mercenaries
 	SP_MERCFLEE=165, SP_MERCKILLS=189, SP_MERCFAITH=190,

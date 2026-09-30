@@ -819,6 +819,8 @@ public:
 	size_t duel_invite;
 
 	int32 killerrid, killedrid, killedgid;
+	int32 killeddropid; // item id of the most recent drop, set right before NPCE_DROPITEM fires (pc_drop_item_event extension)
+	int32 killedbyme;   // 1 if this pc dealt the killing blow that produced killeddropid, 0 otherwise; same lifetime as killeddropid
 
 	int32 cashPoints, kafraPoints;
 	int32 rental_timer;

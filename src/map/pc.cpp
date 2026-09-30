@@ -10273,6 +10273,8 @@ int64 pc_readparam( const map_session_data* sd, int64 type )
 		case SP_KILLERRID:       val = sd->killerrid; break;
 		case SP_KILLEDRID:       val = sd->killedrid; break;
 		case SP_KILLEDGID:       val = sd->killedgid; break;
+		case SP_KILLEDDROPID:    val = sd->killeddropid; break;
+		case SP_KILLEDBYME:      val = sd->killedbyme; break;
 		case SP_SITTING:         val = pc_issit(sd)?1:0; break;
 		case SP_CHARMOVE:		 val = sd->status.character_moves; break;
 		case SP_CHARRENAME:		 val = sd->status.rename; break;
@@ -10609,6 +10611,12 @@ bool pc_setparam(map_session_data *sd,int64 type,int64 val_tmp)
 		return true;
 	case SP_KILLEDGID:
 		sd->killedgid = val;
+		return true;
+	case SP_KILLEDDROPID:
+		sd->killeddropid = val;
+		return true;
+	case SP_KILLEDBYME:
+		sd->killedbyme = val;
 		return true;
 	case SP_CHARMOVE:
 		sd->status.character_moves = val;
