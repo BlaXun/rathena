@@ -1576,7 +1576,15 @@ int32 skill_additional_effect( block_list* src, block_list *bl, uint16 skill_id,
 	}
 
 	//Polymorph
-	if(sd && sd->bonus.classchange && attack_type&BF_WEAPON &&
+	// Blaze Shield (NJ_KAENSIN) is a magic-typed placed skill, so its hits
+	// carry BF_MAGIC and would otherwise fall outside the BF_WEAPON gate --
+	// meaning an accessory carrying Hylozoist Card (bClassChange,100) never
+	// rolls a proc on the one skill a Ninja routinely stands in the middle
+	// of. bClassChange has no magic-attack counterpart, so opening this gate
+	// is the only path. Kept skill-specific rather than a blanket "any
+	// magic" so Fire Bolt spam does not turn Hylozoist Card into a general
+	// polymorph engine.
+	if(sd && sd->bonus.classchange && (attack_type&BF_WEAPON || skill_id == NJ_KAENSIN) &&
 		dstmd && !status_has_mode(tstatus,MD_STATUSIMMUNE) &&
 		(rnd()%10000 < sd->bonus.classchange))
 	{
