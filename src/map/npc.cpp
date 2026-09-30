@@ -5996,7 +5996,9 @@ const char *npc_get_script_event_name(int32 npce_index)
 	case NPCE_IDENTIFY:
 		return script_config.identify_event_name;
 	case NPCE_DROPITEM:
-		return script_config.drop_item_event_name;
+		// A literal, not a Script_Config field: that struct is initialised by
+		// position, so a field added to it has to line up with upstream's forever.
+		return "OnPCDropItemEvent";
 	default:
 		ShowError("npc_get_script_event_name: npce_index is outside the array limits: %d (max: %d).\n", npce_index, NPCE_MAX);
 		return nullptr;
