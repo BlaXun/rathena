@@ -21,6 +21,43 @@
 //   Description   Multi-line explanation (shown by @extensioninfo).
 //   Enabled       true / false. Defaults to false. Overrides in
 //                 db/import/extension_db.yml only need Id and Enabled.
+//   Values        Optional. Typed settings the extension's code reads,
+//                 so a mod can tune a number or name something without
+//                 a new C++ change. Each entry has a Key and either
+//                 declares it (here, in the base file):
+//                   Type          Int or String.
+//                   Default       Used while the extension is on and
+//                                 nothing sets Value. Default 0 / "".
+//                   Min, Max      Int only, optional. A Value outside
+//                                 them is capped, with a warning.
+//                   Description   Shown by @extensioninfo.
+//                 or sets it (in an import, or a mod's db/ folder):
+//                   Value         The number or string to use.
+//                 Keys merge one at a time, so two mods setting different
+//                 keys of one extension both apply; for the same key, the
+//                 later file wins.
+//
+//                 While an extension is off, its code sees the stock value:
+//                 C++ reads extension_int(id, key, stock) and
+//                 extension_string(id, key, stock); scripts read
+//                 getextensionvalue("<id>", "<key>"{, <stock>}).
+//                 getextension("<id>") returns 1 when it is on.
+//
+//                 Example:
+//                   - Id: example_rate
+//                     Name: Example
+//                     Values:
+//                       - Key: rate
+//                         Type: Int
+//                         Default: 100
+//                         Min: 0
+//                         Max: 1000
+//                 and, to turn it on at 150:
+//                   - Id: example_rate
+//                     Enabled: true
+//                     Values:
+//                       - Key: rate
+//                         Value: 150
 //########################################################################
 
 Header:
@@ -28,28 +65,25 @@ Header:
   Version: 1
 
 Body:
-  - Id: makeitem_owned
-    Name: makeitemowned script command
+  - Id: pc_drop_item_event
+    Name: Fire OnPCDropItemEvent per monster drop
     Description: |
-      Adds a `makeitemowned` script command that places a flooritem the
-      way `makeitem` does, plus pickup-priority character ids on the
-      flooritem -- so a script can drop an item bound to a specific
-      player for a short window, exactly like a mob's own drops.
+      When a monster's regular drop table rolls a drop for a player, fire
+      an NPCE_DROPITEM script event on that player before the flooritem
+      is placed on the map. The event's script label is OnPCDropItemEvent
+      and the following player parameters are set for the duration of the
+      handler:
 
-      Signature:
-        makeitemowned <item>,<amount>,"<map>",<X>,<Y>
-                     {,<first_charid>{,<second_charid>{,<third_charid>}}};
+        killedgid     the mob's unique unit id
+        killedrid     the mob's mob_db id (its class id)
+        killeddropid  the item id that was rolled
+        killedbyme    1 if the drop recipient (this pc) also dealt the
+                      killing blow; 0 if a party mate, merc, homun, or
+                      someone else got the kill
 
-      The three char ids are optional. first_charid defaults to the
-      attached player's char_id (via script_rid2sd); second and third
-      default to 0 (no priority). The pickup-priority durations for the
-      three slots are the standard battle.conf knobs
-      (item_first_get_time, item_second_get_time, item_third_get_time),
-      shared with regular mob drops.
-
-      Off means stock rAthena: the command is registered but every call
-      returns failure and logs a one-line error, so scripts that reach
-      for it fail loudly rather than silently placing an unowned drop.
+      Fires once per successful drop -- a mob that drops three items in
+      one death fires it three times, once per item. Off means stock
+      rAthena: no such event exists.
 
 Footer:
   Imports:

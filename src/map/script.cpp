@@ -8239,17 +8239,8 @@ BUILDIN_FUNC(makeitem) {
  * throughout rAthena's drop pipeline: first_charid defaults to the attached
  * player's char_id if a player is attached (0 otherwise -- no owner),
  * second and third default to 0 (no ownership).
- *
- * Gated on the `makeitem_owned` extension. If the extension is off, the
- * command returns failure and logs a one-line explanation so scripts fail
- * loudly rather than silently placing an unowned drop.
  */
 BUILDIN_FUNC(makeitemowned) {
-	if (!extension_enabled("makeitem_owned")) {
-		ShowError("buildin_makeitemowned: the 'makeitem_owned' extension is not enabled; enable it in db/import/extension_db.yml\n");
-		return SCRIPT_CMD_FAILURE;
-	}
-
 	t_itemid nameid;
 	uint16 amount, flag = 0, x, y;
 	const char *mapname;
@@ -17172,6 +17163,34 @@ BUILDIN_FUNC(getextension)
 	const char* id = script_getstr(st, 2);
 
 	script_pushint(st, extension_enabled(id) ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * Read a typed value of an extension.
+ * getextensionvalue("<extension id>","<key>"{,<default>})
+ * -> the value (an int or a string, as the key is declared) while the
+ * extension is enabled; otherwise <default>, which should be the stock
+ * number or text, and 0 when none is given. See db/extension_db.yml.
+ */
+BUILDIN_FUNC(getextensionvalue)
+{
+	const char* id = script_getstr(st, 2);
+	const char* key = script_getstr(st, 3);
+	const s_extension_value* value = extension_enabled(id) ? extension_value(id, key) : nullptr;
+
+	if (value == nullptr) {
+		if (!script_hasdata(st, 4))
+			script_pushint(st, 0);
+		else if (script_isstring(st, 4))
+			script_pushstrcopy(st, script_getstr(st, 4));
+		else
+			script_pushint64(st, script_getnum64(st, 4));
+	} else if (value->type == EXTVAL_INT) {
+		script_pushint64(st, value->int_value);
+	} else {
+		script_pushstrcopy(st, value->str_value.c_str());
+	}
 	return SCRIPT_CMD_SUCCESS;
 }
 
@@ -28423,6 +28442,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(setbattleflag,"si?"),
 	BUILDIN_DEF(getbattleflag,"s"),
 	BUILDIN_DEF(getextension,"s"),
+	BUILDIN_DEF(getextensionvalue,"ss?"),
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
 	BUILDIN_DEF(undisguise,"?"), //undisguise player. Lupus

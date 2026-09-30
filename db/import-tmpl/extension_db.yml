@@ -8,6 +8,12 @@
 //     - Id: blaze_shield_drain
 //       Enabled: true
 //
+// and, for an extension that declares values, set them by Key:
+//
+//       Values:
+//         - Key: rate
+//           Value: 150
+//
 
 Header:
   Type: EXTENSION_DB
