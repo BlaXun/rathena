@@ -29,3 +29,7 @@ Header:
 
 Body:
 # Populated by extension-specific commits.
+
+Footer:
+  Imports:
+    - Path: db/import/extension_db.yml
