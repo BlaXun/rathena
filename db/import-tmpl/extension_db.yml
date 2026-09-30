@@ -1,13 +1,13 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-//
-// Override entries in db/extension_db.yml. Only Id and Enabled are
-// needed; Name and Description are taken from the base file.
-//
-//   Body:
-//     - Id: blaze_shield_drain
-//       Enabled: true
-//
+# Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
+# For more information, see LICENCE in the main folder
+#
+# Override entries in db/extension_db.yml. Only Id and Enabled are
+# needed; Name and Description are taken from the base file.
+#
+#   Body:
+#     - Id: blaze_shield_drain
+#       Enabled: true
+#
 
 Header:
   Type: EXTENSION_DB

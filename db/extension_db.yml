@@ -1,27 +1,27 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-//
-//########################################################################
-// Extension Database
-//########################################################################
-//
-// Server-side toggles for behaviour that deviates from stock rAthena.
-// Each entry gates a specific code path elsewhere in the server;
-// disabling an extension restores the stock behaviour.
-//
-// Every entry is off by default. To enable one on this server, do NOT
-// edit this file -- copy the Id into db/import/extension_db.yml with
-// Enabled: true and it will be picked up on the next reload. Mods do
-// the same through their own db/ folder.
-//
-//########################################################################
-// - Id            Stable identifier the C code and script commands use.
-//                 Snake_case, lowercase, short.
-//   Name          One-line human-readable label (shown by @extensions).
-//   Description   Multi-line explanation (shown by @extensioninfo).
-//   Enabled       true / false. Defaults to false. Overrides in
-//                 db/import/extension_db.yml only need Id and Enabled.
-//########################################################################
+# Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
+# For more information, see LICENCE in the main folder
+#
+#########################################################################
+# Extension Database
+#########################################################################
+#
+# Server-side toggles for behaviour that deviates from stock rAthena.
+# Each entry gates a specific code path elsewhere in the server;
+# disabling an extension restores the stock behaviour.
+#
+# Every entry is off by default. To enable one on this server, do NOT
+# edit this file -- copy the Id into db/import/extension_db.yml with
+# Enabled: true and it will be picked up on the next reload. Mods do
+# the same through their own db/ folder.
+#
+#########################################################################
+# - Id            Stable identifier the C code and script commands use.
+#                 Snake_case, lowercase, short.
+#   Name          One-line human-readable label (shown by @extensions).
+#   Description   Multi-line explanation (shown by @extensioninfo).
+#   Enabled       true / false. Defaults to false. Overrides in
+#                 db/import/extension_db.yml only need Id and Enabled.
+#########################################################################
 
 Header:
   Type: EXTENSION_DB

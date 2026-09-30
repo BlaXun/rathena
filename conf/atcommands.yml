@@ -414,6 +414,13 @@ Body:
   - Command: exp
     Help: |
       Displays current levels and % progress.
+  - Command: extensioninfo
+    Help: |
+      Shows what one extension does, whether it is on, and its values.
+      Usage: @extensioninfo <id>
+  - Command: extensions
+    Help: |
+      Lists the server extensions (db/extension_db.yml) and whether each is on.
   - Command: fakename
     Help: |
       Params: <name>
