@@ -21,7 +21,7 @@ How to work:
 
 Fixes to rAthena itself, and the fork's extension points:
 - **Lua hooks** (`src/map/skill_lua.cpp`, `.hpp`): `skill(...)` and `item(...)` hooks with a priority chain, `c:cast`, drain, heal and status actions. Mods' `lua/` folders use these.
-- **Server extensions** (`db/extension_db.yml`): fork behaviour a mod can switch on, with typed values. `@extensions` lists them in game.
+- **Server extensions** (`db/extension_db.yml`): fork behaviour a mod can switch on, with typed values. `@extensions` lists them in game. **Read [doc/extensions.md](doc/extensions.md) before changing stock behaviour:** a change that should be optional belongs behind an extension (off by default), not in a core edit.
 - Script commands and events mods rely on, e.g. `makeitemowned`, `OnPCDropItemEvent`, and the one-time login tokens.
 
 App-specific additions (the population engine, the stylist, crash tracing) are not here. They are patches in the app repo (`third-party/`, `scripts/apply-server-mods.sh`), applied on top of this branch at build time. Anything you change here must still let those patches apply.
