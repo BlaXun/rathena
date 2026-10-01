@@ -152,7 +152,4 @@ struct AccountDB {
 void mmo_send_global_accreg(AccountDB* self, int32 fd, uint32 account_id, uint32 char_id);
 void mmo_save_global_accreg(AccountDB* self, int32 fd, uint32 account_id, uint32 char_id);
 
-/// Hash any plain-text passwords stored since the last look (password.hpp).
-void account_hash_plaintext( AccountDB* self );
-
 #endif /* ACCOUNT_HPP */
