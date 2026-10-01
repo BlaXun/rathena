@@ -14,6 +14,9 @@
     <ClInclude Include="account.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="password.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ipban.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -35,6 +38,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="account.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="password.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ipban.cpp">
