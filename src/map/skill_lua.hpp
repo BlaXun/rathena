@@ -17,6 +17,7 @@
  * register hooks by skill name:
  *
  *   skill("MG_FIREBOLT", {
+ *     priority = 3,                           -- 0..10, lower runs first; 5 is the default
  *     ratio   = function(c, stock) return stock + c.caster.int // 2 end,
  *     hit     = function(c, stock) ... end,   -- accuracy
  *     element = function(c, stock) ... end,   -- an ELE_* constant
@@ -30,6 +31,14 @@
  * applied once the hit has been dealt. Nothing a script does can reach the
  * disk, the network or the server's memory; an error or a runaway loop
  * switches that one hook off and says so in the log.
+ *
+ * Two mods may hook the same part of the same skill: every registered hook
+ * runs, in ascending priority order (ties broken by mod load order). For
+ * ratio, hit and element each hook sees what the previous one returned as
+ * `stock`, so the chain composes. For on_hit each hook queues its own
+ * actions (drain, heal, status, polymorph) and they are applied together
+ * once the hit is dealt. A mod that redeclares a hook replaces its own
+ * previous registration -- a mod never fights itself.
  */
 
 struct block_list;
