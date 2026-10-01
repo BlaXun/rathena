@@ -77,8 +77,8 @@ void count_hook(lua_State* state, lua_Debug*) {
 // Hooks, by skill name and then by id
 // ---------------------------------------------------------------------------
 
-enum e_hook : uint8 { HOOK_RATIO = 0, HOOK_HIT, HOOK_ELEMENT, HOOK_ON_HIT, HOOK_MAX };
-const char* const hook_names[HOOK_MAX] = { "ratio", "hit", "element", "on_hit" };
+enum e_hook : uint8 { HOOK_RATIO = 0, HOOK_HIT, HOOK_ELEMENT, HOOK_ON_HIT, HOOK_ON_STEAL, HOOK_MAX };
+const char* const hook_names[HOOK_MAX] = { "ratio", "hit", "element", "on_hit", "on_steal" };
 
 enum e_item_hook : uint8 { ITEM_HOOK_ON_ATTACK = 0, ITEM_HOOK_ON_HIT_TAKEN, ITEM_HOOK_MAX };
 const char* const item_hook_names[ITEM_HOOK_MAX] = { "on_attack", "on_hit_taken" };
@@ -563,7 +563,7 @@ int32 lua_register_skill(lua_State* state) {
 			if (strcmp(key, hook_names[i]) == 0)
 				which = i;
 		if (which < 0)
-			return luaL_error(state, "skill %s: unknown hook \"%s\" (ratio, hit, element, on_hit or priority)", name, key);
+			return luaL_error(state, "skill %s: unknown hook \"%s\" (ratio, hit, element, on_hit, on_steal or priority)", name, key);
 		if (!lua_isfunction(state, -1))
 			return luaL_error(state, "skill %s: %s must be a function", name, key);
 
@@ -1036,6 +1036,143 @@ void cast_like_autospell(block_list* src, block_list* target, uint16 skill_id, u
 		if (DIFF_TICK(ud->canact_tick, tick + delay) < 0)
 			ud->canact_tick = i64max(tick + delay, ud->canact_tick);
 	}
+}
+
+namespace {
+
+const char* drop_type_name(int32 type) {
+	switch (type) {
+		case IT_CARD: return "card";
+		case IT_WEAPON: return "weapon";
+		case IT_ARMOR: return "armor";
+		default: return "etc";
+	}
+}
+
+/// Build c.drops: an array of the mob's stealable drops, in the mob db's
+/// own slot order. Each entry carries nameid, rate (out of 10000, after the
+/// server multiplier) and the item's type as both booleans (is_card,
+/// is_equip, is_etc) and a short string ("card", "weapon", "armor", "etc"),
+/// so a hook can filter without consulting the item database itself.
+void push_drops(const mob_data& md) {
+	int32 drop_i = 0;
+
+	lua_createtable(L, (int32)md.db->dropitem.size(), 0);
+	for (const std::shared_ptr<s_mob_drop>& entry : md.db->dropitem) {
+		if (entry->steal_protected)
+			continue;
+		if (!item_db.exists(entry->nameid))
+			continue;
+
+		std::shared_ptr<item_data> id = item_db.find(entry->nameid);
+		int32 type = id != nullptr ? id->type : -1;
+
+		lua_createtable(L, 0, 6);
+		set_int("nameid", entry->nameid);
+		set_int("rate", entry->rate);
+		lua_pushboolean(L, type == IT_CARD);
+		lua_setfield(L, -2, "is_card");
+		lua_pushboolean(L, type == IT_WEAPON || type == IT_ARMOR);
+		lua_setfield(L, -2, "is_equip");
+		lua_pushboolean(L, type != IT_CARD && type != IT_WEAPON && type != IT_ARMOR);
+		lua_setfield(L, -2, "is_etc");
+		lua_pushstring(L, drop_type_name(type));
+		lua_setfield(L, -2, "type");
+
+		lua_rawseti(L, -2, ++drop_i);
+	}
+}
+
+/// Pull a nameid out of what an on_steal hook returned. The hook may return
+/// a drop table (one from c.drops, or any table with a `nameid`), the
+/// nameid as an integer, or nil to pass. Returns 0 for nil or an
+/// unrecognised shape (and logs the shape).
+t_itemid read_chosen_drop(const s_hook& hook) {
+	if (lua_isinteger(L, -1))
+		return static_cast<t_itemid>(lua_tointeger(L, -1));
+
+	if (lua_istable(L, -1)) {
+		lua_getfield(L, -1, "nameid");
+		t_itemid id = lua_isinteger(L, -1) ? static_cast<t_itemid>(lua_tointeger(L, -1)) : 0;
+		lua_pop(L, 1);
+		return id;
+	}
+
+	if (!lua_isnil(L, -1))
+		ShowError("Lua: %s's on_steal hook returned a %s, not a drop, nameid or nil; falling through.\n", hook.mod.c_str(), luaL_typename(L, -1));
+	return 0;
+}
+
+/// True if `nameid` is a stealable drop (`steal_protected == false` and
+/// known to item_db) on this mob, so the hook cannot force an item the
+/// server would not otherwise give.
+bool is_stealable(const mob_data& md, t_itemid nameid) {
+	for (const std::shared_ptr<s_mob_drop>& entry : md.db->dropitem) {
+		if (entry->nameid != nameid)
+			continue;
+		if (entry->steal_protected)
+			continue;
+		if (!item_db.exists(entry->nameid))
+			continue;
+		return true;
+	}
+	return false;
+}
+
+} // namespace
+
+t_itemid skill_lua_on_steal(block_list* src, block_list* target, uint16 skill_lv) {
+	// in_lua_cast refuses re-entry the same way on_damage does: an item
+	// whose on_attack cast of TF_STEAL otherwise reruns the on_steal hook
+	// against the Lua state the outer call still owns.
+	if (L == nullptr || src == nullptr || target == nullptr || target->type != BL_MOB || in_lua_cast)
+		return 0;
+
+	s_skill_hooks* skill_hooks = hooks_for(TF_STEAL);
+
+	if (skill_hooks == nullptr || skill_hooks->hooks[HOOK_ON_STEAL].empty())
+		return 0;
+
+	const mob_data& md = *reinterpret_cast<mob_data*>(target);
+
+	for (s_hook& hook : skill_hooks->hooks[HOOK_ON_STEAL]) {
+		if (hook.ref == LUA_NOREF)
+			continue;
+
+		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
+
+		lua_createtable(L, 0, 7);
+		lua_pushstring(L, skill_get_name(TF_STEAL));
+		lua_setfield(L, -2, "skill");
+		set_int("skill_id", TF_STEAL);
+		set_int("skill_lv", skill_lv);
+		push_unit(src);
+		lua_setfield(L, -2, "caster");
+		push_unit(target);
+		lua_setfield(L, -2, "target");
+		lua_pushcfunction(L, lua_hit_chance);
+		lua_setfield(L, -2, "chance");
+		push_drops(md);
+		lua_setfield(L, -2, "drops");
+
+		if (!protected_call(hook, skill_hooks->skill.c_str(), 1, 1))
+			continue;
+
+		t_itemid chosen = read_chosen_drop(hook);
+
+		lua_pop(L, 1);
+
+		if (chosen == 0)
+			continue;  // next hook in the chain
+
+		if (!is_stealable(md, chosen)) {
+			ShowWarning("Lua: %s's on_steal hook returned nameid %u, which is not a stealable drop on %s; falling through.\n", hook.mod.c_str(), chosen, md.db->name.c_str());
+			continue;
+		}
+		return chosen;
+	}
+
+	return 0;
 }
 
 void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {

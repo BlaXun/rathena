@@ -57,6 +57,7 @@
 #include "pet.hpp" // pet_unlocktarget()
 #include "quest.hpp"
 #include "skill.hpp" // skill_isCopyable()
+#include "skill_lua.hpp" // skill_lua_on_steal()
 #include "script.hpp" // struct script_reg, struct script_regstr
 #include "searchstore.hpp"  // struct s_search_store_info
 #include "status.hpp" // OPTION_*, struct weapon_atk
@@ -6875,28 +6876,44 @@ bool pc_steal_item(map_session_data *sd,block_list *bl, uint16 skill_lv)
 
 	std::shared_ptr<s_mob_drop> drop = nullptr;
 
-	// Try dropping one item.
-	for( std::shared_ptr<s_mob_drop>& entry : md->db->dropitem ){
-		if( entry->steal_protected ){
-			continue;
+	// Give TF_STEAL's on_steal Lua hook (if any) first pick: this is how
+	// mods override the stock slot-order loop, which otherwise means a drop
+	// at 100% rate gates every later-slot drop (so a stealable card after a
+	// Jellopy at 1.5x+ rates is unreachable). skill_lua_on_steal returns 0
+	// when no hook ran or every hook returned nil, and the stock loop runs.
+	if( t_itemid chosen = skill_lua_on_steal( sd, bl, skill_lv ); chosen != 0 ){
+		for( std::shared_ptr<s_mob_drop>& entry : md->db->dropitem ){
+			if( entry->nameid == chosen && !entry->steal_protected && item_db.exists( entry->nameid ) ){
+				drop = entry;
+				break;
+			}
 		}
+	}
 
-		if( !item_db.exists( entry->nameid ) ){
-			continue;
-		}
+	// Try dropping one item.
+	if( drop == nullptr ){
+		for( std::shared_ptr<s_mob_drop>& entry : md->db->dropitem ){
+			if( entry->steal_protected ){
+				continue;
+			}
+
+			if( !item_db.exists( entry->nameid ) ){
+				continue;
+			}
 
 #ifdef RENEWAL
-		if( rnd() % 10000 < entry->rate ){
-			drop = entry;
-			break;
-		}
+			if( rnd() % 10000 < entry->rate ){
+				drop = entry;
+				break;
+			}
 #else
-		// Droprate is affected by the skill success rate.
-		if( rnd() % 10000 < entry->rate * rate / 100. ){
-			drop = entry;
-			break;
-		}
+			// Droprate is affected by the skill success rate.
+			if( rnd() % 10000 < entry->rate * rate / 100. ){
+				drop = entry;
+				break;
+			}
 #endif
+		}
 	}
 
 	if( drop == nullptr ){
