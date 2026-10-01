@@ -39,6 +39,31 @@
  * actions (drain, heal, status, polymorph) and they are applied together
  * once the hit is dealt. A mod that redeclares a hook replaces its own
  * previous registration -- a mod never fights itself.
+ *
+ * Equipped items can also run hooks, through a separate registration keyed
+ * by item AegisName:
+ *
+ *   item("VORPAL_BLADE", {
+ *     priority = 5,                          -- same 0..10 chain as skill()
+ *     on_attack = function(c)                -- the wearer swung at something
+ *       if c.connected and c.critical then c:heal(50, 0) end
+ *     end,
+ *     on_hit_taken = function(c) ... end,    -- something swung at the wearer
+ *   })
+ *
+ * on_attack fires for every attack by any unit that has the item equipped
+ * -- normal attacks and skill attacks, hits and misses -- after the damage
+ * calculation is finalized. on_hit_taken fires the same way, but keyed on
+ * the defender's equipment. In both hooks `c` carries the full outcome:
+ * `c.connected` (did damage apply), `c.critical`, `c.damage`, `c.element`,
+ * `c.skill_id` (0 for a normal attack), plus the usual `c.caster` and
+ * `c.target` -- which also now expose each equip slot's item id, so a hook
+ * can gate on gear without re-registering.
+ *
+ * item() hooks chain the same way skill() hooks do: multiple mods can
+ * register for the same item, and each runs in priority order, queuing
+ * actions into the same pending hit. A unit without the item equipped --
+ * mobs, homunculi, players who took it off -- does not fire the hook.
  */
 
 struct block_list;
@@ -79,11 +104,21 @@ void do_final_skill_lua();
 /// skill database has (re)built its skill classes.
 void skill_lua_attach();
 
-/// Run a skill's on_hit hook, if it has one. The actions it asks for are
-/// returned rather than done, so they happen after the hit is dealt.
-std::unique_ptr<s_skill_lua_hit> skill_lua_on_hit(block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv, int64 damage, int32 attack_type);
+/// Fire every hook interested in this attack:
+///  - a skill()'s on_hit, if skill_id is set and the skill is hooked;
+///  - item()'s on_attack, for each item equipped on `src`;
+///  - item()'s on_hit_taken, for each item equipped on `target`.
+/// Each hook may queue drain/heal/status/polymorph actions; they are
+/// returned together rather than applied here, so they happen after the
+/// hit is dealt. Returns nullptr when no action was queued.
+///
+/// `dmg_lv` is the attack's connection result (ATK_DEF means it landed),
+/// `critical` is true for a critical, `element` is the final attack element
+/// (ELE_*), and `attack_type` carries the usual BF_WEAPON/BF_MAGIC/BF_MISC
+/// mask. skill_id is 0 for a normal weapon attack.
+std::unique_ptr<s_skill_lua_hit> skill_lua_on_damage(block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv, int64 damage, int32 attack_type, int32 dmg_lv, bool critical, int32 element);
 
-/// Apply what an on_hit hook asked for. Does nothing for an empty hit.
+/// Apply what the hooks asked for. Does nothing for an empty hit.
 void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit);
 
 #endif /* SKILL_LUA_HPP */

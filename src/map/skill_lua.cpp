@@ -20,6 +20,7 @@
 #include "../../3rdparty/lua/src/lualib.h"
 
 #include "battle.hpp"
+#include "itemdb.hpp"
 #include "map.hpp"
 #include "mob.hpp"
 #include "pc.hpp"
@@ -79,6 +80,9 @@ void count_hook(lua_State* state, lua_Debug*) {
 enum e_hook : uint8 { HOOK_RATIO = 0, HOOK_HIT, HOOK_ELEMENT, HOOK_ON_HIT, HOOK_MAX };
 const char* const hook_names[HOOK_MAX] = { "ratio", "hit", "element", "on_hit" };
 
+enum e_item_hook : uint8 { ITEM_HOOK_ON_ATTACK = 0, ITEM_HOOK_ON_HIT_TAKEN, ITEM_HOOK_MAX };
+const char* const item_hook_names[ITEM_HOOK_MAX] = { "on_attack", "on_hit_taken" };
+
 constexpr int32 PRIORITY_MIN = 0;
 constexpr int32 PRIORITY_MAX = 10;
 constexpr int32 PRIORITY_DEFAULT = 5;
@@ -99,6 +103,13 @@ struct s_skill_hooks {
 	std::vector<s_hook> hooks[HOOK_MAX];
 };
 
+/// Same shape as s_skill_hooks, keyed by item AegisName; mod registrations
+/// are kept here until startup resolves each name to its nameid.
+struct s_item_hooks {
+	std::string aegis;
+	std::vector<s_hook> hooks[ITEM_HOOK_MAX];
+};
+
 /// Monotonic counter so a late-registering hook keeps its place behind
 /// earlier ones at the same priority.
 uint32 next_load_order = 0;
@@ -113,6 +124,18 @@ s_skill_hooks* hooks_for(uint16 skill_id) {
 	auto it = hooks_by_id.find(skill_id);
 
 	return it == hooks_by_id.end() ? nullptr : it->second;
+}
+
+std::unordered_map<std::string, s_item_hooks> item_hooks_by_name;
+std::unordered_map<t_itemid, s_item_hooks*> item_hooks_by_id;
+
+s_item_hooks* item_hooks_for(t_itemid nameid) {
+	if (L == nullptr || item_hooks_by_id.empty() || nameid == 0)
+		return nullptr;
+
+	auto it = item_hooks_by_id.find(nameid);
+
+	return it == item_hooks_by_id.end() ? nullptr : it->second;
 }
 
 int32 message_handler(lua_State* state) {
@@ -227,6 +250,23 @@ void push_unit(const block_list* bl) {
 		// Item bonuses a hook might want to honour on a skill that stock
 		// rAthena does not apply them to.
 		set_int("classchange", sd->bonus.classchange);
+		// Equipped items by slot, 0 when nothing is in that slot. Scripts
+		// can gate on gear ("c.caster.weapon_id == const('VORPAL_BLADE')")
+		// without a separate item() registration.
+		auto slot_id = [&](equip_index e) -> t_itemid {
+			int16 idx = sd->equip_index[e];
+			return idx >= 0 ? sd->inventory.u.items_inventory[idx].nameid : 0;
+		};
+		set_int("weapon_id", slot_id(EQI_HAND_R));
+		set_int("shield_id", slot_id(EQI_HAND_L));
+		set_int("armor_id", slot_id(EQI_ARMOR));
+		set_int("shoes_id", slot_id(EQI_SHOES));
+		set_int("robe_id", slot_id(EQI_GARMENT));
+		set_int("helm_top_id", slot_id(EQI_HEAD_TOP));
+		set_int("helm_mid_id", slot_id(EQI_HEAD_MID));
+		set_int("helm_bottom_id", slot_id(EQI_HEAD_LOW));
+		set_int("accessory_1_id", slot_id(EQI_ACC_L));
+		set_int("accessory_2_id", slot_id(EQI_ACC_R));
 	} else if (const mob_data* md = BL_CAST(BL_MOB, bl); md != nullptr) {
 		set_int("mob_id", md->mob_id);
 	}
@@ -235,13 +275,13 @@ void push_unit(const block_list* bl) {
 	lua_setfield(L, -2, "has_status");
 }
 
-// The hit an on_hit hook is running for. Actions record into it; outside
-// on_hit it is null and they refuse.
+// The hit a damage hook is running for. Actions record into it; outside
+// a damage hook (on_hit, on_attack, on_hit_taken) it is null and they refuse.
 s_skill_lua_hit* current_hit = nullptr;
 
 s_skill_lua_hit& hit_or_error(lua_State* state, const char* what) {
 	if (current_hit == nullptr)
-		luaL_error(state, "c:%s() only works inside on_hit", what);
+		luaL_error(state, "c:%s() only works inside on_hit, on_attack or on_hit_taken", what);
 	return *current_hit;
 }
 
@@ -255,20 +295,29 @@ int32 unit_arg(lua_State* state, int32 arg, const s_skill_lua_hit& hit) {
 	return luaL_error(state, "who must be \"target\" or \"caster\", not \"%s\"", who);
 }
 
-// c:drain() -- the caster's HP/SP drain item bonuses, on this hit's damage.
+// c:drain() -- the attacker's HP/SP drain item bonuses, on this hit's
+// damage. The direction is fixed (attacker drains defender) because the
+// underlying server call is: calling it in on_hit_taken is harmless but
+// redundant, since the stock weapon-attack path already drains for every
+// weapon hit that lands.
 int32 lua_hit_drain(lua_State* state) {
 	s_skill_lua_hit& hit = hit_or_error(state, "drain");
 	hit.actions.push_back({ SKILL_LUA_DRAIN, hit.src_id });
 	return 0;
 }
 
-// c:heal(hp, sp) -- restores the caster.
+// c:heal(hp, sp, {who}) -- restore a unit. `who` is "caster" (default,
+// the attacker) or "target" (the defender). The default matches the
+// skill() on_hit case where a skill heals its own caster off the hit it
+// just dealt. An item() on_hit_taken hook that wants to restore the
+// wearer picks "target" explicitly, since the wearer is the defender.
 int32 lua_hit_heal(lua_State* state) {
 	s_skill_lua_hit& hit = hit_or_error(state, "heal");
-	s_skill_lua_action action = { SKILL_LUA_HEAL, hit.src_id };
+	s_skill_lua_action action = { SKILL_LUA_HEAL };
 
 	action.hp = std::max<lua_Integer>(0, luaL_checkinteger(state, 2));
 	action.sp = std::max<lua_Integer>(0, luaL_optinteger(state, 3, 0));
+	action.unit_id = unit_arg(state, 4, hit);
 	hit.actions.push_back(action);
 	return 0;
 }
@@ -303,9 +352,26 @@ int32 lua_hit_chance(lua_State* state) {
 	return 1;
 }
 
-void push_context(uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, const int64* damage) {
-	lua_createtable(L, 0, 12);
-	lua_pushstring(L, skill_get_name(skill_id));
+/// Extra fields a damage hook (on_hit/on_attack/on_hit_taken) wants on `c`
+/// but a chain hook (ratio/hit/element) does not need. All optional: null
+/// means a chain hook, non-null means a damage hook.
+struct s_damage_ctx {
+	int64 damage;
+	int32 dmg_lv;          ///< ATK_* (ATK_DEF means it connected)
+	int32 element;         ///< ELE_*
+	int32 attack_type;     ///< BF_WEAPON / BF_MAGIC / BF_MISC mask
+	bool critical;
+};
+
+const char* attack_type_name(int32 attack_type) {
+	if (attack_type & BF_MAGIC) return "magic";
+	if (attack_type & BF_MISC) return "misc";
+	return "weapon";
+}
+
+void push_context(uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, const s_damage_ctx* dmg) {
+	lua_createtable(L, 0, dmg != nullptr ? 18 : 12);
+	lua_pushstring(L, skill_id != 0 ? skill_get_name(skill_id) : "");
 	lua_setfield(L, -2, "skill");
 	set_int("skill_id", skill_id);
 	set_int("skill_lv", skill_lv);
@@ -316,8 +382,15 @@ void push_context(uint16 skill_id, uint16 skill_lv, const block_list* src, const
 	lua_pushcfunction(L, lua_hit_chance);
 	lua_setfield(L, -2, "chance");
 
-	if (damage != nullptr) {
-		set_int("damage", *damage);
+	if (dmg != nullptr) {
+		set_int("damage", dmg->damage);
+		set_int("element", dmg->element);
+		lua_pushboolean(L, dmg->dmg_lv >= ATK_DEF && dmg->damage > 0);
+		lua_setfield(L, -2, "connected");
+		lua_pushboolean(L, dmg->critical);
+		lua_setfield(L, -2, "critical");
+		lua_pushstring(L, attack_type_name(dmg->attack_type));
+		lua_setfield(L, -2, "weapon_type");
 		lua_pushcfunction(L, lua_hit_drain);
 		lua_setfield(L, -2, "drain");
 		lua_pushcfunction(L, lua_hit_heal);
@@ -501,6 +574,74 @@ int32 lua_register_skill(lua_State* state) {
 	return 0;
 }
 
+// item("VORPAL_BLADE", { priority = 3, on_attack = ..., on_hit_taken = ... })
+// Same chaining and priority rules as skill(), keyed by the item's
+// AegisName. The nameid is resolved at skill_lua_attach time, so a typo
+// shows up in the log as "no item called X" rather than a silent no-op.
+int32 lua_register_item(lua_State* state) {
+	const char* name = luaL_checkstring(state, 1);
+	luaL_checktype(state, 2, LUA_TTABLE);
+
+	s_item_hooks& entry = item_hooks_by_name[name];
+	entry.aegis = name;
+
+	int32 priority = PRIORITY_DEFAULT;
+	lua_getfield(state, 2, "priority");
+	if (!lua_isnil(state, -1)) {
+		if (!lua_isinteger(state, -1))
+			return luaL_error(state, "item %s: priority must be a whole number between %d and %d", name, PRIORITY_MIN, PRIORITY_MAX);
+		lua_Integer p = lua_tointeger(state, -1);
+		if (p < PRIORITY_MIN || p > PRIORITY_MAX)
+			return luaL_error(state, "item %s: priority %d is outside the %d..%d range", name, static_cast<int32>(p), PRIORITY_MIN, PRIORITY_MAX);
+		priority = static_cast<int32>(p);
+	}
+	lua_pop(state, 1);
+
+	lua_pushnil(state);
+	while (lua_next(state, 2) != 0) {
+		const char* key = lua_type(state, -2) == LUA_TSTRING ? lua_tostring(state, -2) : "";
+
+		if (strcmp(key, "priority") == 0) {
+			lua_pop(state, 1);
+			continue;
+		}
+
+		int32 which = -1;
+
+		for (int32 i = 0; i < ITEM_HOOK_MAX; i++)
+			if (strcmp(key, item_hook_names[i]) == 0)
+				which = i;
+		if (which < 0)
+			return luaL_error(state, "item %s: unknown hook \"%s\" (on_attack, on_hit_taken or priority)", name, key);
+		if (!lua_isfunction(state, -1))
+			return luaL_error(state, "item %s: %s must be a function", name, key);
+
+		std::vector<s_hook>& vec = entry.hooks[which];
+		s_hook hook;
+		hook.mod = current_mod;
+		hook.priority = priority;
+		hook.load_order = next_load_order++;
+		hook.ref = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		auto existing = std::find_if(vec.begin(), vec.end(),
+			[&](const s_hook& h) { return h.mod == current_mod; });
+		if (existing != vec.end()) {
+			luaL_unref(state, LUA_REGISTRYINDEX, existing->ref);
+			*existing = hook;
+		} else {
+			vec.push_back(hook);
+		}
+
+		std::stable_sort(vec.begin(), vec.end(),
+			[](const s_hook& a, const s_hook& b) {
+				if (a.priority != b.priority)
+					return a.priority < b.priority;
+				return a.load_order < b.load_order;
+			});
+	}
+	return 0;
+}
+
 // const("SC_STUN") -> the number the server uses for it. Any script constant.
 int32 lua_constant(lua_State* state) {
 	const char* name = luaL_checkstring(state, 1);
@@ -621,6 +762,7 @@ void do_init_skill_lua() {
 	lua_settop(L, 0);
 
 	lua_register(L, "skill", lua_register_skill);
+	lua_register(L, "item", lua_register_item);
 	lua_register(L, "const", lua_constant);
 	lua_register(L, "log", lua_log);
 	lua_register(L, "print", lua_log);
@@ -640,18 +782,27 @@ void do_init_skill_lua() {
 	for (const auto& file : files)
 		loaded += run_file(file.second, file.first) ? 1 : 0;
 
-	size_t hooks_total = 0;
+	size_t skill_hooks_total = 0;
 
 	for (const auto& it : hooks_by_name)
 		for (int32 i = 0; i < HOOK_MAX; i++)
-			hooks_total += it.second.hooks[i].size();
-	ShowStatus("Lua: loaded %zu of %zu file(s), %zu hook(s) across %zu skill(s).\n", loaded, files.size(), hooks_total, hooks_by_name.size());
+			skill_hooks_total += it.second.hooks[i].size();
+
+	size_t item_hooks_total = 0;
+
+	for (const auto& it : item_hooks_by_name)
+		for (int32 i = 0; i < ITEM_HOOK_MAX; i++)
+			item_hooks_total += it.second.hooks[i].size();
+	ShowStatus("Lua: loaded %zu of %zu file(s), %zu skill hook(s) across %zu skill(s), %zu item hook(s) across %zu item(s).\n",
+		loaded, files.size(), skill_hooks_total, hooks_by_name.size(), item_hooks_total, item_hooks_by_name.size());
 	skill_lua_attach();
 }
 
 void do_final_skill_lua() {
 	hooks_by_id.clear();
 	hooks_by_name.clear();
+	item_hooks_by_id.clear();
+	item_hooks_by_name.clear();
 	current_hit = nullptr;
 	if (L != nullptr) {
 		lua_close(L);
@@ -692,12 +843,84 @@ void skill_lua_attach() {
 	for (const auto& it : hooks_by_name)
 		if (!found.count(it.first))
 			ShowWarning("Lua: there is no skill called %s (use the AegisName, like MG_FIREBOLT).\n", it.first.c_str());
+
+	// Resolve each registered item AegisName to its nameid. An item that
+	// does not exist is named loudly rather than silently ignored.
+	item_hooks_by_id.clear();
+	for (auto& it : item_hooks_by_name) {
+		std::shared_ptr<item_data> id = item_db.search_aegisname(it.first.c_str());
+
+		if (id == nullptr) {
+			ShowWarning("Lua: there is no item called %s (use the AegisName, like VORPAL_BLADE).\n", it.first.c_str());
+			continue;
+		}
+		item_hooks_by_id[id->nameid] = &it.second;
+	}
 }
 
-std::unique_ptr<s_skill_lua_hit> skill_lua_on_hit(block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv, int64 damage, int32 attack_type) {
-	s_skill_hooks* hooks = hooks_for(skill_id);
+namespace {
 
-	if (hooks == nullptr || hooks->hooks[HOOK_ON_HIT].empty() || src == nullptr || target == nullptr || current_hit != nullptr)
+/// Iterate a unit's equipped items (0 if not a player), looking up each
+/// nameid in the item-hook table. Fire `which` on each match, in priority
+/// order within each item. One nameid fires at most once per attack, even
+/// if the wearer has multiple copies equipped.
+void fire_item_hooks(e_item_hook which, const block_list* bl, uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, const s_damage_ctx& dmg) {
+	const map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr;
+
+	if (sd == nullptr || item_hooks_by_id.empty())
+		return;
+
+	constexpr equip_index slots[] = {
+		EQI_HAND_R, EQI_HAND_L, EQI_ARMOR, EQI_SHOES, EQI_GARMENT,
+		EQI_HEAD_TOP, EQI_HEAD_MID, EQI_HEAD_LOW, EQI_ACC_L, EQI_ACC_R,
+	};
+	// Dedup: at most one call per nameid even if the wearer has multiple
+	// copies equipped (e.g. the same accessory in both slots).
+	t_itemid fired[sizeof(slots) / sizeof(slots[0])] = {};
+	size_t fired_n = 0;
+
+	for (equip_index e : slots) {
+		int16 idx = sd->equip_index[e];
+		if (idx < 0)
+			continue;
+		t_itemid nameid = sd->inventory.u.items_inventory[idx].nameid;
+		if (nameid == 0)
+			continue;
+		bool seen = false;
+		for (size_t i = 0; i < fired_n; i++)
+			if (fired[i] == nameid) { seen = true; break; }
+		if (seen)
+			continue;
+
+		s_item_hooks* hooks = item_hooks_for(nameid);
+		if (hooks == nullptr || hooks->hooks[which].empty())
+			continue;
+
+		fired[fired_n++] = nameid;
+		for (s_hook& hook : hooks->hooks[which]) {
+			if (hook.ref == LUA_NOREF)
+				continue;
+			lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
+			push_context(skill_id, skill_lv, src, target, &dmg);
+			protected_call(hook, hooks->aegis.c_str(), 1, 0);
+		}
+	}
+}
+
+}  // namespace
+
+std::unique_ptr<s_skill_lua_hit> skill_lua_on_damage(block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv, int64 damage, int32 attack_type, int32 dmg_lv, bool critical, int32 element) {
+	// Shared pending hit, reused by any skill()/item() hook that fires.
+	// A re-entry (a hook that somehow triggers another attack) is refused
+	// to keep the shared actions list unambiguous.
+	if (src == nullptr || target == nullptr || current_hit != nullptr)
+		return nullptr;
+
+	s_skill_hooks* skill_hooks = skill_id != 0 ? hooks_for(skill_id) : nullptr;
+	bool has_skill_hooks = skill_hooks != nullptr && !skill_hooks->hooks[HOOK_ON_HIT].empty();
+	bool has_item_hooks = !item_hooks_by_id.empty() && (src->type == BL_PC || target->type == BL_PC);
+
+	if (!has_skill_hooks && !has_item_hooks)
 		return nullptr;
 
 	auto hit = std::make_unique<s_skill_lua_hit>();
@@ -710,16 +933,25 @@ std::unique_ptr<s_skill_lua_hit> skill_lua_on_hit(block_list* src, block_list* t
 	hit->race = tstatus->race;
 	hit->class_ = tstatus->class_;
 
-	// Every mod's on_hit runs in priority order and may queue its own
-	// actions; they are applied together once the hit is dealt.
+	s_damage_ctx dmg = { damage, dmg_lv, element, attack_type, critical };
+
 	current_hit = hit.get();
-	for (s_hook& hook : hooks->hooks[HOOK_ON_HIT]) {
-		if (hook.ref == LUA_NOREF)
-			continue;
-		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
-		push_context(skill_id, skill_lv, src, target, &damage);
-		protected_call(hook, hooks->skill.c_str(), 1, 0);
+
+	// Order: skill on_hit first (same point as before this feature), then
+	// attacker's item on_attack, then defender's item on_hit_taken. Each
+	// stage runs every registered mod in priority order.
+	if (has_skill_hooks) {
+		for (s_hook& hook : skill_hooks->hooks[HOOK_ON_HIT]) {
+			if (hook.ref == LUA_NOREF)
+				continue;
+			lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
+			push_context(skill_id, skill_lv, src, target, &dmg);
+			protected_call(hook, skill_hooks->skill.c_str(), 1, 0);
+		}
 	}
+	fire_item_hooks(ITEM_HOOK_ON_ATTACK, src, skill_id, skill_lv, src, target, dmg);
+	fire_item_hooks(ITEM_HOOK_ON_HIT_TAKEN, target, skill_id, skill_lv, src, target, dmg);
+
 	current_hit = nullptr;
 
 	if (hit->actions.empty())
