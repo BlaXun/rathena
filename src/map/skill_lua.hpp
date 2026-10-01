@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <common/cbasetypes.hpp>
+#include <common/mmo.hpp>
 
 /**
  * Skill hooks written in Lua.
@@ -31,6 +32,26 @@
  * applied once the hit has been dealt. Nothing a script does can reach the
  * disk, the network or the server's memory; an error or a runaway loop
  * switches that one hook off and says so in the log.
+ *
+ * One more skill hook, only meaningful on TF_STEAL:
+ *
+ *   skill("TF_STEAL", {
+ *     on_steal = function(c)
+ *       for _, drop in ipairs(c.drops) do
+ *         if drop.is_card and c:chance(drop.rate) then
+ *           return drop                       -- give this drop
+ *         end
+ *       end
+ *       return nil                            -- fall through to stock
+ *     end,
+ *   })
+ *
+ * on_steal runs from pc_steal_item after the DEX/level success check, with
+ * c.drops holding the mob's stealable drops ({nameid, rate, is_card,
+ * is_equip, is_etc, type}). The hook may return one of those entries (or any
+ * table with a matching `nameid`, or the nameid as an integer) to force that
+ * drop; returning nil lets the stock slot-order loop run as if no hook
+ * existed. First non-nil return in the priority chain wins.
  *
  * Two mods may hook the same part of the same skill: every registered hook
  * runs, in ascending priority order (ties broken by mod load order). For
@@ -129,5 +150,11 @@ std::unique_ptr<s_skill_lua_hit> skill_lua_on_damage(block_list* src, block_list
 
 /// Apply what the hooks asked for. Does nothing for an empty hit.
 void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit);
+
+/// Give TF_STEAL's on_steal hook a chance to pick which stealable drop the
+/// thief gets. Returns the chosen drop's nameid, or 0 to let the stock
+/// slot-order loop in pc_steal_item run as normal. Caller must still check
+/// that the returned nameid names a stealable entry on the mob.
+t_itemid skill_lua_on_steal(struct block_list* src, struct block_list* target, uint16 skill_lv);
 
 #endif /* SKILL_LUA_HPP */
