@@ -3164,7 +3164,11 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 	// each of the attacker's equipped items, on_hit_taken for each of the
 	// defender's. What any of them asks for is applied once the hit has
 	// been dealt.
-	int32 lua_element = skill_id != 0 ? skill_get_ele(skill_id, skill_lv) : status_get_status_data(*src)->rhw.ele;
+	// A skill of the weapon's (-1) or an endowed (-2) element reports the
+	// weapon's, which already carries any endow.
+	int32 lua_element = skill_id != 0 ? skill_get_ele(skill_id, skill_lv) : -1;
+	if (lua_element < 0)
+		lua_element = status_get_status_data(*src)->rhw.ele;
 	std::unique_ptr<s_skill_lua_hit> lua_hit = skill_lua_on_damage(src, bl, skill_id, skill_lv, damage, dmg.flag, dmg.dmg_lv, dmg.type == DMG_CRITICAL, lua_element);
 
 	// Instant damage

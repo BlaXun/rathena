@@ -64,7 +64,9 @@
  * Besides drain, heal, status and polymorph, any hook may ask for
  * c:cast(skill, level, who): a skill cast the way bAutoSpell casts one, at
  * "target" (default) or "caster". No Lua hook runs during that cast, so an
- * item that casts a damaging skill cannot trigger itself in a loop.
+ * item that casts a bolt on every hit cannot trigger itself in a loop. A
+ * ground skill's later hits (Storm Gust's ticks) are not part of the cast
+ * and do run hooks: an on_attack that casts one should check c.skill_id.
  *
  * item() hooks chain the same way skill() hooks do: multiple mods can
  * register for the same item, and each runs in priority order, queuing
