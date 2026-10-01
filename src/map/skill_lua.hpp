@@ -52,6 +52,7 @@
  *   })
  *
  * on_attack fires for every attack by any unit that has the item equipped
+ * (a card counts when it is slotted in something equipped)
  * -- normal attacks and skill attacks, hits and misses -- after the damage
  * calculation is finalized. on_hit_taken fires the same way, but keyed on
  * the defender's equipment. In both hooks `c` carries the full outcome:

@@ -884,10 +884,11 @@ void skill_lua_attach() {
 
 namespace {
 
-/// Iterate a unit's equipped items (0 if not a player), looking up each
-/// nameid in the item-hook table. Fire `which` on each match, in priority
-/// order within each item. One nameid fires at most once per attack, even
-/// if the wearer has multiple copies equipped.
+/// Iterate a unit's equipped items (0 if not a player), and the cards slotted
+/// in them, looking up each nameid in the item-hook table. Fire `which` on
+/// each match, in priority order within each item. One nameid fires at most
+/// once per attack, even if the wearer has several copies equipped or
+/// slotted (the same accessory twice, four of one card in a weapon).
 void fire_item_hooks(e_item_hook which, const block_list* bl, uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, const s_damage_ctx& dmg) {
 	const map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr;
 
@@ -898,27 +899,19 @@ void fire_item_hooks(e_item_hook which, const block_list* bl, uint16 skill_id, u
 		EQI_HAND_R, EQI_HAND_L, EQI_ARMOR, EQI_SHOES, EQI_GARMENT,
 		EQI_HEAD_TOP, EQI_HEAD_MID, EQI_HEAD_LOW, EQI_ACC_L, EQI_ACC_R,
 	};
-	// Dedup: at most one call per nameid even if the wearer has multiple
-	// copies equipped (e.g. the same accessory in both slots).
-	t_itemid fired[sizeof(slots) / sizeof(slots[0])] = {};
+	t_itemid fired[sizeof(slots) / sizeof(slots[0]) * (1 + MAX_SLOTS)] = {};
 	size_t fired_n = 0;
 
-	for (equip_index e : slots) {
-		int16 idx = sd->equip_index[e];
-		if (idx < 0)
-			continue;
-		t_itemid nameid = sd->inventory.u.items_inventory[idx].nameid;
+	auto fire = [&](t_itemid nameid) {
 		if (nameid == 0)
-			continue;
-		bool seen = false;
+			return;
 		for (size_t i = 0; i < fired_n; i++)
-			if (fired[i] == nameid) { seen = true; break; }
-		if (seen)
-			continue;
+			if (fired[i] == nameid)
+				return;
 
 		s_item_hooks* hooks = item_hooks_for(nameid);
 		if (hooks == nullptr || hooks->hooks[which].empty())
-			continue;
+			return;
 
 		fired[fired_n++] = nameid;
 		for (s_hook& hook : hooks->hooks[which]) {
@@ -928,6 +921,18 @@ void fire_item_hooks(e_item_hook which, const block_list* bl, uint16 skill_id, u
 			push_context(skill_id, skill_lv, src, target, &dmg);
 			protected_call(hook, hooks->aegis.c_str(), 1, 0);
 		}
+	};
+
+	for (equip_index e : slots) {
+		int16 idx = sd->equip_index[e];
+		if (idx < 0)
+			continue;
+		const item& equipped = sd->inventory.u.items_inventory[idx];
+		fire(equipped.nameid);
+		// card[0] of a forged or named item holds a marker, not a card.
+		if (!itemdb_isspecial(equipped.card[0]))
+			for (int32 c = 0; c < MAX_SLOTS; c++)
+				fire(equipped.card[c]);
 	}
 }
 
