@@ -2971,20 +2971,6 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 					ud->endure_tick = gettick() + 2000;
 			}
 			break;
-		case NJ_KAENSIN:
-			// Extension "blaze_shield_knockback": stock KAENSIN pillars have no
-			// knockback (unlike MG_FIREWALL's Knockback: 2), so a mob walks straight
-			// through the 5x5 donut and only pays for the cells the 100 ms global
-			// skill_unit_timer happens to catch it on. Giving each pillar a one-cell
-			// blow mirrors firewall: the mob is pushed back along its approach line
-			// and walks into the same pillar again, draining its val2 counter
-			// instead of blowing past it. Default direction (dir == -1 in
-			// skill_attack_blow) resolves via map_calc_dir to the mob's own facing
-			// when it stands on the pillar's cell and is then reversed by
-			// skill_blown, so no explicit direction case is needed. Off by default.
-			if (extension_enabled("blaze_shield_knockback"))
-				dmg.blewcount = 1;
-			break;
 		case MH_BLAZING_AND_FURIOUS:
 			if (homun_data *hd = BL_CAST(BL_HOM, src); hd != nullptr) {
 				// TODO: no update on the client ?
@@ -12544,6 +12530,39 @@ int32 skill_unit_move_sub(block_list* bl, va_list ap)
 
 	if( group->interval != -1 && !skill_get_unit_flag(skill_id, UF_DUALMODE) && skill_id != BD_LULLABY ) //Lullaby is the exception, bugreport:411
 	{	//Non-dualmode unit skills with a timer don't trigger when walking, so just return
+		// Extension "blaze_shield_knockback": apply the pillar's hit the moment a
+		// mob steps onto it, not only on the 100 ms global skill_unit_timer. Without
+		// this a mob fast enough to cross a cell between global ticks skips it, so
+		// most pillars in the 5x5 donut never see the mob. Pins non-endure mobs
+		// with a skill-induced walkdelay sized to the pillar's remaining burn time
+		// (val2 * interval), so the mob eats the full stack of hits before moving
+		// off. Endure (and MD_STATUSIMMUNE in unit_set_walkdelay) skips the pin,
+		// which is the stock escape hatch for firewall-family cells.
+		if ((flag & 1) && skill_id == NJ_KAENSIN && target->type == BL_MOB
+			&& extension_enabled("blaze_shield_knockback")
+			&& (group->bl_flag & target->type)
+			&& battle_check_target(unit, target, group->target_flag) > 0) {
+			if (block_list* ss = map_id2bl(group->src_id); ss != nullptr && !status_isdead(*target)) {
+				int32 count = 0;
+				const int32 x = target->x, y = target->y;
+				do {
+					skill_attack(BF_MAGIC, ss, unit, target, group->skill_id, group->skill_lv,
+						tick + (t_tick)count*group->interval, 0);
+				} while (group->interval > 0 && --unit->val2 && x == target->x && y == target->y
+					&& ++count < SKILLUNITTIMER_INTERVAL/group->interval
+					&& !status_isdead(*target));
+
+				if (unit->val2 > 0 && !status_isendure(*target, tick, false)) {
+					t_tick delay = static_cast<t_tick>(unit->val2) * group->interval;
+					if (delay > 0)
+						unit_set_walkdelay(target, tick, delay, 1, group->skill_id);
+				}
+
+				if (unit->val2 <= 0)
+					skill_delunit(unit);
+			}
+		}
+
 		if( dissonance ) {
 			skill_dance_switch(unit, true);
 			int32 result = skill_unit_onout(unit, target, tick);
