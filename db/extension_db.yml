@@ -28,4 +28,19 @@ Header:
   Version: 1
 
 Body:
-# Populated by extension-specific commits.
+  - Id: blaze_shield_knockback
+    Name: "Blaze Shield pillar knockback"
+    Description: |
+      Give each NJ_KAENSIN (Blaze Shield / Blazing Field) pillar hit a
+      one-cell knockback, matching MG_FIREWALL's Knockback: 2.
+      Stock KAENSIN has no knockback, so a mob walks straight through
+      the 5x5 pillar donut and only takes damage from the cells the
+      100 ms global skill_unit_timer happens to catch it on -- fast
+      mobs clear a cell between ticks and pay nothing for it. With this
+      on, each hit shoves the mob one cell back along its approach line
+      (default direction resolves to the mob's own facing on the pillar
+      cell and is reversed by skill_blown), so the mob walks into the
+      same pillar again and drains its hit counter instead of blowing
+      past it -- the sticky firewall feel.
+      Off by default; stock behaviour is unchanged.
+    Enabled: false

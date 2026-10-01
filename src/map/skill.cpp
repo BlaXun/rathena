@@ -28,6 +28,7 @@
 #include "clif.hpp"
 #include "date.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "intif.hpp"
@@ -2969,6 +2970,20 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 				if (unit_data* ud = unit_bl2ud(bl); ud != nullptr)
 					ud->endure_tick = gettick() + 2000;
 			}
+			break;
+		case NJ_KAENSIN:
+			// Extension "blaze_shield_knockback": stock KAENSIN pillars have no
+			// knockback (unlike MG_FIREWALL's Knockback: 2), so a mob walks straight
+			// through the 5x5 donut and only pays for the cells the 100 ms global
+			// skill_unit_timer happens to catch it on. Giving each pillar a one-cell
+			// blow mirrors firewall: the mob is pushed back along its approach line
+			// and walks into the same pillar again, draining its val2 counter
+			// instead of blowing past it. Default direction (dir == -1 in
+			// skill_attack_blow) resolves via map_calc_dir to the mob's own facing
+			// when it stands on the pillar's cell and is then reversed by
+			// skill_blown, so no explicit direction case is needed. Off by default.
+			if (extension_enabled("blaze_shield_knockback"))
+				dmg.blewcount = 1;
 			break;
 		case MH_BLAZING_AND_FURIOUS:
 			if (homun_data *hd = BL_CAST(BL_HOM, src); hd != nullptr) {
