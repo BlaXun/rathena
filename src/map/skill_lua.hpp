@@ -60,6 +60,11 @@
  * `c.target` -- which also now expose each equip slot's item id, so a hook
  * can gate on gear without re-registering.
  *
+ * Besides drain, heal, status and polymorph, any hook may ask for
+ * c:cast(skill, level, who): a skill cast the way bAutoSpell casts one, at
+ * "target" (default) or "caster". No Lua hook runs during that cast, so an
+ * item that casts a damaging skill cannot trigger itself in a loop.
+ *
  * item() hooks chain the same way skill() hooks do: multiple mods can
  * register for the same item, and each runs in priority order, queuing
  * actions into the same pending hit. A unit without the item equipped --
@@ -73,6 +78,7 @@ enum e_skill_lua_action : uint8 {
 	SKILL_LUA_HEAL,
 	SKILL_LUA_STATUS,
 	SKILL_LUA_POLYMORPH,
+	SKILL_LUA_CAST,
 };
 
 /// One thing an on_hit hook asked for. Units are kept by id, never by
@@ -80,9 +86,9 @@ enum e_skill_lua_action : uint8 {
 struct s_skill_lua_action {
 	e_skill_lua_action kind;
 	int32 unit_id;      ///< who it happens to
-	int32 type;         ///< SKILL_LUA_STATUS: the sc_type
+	int32 type;         ///< SKILL_LUA_STATUS: the sc_type; SKILL_LUA_CAST: the skill id
 	int32 rate;         ///< SKILL_LUA_STATUS: chance out of 10000
-	int32 val1;         ///< SKILL_LUA_STATUS
+	int32 val1;         ///< SKILL_LUA_STATUS; SKILL_LUA_CAST: the skill level
 	int64 duration;     ///< SKILL_LUA_STATUS, in milliseconds
 	int64 hp, sp;       ///< SKILL_LUA_HEAL
 };

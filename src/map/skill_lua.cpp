@@ -129,6 +129,10 @@ s_skill_hooks* hooks_for(uint16 skill_id) {
 std::unordered_map<std::string, s_item_hooks> item_hooks_by_name;
 std::unordered_map<t_itemid, s_item_hooks*> item_hooks_by_id;
 
+// While a skill cast from Lua (c:cast) runs, no Lua hook runs: an item whose
+// on_attack casts a skill that hits would otherwise trigger itself forever.
+bool in_lua_cast = false;
+
 s_item_hooks* item_hooks_for(t_itemid nameid) {
 	if (L == nullptr || item_hooks_by_id.empty() || nameid == 0)
 		return nullptr;
@@ -346,6 +350,24 @@ int32 lua_hit_polymorph(lua_State* state) {
 }
 
 // c:chance(n) -- true n times in 10000, from the server's own random numbers.
+// c:cast("MG_FIREBOLT", 3, {who}) -- cast a skill the way bAutoSpell does:
+// at "target" (default) or "caster", with the skill's own checks and delays.
+int32 lua_hit_cast(lua_State* state) {
+	s_skill_lua_hit& hit = hit_or_error(state, "cast");
+	uint16 skill_id = lua_type(state, 2) == LUA_TNUMBER ? (uint16)lua_tointeger(state, 2) : skill_name2id(luaL_checkstring(state, 2));
+
+	if (skill_id == 0 || skill_get_index(skill_id) == 0)
+		return luaL_error(state, "c:cast: there is no skill %s (use the AegisName, like MG_FIREBOLT)", luaL_tolstring(state, 2, nullptr));
+
+	s_skill_lua_action action = { SKILL_LUA_CAST };
+
+	action.type = skill_id;
+	action.val1 = static_cast<int32>(std::clamp<lua_Integer>(luaL_optinteger(state, 3, 1), 1, MAX_SKILL_LEVEL));
+	action.unit_id = unit_arg(state, 4, hit);
+	hit.actions.push_back(action);
+	return 0;
+}
+
 int32 lua_hit_chance(lua_State* state) {
 	lua_Integer n = luaL_checkinteger(state, 2);
 	lua_pushboolean(state, rnd() % 10000 < n);
@@ -399,6 +421,8 @@ void push_context(uint16 skill_id, uint16 skill_lv, const block_list* src, const
 		lua_setfield(L, -2, "status");
 		lua_pushcfunction(L, lua_hit_polymorph);
 		lua_setfield(L, -2, "polymorph");
+		lua_pushcfunction(L, lua_hit_cast);
+		lua_setfield(L, -2, "cast");
 	}
 }
 
@@ -913,7 +937,7 @@ std::unique_ptr<s_skill_lua_hit> skill_lua_on_damage(block_list* src, block_list
 	// Shared pending hit, reused by any skill()/item() hook that fires.
 	// A re-entry (a hook that somehow triggers another attack) is refused
 	// to keep the shared actions list unambiguous.
-	if (src == nullptr || target == nullptr || current_hit != nullptr)
+	if (src == nullptr || target == nullptr || current_hit != nullptr || in_lua_cast)
 		return nullptr;
 
 	s_skill_hooks* skill_hooks = skill_id != 0 ? hooks_for(skill_id) : nullptr;
@@ -959,6 +983,56 @@ std::unique_ptr<s_skill_lua_hit> skill_lua_on_damage(block_list* src, block_list
 	return hit;
 }
 
+/// Cast a skill the way bAutoSpell does (skill_additional_effect): the same
+/// "can this be cast here" check, ground-skill limit, item requirements and
+/// after-cast delay. No Lua hook runs while it does (in_lua_cast).
+void cast_like_autospell(block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv) {
+	map_session_data* sd = BL_CAST(BL_PC, src);
+	t_tick tick = gettick();
+
+	if (sd != nullptr) {
+		sd->state.autocast = 1;
+		bool refused = skill_isNotOk(skill_id, *sd);
+		sd->state.autocast = 0;
+		if (refused)
+			return;
+	}
+
+	e_cast_type type = skill_get_casttype(skill_id);
+
+	if (type == CAST_GROUND && !skill_pos_maxcount_check(src, target->x, target->y, skill_id, skill_lv, BL_PC, false))
+		return;
+	if (skill_id == PF_SPIDERWEB)
+		type = CAST_GROUND;
+
+	in_lua_cast = true;
+	if (sd != nullptr) {
+		sd->state.autocast = 1;
+		skill_consume_requirement(sd, skill_id, skill_lv, 1);
+	}
+	switch (type) {
+		case CAST_GROUND:
+			skill_castend_pos2(src, target->x, target->y, skill_id, skill_lv, tick, 0);
+			break;
+		case CAST_NODAMAGE:
+			skill_castend_nodamage_id(src, target, skill_id, skill_lv, tick, 0);
+			break;
+		case CAST_DAMAGE:
+			skill_castend_damage_id(src, target, skill_id, skill_lv, tick, 0);
+			break;
+	}
+	if (sd != nullptr)
+		sd->state.autocast = 0;
+	in_lua_cast = false;
+
+	if (unit_data* ud = unit_bl2ud(src); ud != nullptr) {
+		int32 delay = skill_delayfix(src, skill_id, skill_lv);
+
+		if (DIFF_TICK(ud->canact_tick, tick + delay) < 0)
+			ud->canact_tick = i64max(tick + delay, ud->canact_tick);
+	}
+}
+
 void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 	if (hit == nullptr)
 		return;
@@ -983,6 +1057,10 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 			case SKILL_LUA_STATUS:
 				if (bl != nullptr && !status_isdead(*bl))
 					sc_start(src != nullptr ? src : bl, bl, static_cast<sc_type>(action.type), action.rate, action.val1, static_cast<t_tick>(action.duration));
+				break;
+			case SKILL_LUA_CAST:
+				if (src != nullptr && bl != nullptr && !status_isdead(*src) && !status_isdead(*bl))
+					cast_like_autospell(src, bl, static_cast<uint16>(action.type), static_cast<uint16>(action.val1));
 				break;
 			case SKILL_LUA_POLYMORPH:
 				if (bl != nullptr && bl->type == BL_MOB && !status_isdead(*bl)) {
