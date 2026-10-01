@@ -91,6 +91,7 @@ struct Login_Config {
 	uint8 password_min_length;                      /// minimum password length
 	int32 start_limited_time;                         /// new account expiration time (-1: unlimited)
 	bool use_md5_passwds;                           /// work with password hashes instead of plaintext passwords?
+	bool hash_passwords;                            /// store salted PBKDF2 hashes (password.hpp); off when use_md5_passwds is on
 	int32 group_id_to_connect;                        /// required group id to connect
 	int32 min_group_id_to_connect;                    /// minimum group id to connect
 

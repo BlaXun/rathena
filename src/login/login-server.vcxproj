@@ -187,6 +187,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="account.hpp" />
+    <ClInclude Include="password.hpp" />
     <ClInclude Include="ipban.hpp" />
     <ClInclude Include="login.hpp" />
     <ClInclude Include="loginchrif.hpp" />
@@ -196,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="account.cpp" />
+    <ClCompile Include="password.cpp" />
     <ClCompile Include="ipban.cpp" />
     <ClCompile Include="login.cpp" />
     <ClCompile Include="loginchrif.cpp" />

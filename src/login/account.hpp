@@ -18,7 +18,7 @@ AccountDB* account_db_sql(void);
 struct mmo_account {
 	uint32 account_id;
 	char userid[NAME_LENGTH];
-	char pass[32+1];        // 23+1 for plaintext, 32+1 for md5-ed passwords
+	char pass[128+1];       // 23+1 for plaintext, 32+1 for md5-ed passwords, ~90 for a PBKDF2 hash (password.hpp)
 	char sex;               // gender (M/F/S)
 	char email[40];         // e-mail (by default: a@a.com)
 	uint32 group_id;        // player group id
@@ -151,5 +151,8 @@ struct AccountDB {
 
 void mmo_send_global_accreg(AccountDB* self, int32 fd, uint32 account_id, uint32 char_id);
 void mmo_save_global_accreg(AccountDB* self, int32 fd, uint32 account_id, uint32 char_id);
+
+/// Hash any plain-text passwords stored since the last look (password.hpp).
+void account_hash_plaintext( AccountDB* self );
 
 #endif /* ACCOUNT_HPP */

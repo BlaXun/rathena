@@ -770,7 +770,8 @@ CREATE TABLE IF NOT EXISTS `ipbanlist` (
 CREATE TABLE IF NOT EXISTS `login` (
   `account_id` int(11) unsigned NOT NULL auto_increment,
   `userid` varchar(23) NOT NULL default '',
-  `user_pass` varchar(32) NOT NULL default '',
+  `user_pass` varchar(128) NOT NULL default '',
+  `pass_flags` tinyint(3) unsigned NOT NULL default '0',
   `sex` enum('M','F','S') NOT NULL default 'M',
   `email` varchar(39) NOT NULL default '',
   `group_id` tinyint(3) NOT NULL default '0',
