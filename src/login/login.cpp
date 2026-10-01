@@ -199,6 +199,15 @@ void login_online_db_setoffline( int32 char_server ){
  * @param data: unused
  * @return : 0
  */
+/**
+ * Every minute: hash plain-text passwords another program stored since the
+ * last look (account.cpp), so none waits for its account's next login.
+ */
+static TIMER_FUNC(login_hash_plaintext_passwords){
+	account_hash_plaintext( accounts );
+	return 0;
+}
+
 static TIMER_FUNC(login_online_data_cleanup){
 	for( std::pair<uint32,struct online_login_data> pair : online_db  ){
 		// Unknown server.. set them offline
@@ -899,6 +908,10 @@ bool LoginServer::initialize( int32 argc, char* argv[] ){
 
 	// every 10 minutes cleanup online account db.
 	add_timer_func_list(login_online_data_cleanup, "online_data_cleanup");
+	if( login_config.hash_passwords ){
+		add_timer_func_list(login_hash_plaintext_passwords, "hash_plaintext_passwords");
+		add_timer_interval(gettick() + 60*1000, login_hash_plaintext_passwords, 0, 0, 60*1000);
+	}
 	add_timer_interval(gettick() + 600*1000, login_online_data_cleanup, 0, 0, 600*1000);
 
 	// A salted hash and an MD5 of the password cannot both be what is stored.
