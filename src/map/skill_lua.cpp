@@ -79,15 +79,29 @@ void count_hook(lua_State* state, lua_Debug*) {
 enum e_hook : uint8 { HOOK_RATIO = 0, HOOK_HIT, HOOK_ELEMENT, HOOK_ON_HIT, HOOK_MAX };
 const char* const hook_names[HOOK_MAX] = { "ratio", "hit", "element", "on_hit" };
 
+constexpr int32 PRIORITY_MIN = 0;
+constexpr int32 PRIORITY_MAX = 10;
+constexpr int32 PRIORITY_DEFAULT = 5;
+
+/// One mod's registration for one hook on one skill. Several of these may
+/// live on the same (skill, hook) when more than one mod wants in: they run
+/// in ascending `priority` order, ties broken by `load_order` (the order
+/// their files were run, which is the mod's alphabetical place).
 struct s_hook {
 	int32 ref = LUA_NOREF;
 	std::string mod;
+	int32 priority = PRIORITY_DEFAULT;
+	uint32 load_order = 0;
 };
 
 struct s_skill_hooks {
 	std::string skill;
-	s_hook hooks[HOOK_MAX];
+	std::vector<s_hook> hooks[HOOK_MAX];
 };
+
+/// Monotonic counter so a late-registering hook keeps its place behind
+/// earlier ones at the same priority.
+uint32 next_load_order = 0;
 
 std::unordered_map<std::string, s_skill_hooks> hooks_by_name;
 std::unordered_map<uint16, s_skill_hooks*> hooks_by_id;
@@ -315,30 +329,35 @@ void push_context(uint16 skill_id, uint16 skill_lv, const block_list* src, const
 	}
 }
 
-/// ratio, hit and element: `value` is the stock result on the way in and the
-/// hook's on the way out. A hook that returns nil keeps the stock value.
+/// ratio, hit and element: `value` is the stock result on the way in. Every
+/// registered hook runs in priority order; each sees what the previous one
+/// returned as `stock`, and returning nil keeps the running value. A hook
+/// that fails is switched off and the chain carries on with the rest.
 void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int64& value) {
 	s_skill_hooks* hooks = hooks_for(skill_id);
 
-	if (hooks == nullptr || hooks->hooks[which].ref == LUA_NOREF)
+	if (hooks == nullptr || hooks->hooks[which].empty())
 		return;
 
-	s_hook& hook = hooks->hooks[which];
+	for (s_hook& hook : hooks->hooks[which]) {
+		if (hook.ref == LUA_NOREF)
+			continue;  // this one failed earlier and is off until restart
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
-	push_context(skill_id, skill_lv, src, target, nullptr);
-	lua_pushinteger(L, value);
-	if (!protected_call(hook, hooks->skill.c_str(), 2, 1))
-		return;
+		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
+		push_context(skill_id, skill_lv, src, target, nullptr);
+		lua_pushinteger(L, value);
+		if (!protected_call(hook, hooks->skill.c_str(), 2, 1))
+			continue;
 
-	if (lua_isinteger(L, -1)) {
-		value = lua_tointeger(L, -1);
-	} else if (lua_type(L, -1) == LUA_TNUMBER) {
-		value = static_cast<int64>(lua_tonumber(L, -1));  // toward zero, as the C++ would
-	} else if (!lua_isnil(L, -1)) {
-		ShowError("Lua: %s's %s hook for %s returned a %s, not a number; keeping the stock value.\n", hook.mod.c_str(), hook_names[which], hooks->skill.c_str(), luaL_typename(L, -1));
+		if (lua_isinteger(L, -1)) {
+			value = lua_tointeger(L, -1);
+		} else if (lua_type(L, -1) == LUA_TNUMBER) {
+			value = static_cast<int64>(lua_tonumber(L, -1));  // toward zero, as the C++ would
+		} else if (!lua_isnil(L, -1)) {
+			ShowError("Lua: %s's %s hook for %s returned a %s, not a number; keeping the running value.\n", hook.mod.c_str(), hook_names[which], hooks->skill.c_str(), luaL_typename(L, -1));
+		}
+		lua_pop(L, 1);
 	}
-	lua_pop(L, 1);
 }
 
 // ---------------------------------------------------------------------------
@@ -403,9 +422,12 @@ public:
 // The functions a mod's file can call while it loads
 // ---------------------------------------------------------------------------
 
-// skill("NJ_KAENSIN", { ratio = ..., on_hit = ... })
-// A later file replaces only the hooks it names, so two mods can each hook
-// a different part of one skill.
+// skill("NJ_KAENSIN", { priority = 3, ratio = ..., on_hit = ... })
+// Every mod that registers for the same (skill, hook) is kept: at call time
+// they run in ascending priority order, ties broken by load order. Priority
+// is optional (0..10, default 5) and applies to every hook in the call. A
+// mod that registers twice for the same (skill, hook) replaces its own
+// previous entry rather than stacking against itself.
 int32 lua_register_skill(lua_State* state) {
 	const char* name = luaL_checkstring(state, 1);
 	luaL_checktype(state, 2, LUA_TTABLE);
@@ -413,24 +435,68 @@ int32 lua_register_skill(lua_State* state) {
 	s_skill_hooks& entry = hooks_by_name[name];
 	entry.skill = name;
 
+	// Optional priority: pulled first so it is in hand before the hooks are
+	// read, and so it only has to be validated once.
+	int32 priority = PRIORITY_DEFAULT;
+	lua_getfield(state, 2, "priority");
+	if (!lua_isnil(state, -1)) {
+		if (!lua_isinteger(state, -1))
+			return luaL_error(state, "skill %s: priority must be a whole number between %d and %d", name, PRIORITY_MIN, PRIORITY_MAX);
+		lua_Integer p = lua_tointeger(state, -1);
+		if (p < PRIORITY_MIN || p > PRIORITY_MAX)
+			return luaL_error(state, "skill %s: priority %d is outside the %d..%d range", name, static_cast<int32>(p), PRIORITY_MIN, PRIORITY_MAX);
+		priority = static_cast<int32>(p);
+	}
+	lua_pop(state, 1);
+
 	lua_pushnil(state);
 	while (lua_next(state, 2) != 0) {
 		const char* key = lua_type(state, -2) == LUA_TSTRING ? lua_tostring(state, -2) : "";
+
+		// `priority` is a key we read above, not a hook. Skip it rather than
+		// complaining about an unknown hook name.
+		if (strcmp(key, "priority") == 0) {
+			lua_pop(state, 1);
+			continue;
+		}
+
 		int32 which = -1;
 
 		for (int32 i = 0; i < HOOK_MAX; i++)
 			if (strcmp(key, hook_names[i]) == 0)
 				which = i;
 		if (which < 0)
-			return luaL_error(state, "skill %s: unknown hook \"%s\" (ratio, hit, element or on_hit)", name, key);
+			return luaL_error(state, "skill %s: unknown hook \"%s\" (ratio, hit, element, on_hit or priority)", name, key);
 		if (!lua_isfunction(state, -1))
 			return luaL_error(state, "skill %s: %s must be a function", name, key);
 
-		s_hook& hook = entry.hooks[which];
-
-		luaL_unref(state, LUA_REGISTRYINDEX, hook.ref);
-		hook.ref = luaL_ref(state, LUA_REGISTRYINDEX);  // pops the value
+		std::vector<s_hook>& vec = entry.hooks[which];
+		s_hook hook;
 		hook.mod = current_mod;
+		hook.priority = priority;
+		hook.load_order = next_load_order++;
+		hook.ref = luaL_ref(state, LUA_REGISTRYINDEX);  // pops the value
+
+		// Replace this mod's previous registration for this (skill, hook), so
+		// a mod that re-declares a hook (e.g. after a reload) does not stack
+		// against itself.
+		auto existing = std::find_if(vec.begin(), vec.end(),
+			[&](const s_hook& h) { return h.mod == current_mod; });
+		if (existing != vec.end()) {
+			luaL_unref(state, LUA_REGISTRYINDEX, existing->ref);
+			*existing = hook;
+		} else {
+			vec.push_back(hook);
+		}
+
+		// Keep the chain in priority order. Stable so load_order breaks ties
+		// deterministically.
+		std::stable_sort(vec.begin(), vec.end(),
+			[](const s_hook& a, const s_hook& b) {
+				if (a.priority != b.priority)
+					return a.priority < b.priority;
+				return a.load_order < b.load_order;
+			});
 	}
 	return 0;
 }
@@ -562,6 +628,7 @@ void do_init_skill_lua() {
 
 	current_mod = "server";
 	budget = LOAD_BUDGET;
+	next_load_order = 0;
 	if (luaL_dostring(L, PRELUDE) != LUA_OK) {
 		ShowError("Lua: prelude failed: %s\n", lua_tostring(L, -1));
 		do_final_skill_lua();
@@ -573,7 +640,12 @@ void do_init_skill_lua() {
 	for (const auto& file : files)
 		loaded += run_file(file.second, file.first) ? 1 : 0;
 
-	ShowStatus("Lua: loaded %zu of %zu file(s), hooks for %zu skill(s).\n", loaded, files.size(), hooks_by_name.size());
+	size_t hooks_total = 0;
+
+	for (const auto& it : hooks_by_name)
+		for (int32 i = 0; i < HOOK_MAX; i++)
+			hooks_total += it.second.hooks[i].size();
+	ShowStatus("Lua: loaded %zu of %zu file(s), %zu hook(s) across %zu skill(s).\n", loaded, files.size(), hooks_total, hooks_by_name.size());
 	skill_lua_attach();
 }
 
@@ -605,7 +677,7 @@ void skill_lua_attach() {
 		hooks_by_id[skill->nameid] = &hooks->second;
 
 		const s_skill_hooks& h = hooks->second;
-		bool wants_class = h.hooks[HOOK_RATIO].ref != LUA_NOREF || h.hooks[HOOK_HIT].ref != LUA_NOREF || h.hooks[HOOK_ELEMENT].ref != LUA_NOREF;
+		bool wants_class = !h.hooks[HOOK_RATIO].empty() || !h.hooks[HOOK_HIT].empty() || !h.hooks[HOOK_ELEMENT].empty();
 
 		if (!wants_class || dynamic_cast<const LuaSkillImpl*>(skill->impl.get()) != nullptr)
 			continue;
@@ -625,7 +697,7 @@ void skill_lua_attach() {
 std::unique_ptr<s_skill_lua_hit> skill_lua_on_hit(block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv, int64 damage, int32 attack_type) {
 	s_skill_hooks* hooks = hooks_for(skill_id);
 
-	if (hooks == nullptr || hooks->hooks[HOOK_ON_HIT].ref == LUA_NOREF || src == nullptr || target == nullptr || current_hit != nullptr)
+	if (hooks == nullptr || hooks->hooks[HOOK_ON_HIT].empty() || src == nullptr || target == nullptr || current_hit != nullptr)
 		return nullptr;
 
 	auto hit = std::make_unique<s_skill_lua_hit>();
@@ -638,12 +710,16 @@ std::unique_ptr<s_skill_lua_hit> skill_lua_on_hit(block_list* src, block_list* t
 	hit->race = tstatus->race;
 	hit->class_ = tstatus->class_;
 
-	s_hook& hook = hooks->hooks[HOOK_ON_HIT];
-
-	lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
-	push_context(skill_id, skill_lv, src, target, &damage);
+	// Every mod's on_hit runs in priority order and may queue its own
+	// actions; they are applied together once the hit is dealt.
 	current_hit = hit.get();
-	protected_call(hook, hooks->skill.c_str(), 1, 0);
+	for (s_hook& hook : hooks->hooks[HOOK_ON_HIT]) {
+		if (hook.ref == LUA_NOREF)
+			continue;
+		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
+		push_context(skill_id, skill_lv, src, target, &damage);
+		protected_call(hook, hooks->skill.c_str(), 1, 0);
+	}
 	current_hit = nullptr;
 
 	if (hit->actions.empty())
