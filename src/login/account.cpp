@@ -73,7 +73,6 @@ bool account_db_sql_disable_monitor_vip( AccountDB* self, const uint32 account_i
 static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, uint32 account_id);
 static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new, bool refresh_token);
 static void account_db_sql_hash_passwords( AccountDB_SQL* db );
-static void account_db_sql_hash_plaintext( AccountDB_SQL* db );
 
 /// public constructor
 AccountDB* account_db_sql(void) {
@@ -160,6 +159,13 @@ static bool account_db_sql_init(AccountDB* self) {
  * as in sql-files, so a database made before this change is upgraded by simply
  * starting the login server. Server accounts (sex S) keep their plain text: the
  * char and map servers log in with it.
+ *
+ * Run once, at start-up: that converts a database from before hashing in one
+ * go. Nothing polls for plain text afterwards. A program that writes accounts
+ * directly (the Ragnarok Offline app does) writes the hash and `pass_flags`
+ * itself, in the format of password.hpp; a plain-text password written by hand
+ * still works, and is hashed at the account's next login (login.cpp saves the
+ * account after a successful one) or the next start.
  * @param db: pointer to db
  */
 static void account_db_sql_hash_passwords( AccountDB_SQL* db ){
@@ -194,20 +200,6 @@ static void account_db_sql_hash_passwords( AccountDB_SQL* db ){
 	}else{
 		Sql_FreeResult( sql_handle );
 	}
-
-	account_db_sql_hash_plaintext( db );
-}
-
-/**
- * Hash every plain-text password still stored (server accounts aside). Run at
- * start-up and then every minute (login.cpp), so an account another program
- * wrote with a plain-text password -- the app's own account tools do -- is
- * hashed within a minute, whether or not anyone logs in with it.
- * @param db: pointer to db
- */
-static void account_db_sql_hash_plaintext( AccountDB_SQL* db ){
-	Sql* sql_handle = db->accounts;
-	char* data;
 
 	// Load and save each: saving is what hashes (mmo_auth_tosql).
 	std::vector<uint32> plain;
@@ -1145,12 +1137,3 @@ bool account_db_sql_disable_monitor_vip( AccountDB* self, const uint32 account_i
 	return true;
 }
 #endif
-
-/**
- * Hash any plain-text passwords stored since the last look (password.hpp).
- * @param self: the SQL account engine
- */
-void account_hash_plaintext( AccountDB* self ){
-	if( self != nullptr && login_config.hash_passwords )
-		account_db_sql_hash_plaintext( (AccountDB_SQL*)self );
-}
