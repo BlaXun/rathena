@@ -85,6 +85,25 @@ Body:
       one death fires it three times, once per item. Off means stock
       rAthena: no such event exists.
 
+  - Id: blaze_shield_knockback
+    Name: "Blaze Shield pin on entry"
+    Description: |
+      Make NJ_KAENSIN (Blaze Shield / Blazing Field) pillars hit the
+      moment a mob walks onto them, and pin the mob there until the
+      pillar's full stack of hits burns out.
+      Stock KAENSIN only damages via the 100 ms global skill_unit_timer:
+      a mob fast enough to cross a cell between global ticks skips it,
+      so most pillars in the 5x5 donut never see the mob. With this on,
+      walking onto a pillar fires the hit immediately (no cell can be
+      skipped, regardless of mob walkspeed) and applies a skill-induced
+      walkdelay of val2 * interval ms, so the mob stays on the pillar
+      until it burns out, then moves to the next one.
+      Endure (SC_ENDURE) and MD_STATUSIMMUNE skip the pin -- an endure
+      mob still eats the entry hit but can keep walking, matching the
+      stock escape hatch for firewall-family cells.
+      Off by default; stock behaviour is unchanged.
+    Enabled: false
+
 Footer:
   Imports:
     - Path: db/import/extension_db.yml

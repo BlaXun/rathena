@@ -28,6 +28,7 @@
 #include "clif.hpp"
 #include "date.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "intif.hpp"
@@ -12545,6 +12546,39 @@ int32 skill_unit_move_sub(block_list* bl, va_list ap)
 
 	if( group->interval != -1 && !skill_get_unit_flag(skill_id, UF_DUALMODE) && skill_id != BD_LULLABY ) //Lullaby is the exception, bugreport:411
 	{	//Non-dualmode unit skills with a timer don't trigger when walking, so just return
+		// Extension "blaze_shield_knockback": apply the pillar's hit the moment a
+		// mob steps onto it, not only on the 100 ms global skill_unit_timer. Without
+		// this a mob fast enough to cross a cell between global ticks skips it, so
+		// most pillars in the 5x5 donut never see the mob. Pins non-endure mobs
+		// with a skill-induced walkdelay sized to the pillar's remaining burn time
+		// (val2 * interval), so the mob eats the full stack of hits before moving
+		// off. Endure (and MD_STATUSIMMUNE in unit_set_walkdelay) skips the pin,
+		// which is the stock escape hatch for firewall-family cells.
+		if ((flag & 1) && skill_id == NJ_KAENSIN && target->type == BL_MOB
+			&& extension_enabled("blaze_shield_knockback")
+			&& (group->bl_flag & target->type)
+			&& battle_check_target(unit, target, group->target_flag) > 0) {
+			if (block_list* ss = map_id2bl(group->src_id); ss != nullptr && !status_isdead(*target)) {
+				int32 count = 0;
+				const int32 x = target->x, y = target->y;
+				do {
+					skill_attack(BF_MAGIC, ss, unit, target, group->skill_id, group->skill_lv,
+						tick + (t_tick)count*group->interval, 0);
+				} while (group->interval > 0 && --unit->val2 && x == target->x && y == target->y
+					&& ++count < SKILLUNITTIMER_INTERVAL/group->interval
+					&& !status_isdead(*target));
+
+				if (unit->val2 > 0 && !status_isendure(*target, tick, false)) {
+					t_tick delay = static_cast<t_tick>(unit->val2) * group->interval;
+					if (delay > 0)
+						unit_set_walkdelay(target, tick, delay, 1, group->skill_id);
+				}
+
+				if (unit->val2 <= 0)
+					skill_delunit(unit);
+			}
+		}
+
 		if( dissonance ) {
 			skill_dance_switch(unit, true);
 			int32 result = skill_unit_onout(unit, target, tick);
