@@ -27,9 +27,11 @@
 #include "account.hpp"
 #include "ipban.hpp"
 #include "loginchrif.hpp"
+#include "password.hpp"
 #include "loginclif.hpp"
 #include "logincnslif.hpp"
 #include "loginlog.hpp"
+#include "login_token.hpp"
 
 using namespace rathena;
 using namespace rathena::server_login;
@@ -352,7 +354,10 @@ int32 login_mmo_auth(struct login_session_data* sd, bool isServer) {
 		return 0; // 0 = Unregistered ID
 	}
 
-	if( !login_check_password( *sd, acc ) ) {
+	// A one-time login token (login_token.hpp) logs its account in instead of
+	// the password; anything that is not one is checked as a password.
+	bool token = login_config.use_login_tokens && login_token_accept( accounts, *sd, acc );
+	if( !token && !login_check_password( *sd, acc ) ) {
 		ShowNotice("Invalid password (account: '%s', ip: %s)\n", sd->userid, ip);
 		return 1; // 1 = Incorrect Password
 	}
@@ -442,6 +447,18 @@ int32 login_mmo_auth(struct login_session_data* sd, bool isServer) {
  * @return true if matching else false
  */
 bool login_check_password( struct login_session_data& sd, struct mmo_account& acc ){
+	// A stored hash can only be checked against the password itself: the
+	// <passwordencrypt> modes below send an MD5 of it instead, and need the
+	// plain text on this side. A plain-text password that matches is hashed
+	// when the caller saves the account after the login.
+	if( password::is_hashed( acc.pass ) ){
+		if( sd.passwdenc != 0 ){
+			ShowWarning( "login: %s uses <passwordencrypt>, which cannot check a hashed password.\n", acc.userid );
+			return false;
+		}
+		return password::verify( sd.passwd, acc.pass );
+	}
+
 	if( sd.passwdenc == 0 ){
 		return 0 == strcmp( sd.passwd, acc.pass );
 	}
@@ -634,6 +651,8 @@ bool login_config_read(const char* cfgName, bool normal) {
 			safestrncpy(console_log_filepath, w2, sizeof(console_log_filepath));
 		else if(!strcmpi(w1, "log_login"))
 			login_config.log_login = (bool)config_switch(w2);
+		else if(!strcmpi(w1, "login_tokens"))
+			login_config.use_login_tokens = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "new_account"))
 			login_config.new_account_flag = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "acc_name_min_length"))
@@ -644,6 +663,8 @@ bool login_config_read(const char* cfgName, bool normal) {
 			login_config.start_limited_time = atoi(w2);
 		else if(!strcmpi(w1, "use_MD5_passwords"))
 			login_config.use_md5_passwds = (bool)config_switch(w2);
+		else if(!strcmpi(w1, "hash_passwords"))
+			login_config.hash_passwords = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "group_id_to_connect"))
 			login_config.group_id_to_connect = atoi(w2);
 		else if(!strcmpi(w1, "min_group_id_to_connect"))
@@ -755,6 +776,7 @@ void login_set_defaults() {
 	login_config.log_login = true;
 	safestrncpy(login_config.date_format, "%Y-%m-%d %H:%M:%S", sizeof(login_config.date_format));
 	login_config.console = false;
+	login_config.use_login_tokens = true;
 	login_config.new_account_flag = true;
 #if PACKETVER >= 20181114
 	login_config.acc_name_min_length = 6;
@@ -764,6 +786,7 @@ void login_set_defaults() {
 	login_config.password_min_length = 4;
 #endif
 	login_config.use_md5_passwds = false;
+	login_config.hash_passwords = true;
 	login_config.group_id_to_connect = -1;
 	login_config.min_group_id_to_connect = -1;
 
@@ -817,6 +840,7 @@ void LoginServer::finalize(){
 
 	if( login_config.log_login )
 		loginlog_final();
+	login_token_final();
 
 	do_final_msg();
 	ipban_final();
@@ -880,6 +904,12 @@ bool LoginServer::initialize( int32 argc, char* argv[] ){
 
 	// set default parser as parse_login function
 	set_defaultparse(logclif_parse);
+
+	// A salted hash and an MD5 of the password cannot both be what is stored.
+	if( login_config.use_md5_passwds && login_config.hash_passwords ){
+		ShowWarning( "hash_passwords is ignored because use_MD5_passwords is on.\n" );
+		login_config.hash_passwords = false;
+	}
 
 	// every 10 minutes cleanup online account db.
 	add_timer_func_list(login_online_data_cleanup, "online_data_cleanup");

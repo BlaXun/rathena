@@ -86,11 +86,13 @@ struct Login_Config {
 	bool log_login;                                 /// whether to log login server actions or not
 	char date_format[32];                           /// date format used in messages
 	bool console;                                   /// console input system enabled?
+	bool use_login_tokens;                          /// accept one-time login tokens (login_token.hpp) in place of a password?
 	bool new_account_flag;                          /// autoregistration via _M/_F ?
 	uint8 acc_name_min_length;                      /// minimum account name length
 	uint8 password_min_length;                      /// minimum password length
 	int32 start_limited_time;                         /// new account expiration time (-1: unlimited)
 	bool use_md5_passwds;                           /// work with password hashes instead of plaintext passwords?
+	bool hash_passwords;                            /// store salted PBKDF2 hashes (password.hpp); off when use_md5_passwds is on
 	int32 group_id_to_connect;                        /// required group id to connect
 	int32 min_group_id_to_connect;                    /// minimum group id to connect
 

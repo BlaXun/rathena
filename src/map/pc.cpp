@@ -57,6 +57,7 @@
 #include "pet.hpp" // pet_unlocktarget()
 #include "quest.hpp"
 #include "skill.hpp" // skill_isCopyable()
+#include "skill_lua.hpp" // skill_lua_on_steal()
 #include "script.hpp" // struct script_reg, struct script_regstr
 #include "searchstore.hpp"  // struct s_search_store_info
 #include "status.hpp" // OPTION_*, struct weapon_atk
@@ -2351,6 +2352,17 @@ bool pc_set_hate_mob(map_session_data *sd, int32 pos, block_list *bl)
  * We didn't receive item information at this point so DO NOT attempt to do item operations here.
  * See intif_parse_StorageReceived() for item operations [lighta]
  *------------------------------------------*/
+// RAGNAROKMAC: persist the loot and exp display preferences. Called from the
+// commands that change them, so a value survives a crash as well as a logout.
+void pc_save_loot_prefs(map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	pc_setglobalreg(sd, add_str(AUTOLOOT_RATE_VAR), sd->state.autoloot);
+	pc_setglobalreg(sd, add_str(AUTOLOOT_TYPE_VAR), sd->state.autoloottype);
+	pc_setglobalreg(sd, add_str(SHOWEXP_VAR), sd->state.showexp);
+}
+
 void pc_reg_received(map_session_data *sd)
 {
 	uint8 i;
@@ -2361,6 +2373,13 @@ void pc_reg_received(map_session_data *sd)
 	sd->change_level_3rd = static_cast<unsigned char>(pc_readglobalreg(sd, add_str(JOBCHANGE3RD_VAR)));
 	sd->change_level_4th = static_cast<unsigned char>(pc_readglobalreg(sd, add_str(JOBCHANGE4TH_VAR)));
 	sd->die_counter = static_cast<int32>(pc_readglobalreg(sd, add_str(PCDIECOUNTER_VAR)));
+
+	// RAGNAROKMAC: @autoloot, @autoloottype and @showexp were session-only, so
+	// every login began by retyping them. They are read here rather than at
+	// pc_authok because character variables have only arrived by this point.
+	sd->state.autoloot = static_cast<uint16>(cap_value(pc_readglobalreg(sd, add_str(AUTOLOOT_RATE_VAR)), 0, 10000));
+	sd->state.autoloottype = static_cast<uint16>(cap_value(pc_readglobalreg(sd, add_str(AUTOLOOT_TYPE_VAR)), 0, UINT16_MAX));
+	sd->state.showexp = pc_readglobalreg(sd, add_str(SHOWEXP_VAR)) ? 1 : 0;
 
 	sd->langtype = static_cast<int32>(pc_readaccountreg(sd, add_str(LANGTYPE_VAR)));
 	if (msg_checklangtype(sd->langtype,true) < 0)
@@ -4699,10 +4718,16 @@ void pc_bonus2(map_session_data *sd,int32 type,int32 type2,int32 val)
 		sd->special_state.bonus_coma = 1;
 		break;
 	case SP_WEAPON_ATK: // bonus2 bWeaponAtk,w,n;
+		// RAGNAROKMAC: item scripts cannot index beyond the weapon table.
+		if (type2 < 0 || type2 >= MAX_WEAPON_TYPE)
+			break;
 		if (sd->state.lr_flag != LR_FLAG_ARROW)
 			sd->indexed_bonus.weapon_atk[type2]+=val;
 		break;
 	case SP_WEAPON_DAMAGE_RATE: // bonus2 bWeaponDamageRate,w,n;
+		// RAGNAROKMAC: item scripts cannot index beyond the weapon table.
+		if (type2 < 0 || type2 >= MAX_WEAPON_TYPE)
+			break;
 		if (sd->state.lr_flag != LR_FLAG_ARROW)
 			sd->indexed_bonus.weapon_damage_rate[type2]+=val;
 		break;
@@ -6851,28 +6876,44 @@ bool pc_steal_item(map_session_data *sd,block_list *bl, uint16 skill_lv)
 
 	std::shared_ptr<s_mob_drop> drop = nullptr;
 
-	// Try dropping one item.
-	for( std::shared_ptr<s_mob_drop>& entry : md->db->dropitem ){
-		if( entry->steal_protected ){
-			continue;
+	// Give TF_STEAL's on_steal Lua hook (if any) first pick: this is how
+	// mods override the stock slot-order loop, which otherwise means a drop
+	// at 100% rate gates every later-slot drop (so a stealable card after a
+	// Jellopy at 1.5x+ rates is unreachable). skill_lua_on_steal returns 0
+	// when no hook ran or every hook returned nil, and the stock loop runs.
+	if( t_itemid chosen = skill_lua_on_steal( sd, bl, skill_lv ); chosen != 0 ){
+		for( std::shared_ptr<s_mob_drop>& entry : md->db->dropitem ){
+			if( entry->nameid == chosen && !entry->steal_protected && item_db.exists( entry->nameid ) ){
+				drop = entry;
+				break;
+			}
 		}
+	}
 
-		if( !item_db.exists( entry->nameid ) ){
-			continue;
-		}
+	// Try dropping one item.
+	if( drop == nullptr ){
+		for( std::shared_ptr<s_mob_drop>& entry : md->db->dropitem ){
+			if( entry->steal_protected ){
+				continue;
+			}
+
+			if( !item_db.exists( entry->nameid ) ){
+				continue;
+			}
 
 #ifdef RENEWAL
-		if( rnd() % 10000 < entry->rate ){
-			drop = entry;
-			break;
-		}
+			if( rnd() % 10000 < entry->rate ){
+				drop = entry;
+				break;
+			}
 #else
-		// Droprate is affected by the skill success rate.
-		if( rnd() % 10000 < entry->rate * rate / 100. ){
-			drop = entry;
-			break;
-		}
+			// Droprate is affected by the skill success rate.
+			if( rnd() % 10000 < entry->rate * rate / 100. ){
+				drop = entry;
+				break;
+			}
 #endif
+		}
 	}
 
 	if( drop == nullptr ){
@@ -10249,6 +10290,8 @@ int64 pc_readparam( const map_session_data* sd, int64 type )
 		case SP_KILLERRID:       val = sd->killerrid; break;
 		case SP_KILLEDRID:       val = sd->killedrid; break;
 		case SP_KILLEDGID:       val = sd->killedgid; break;
+		case SP_KILLEDDROPID:    val = sd->killeddropid; break;
+		case SP_KILLEDBYME:      val = sd->killedbyme; break;
 		case SP_SITTING:         val = pc_issit(sd)?1:0; break;
 		case SP_CHARMOVE:		 val = sd->status.character_moves; break;
 		case SP_CHARRENAME:		 val = sd->status.rename; break;
@@ -10585,6 +10628,12 @@ bool pc_setparam(map_session_data *sd,int64 type,int64 val_tmp)
 		return true;
 	case SP_KILLEDGID:
 		sd->killedgid = val;
+		return true;
+	case SP_KILLEDDROPID:
+		sd->killeddropid = val;
+		return true;
+	case SP_KILLEDBYME:
+		sd->killedbyme = val;
 		return true;
 	case SP_CHARMOVE:
 		sd->status.character_moves = val;
@@ -13780,6 +13829,10 @@ uint32 JobDatabase::calc_basesp( const uint16 level, const std::shared_ptr<s_job
 		base_sp += floor( ( base_sp / 2 ) + 0.5 );
 	}
 
+	// RAGNAROKMAC: incomplete job tables can produce negative base SP;
+	// clamp while still floating point, before converting to unsigned.
+	if( base_sp <= 0. ) return 0;
+	if( base_sp >= static_cast<double>( UINT_MAX ) ) return UINT_MAX;
 	return static_cast<uint32>( base_sp );
 }
 

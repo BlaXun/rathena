@@ -27,6 +27,7 @@
 #include "battle.hpp"
 #include "clif.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "intif.hpp"
@@ -3352,6 +3353,27 @@ int32 mob_dead(mob_data *md, block_list *src, int32 type)
 			// Announce first, or else ditem will be freed. [Lance]
 			// By popular demand, use base drop rate for autoloot code. [Skotlex]
 			mob_item_drop(md, dlist, ditem, 0, battle_config.autoloot_adjust ? drop_rate : entry->rate, homkillonly || merckillonly);
+
+			// pc_drop_item_event extension: hand the drop to any script listening
+			// for OnPCDropItemEvent, one call per rolled drop. Attached to the
+			// same first_sd rAthena hands the flooritem to, so the event runs on
+			// exactly the player who is entitled to the drop -- mirroring the
+			// scoping of NPCE_KILLNPC. Fires before NPCE_KILLNPC in the same
+			// mob death, so a script that hooks both sees the drops first and
+			// can react to them in the kill handler.
+			//
+			// killedbyme = 1 when the drop recipient also dealt the killing
+			// blow (sd == first_sd); 0 when someone else got the kill (party
+			// mate, merc, homun, someone kill-stealing a mob first_sd already
+			// tagged). Lets a script filter "only my own kills" without
+			// second-guessing rAthena's first_sd / killer split.
+			if (first_sd != nullptr && extension_enabled("pc_drop_item_event")) {
+				pc_setparam(first_sd, SP_KILLEDGID, md->id);
+				pc_setparam(first_sd, SP_KILLEDRID, md->mob_id);
+				pc_setparam(first_sd, SP_KILLEDDROPID, entry->nameid);
+				pc_setparam(first_sd, SP_KILLEDBYME, (sd == first_sd) ? 1 : 0);
+				npc_script_event(*first_sd, NPCE_DROPITEM);
+			}
 		}
 
 		// Ore Discovery (triggers if owner has loot priority, does not require to be the killer)
@@ -4879,46 +4901,69 @@ bool MobDatabase::parseDropNode( std::string nodeName, const ryml::NodeRef& node
 			exist = false;
 		}
 
-		std::string item_name;
+		// Fields on an override entry (exist=true) are optional: an
+		// unspecified field keeps the existing drop's value. This lets a
+		// mod flip one flag on a stock drop without restating the item and
+		// rate, so two mods that touch the same slot for different reasons
+		// (e.g. one setting StealProtected, one bumping Rate) do not
+		// clobber each other's changes. On a new entry (exist=false),
+		// Item and Rate remain required.
+		if (this->nodeExists(dropit, "Item")) {
+			std::string item_name;
 
-		if (!this->asString(dropit, "Item", item_name))
-			return false;
+			if (!this->asString(dropit, "Item", item_name))
+				return false;
 
-		std::shared_ptr<item_data> item = item_db.search_aegisname( item_name.c_str() );
+			std::shared_ptr<item_data> item = item_db.search_aegisname( item_name.c_str() );
 
-		if (item == nullptr) {
-			this->invalidWarning(dropit["Item"], "Monster %s item %s does not exist, skipping.\n", nodeName.c_str(), item_name.c_str());
+			if (item == nullptr) {
+				this->invalidWarning(dropit["Item"], "Monster %s item %s does not exist, skipping.\n", nodeName.c_str(), item_name.c_str());
+				continue;
+			}
+
+			drop->nameid = item->nameid;
+		} else if (!exist) {
+			this->invalidWarning(dropit, "Monster %s entry has no Item and is not overriding an existing drop, skipping.\n", nodeName.c_str());
 			continue;
 		}
 
-		uint16 rate;
+		if (this->nodeExists(dropit, "Rate")) {
+			uint16 rate;
 
-		if (!this->asUInt16Rate(dropit, "Rate", rate))
-			return false;
-
-		bool steal = false;
-
-		if (this->nodeExists(dropit, "StealProtected")) {
-			if (!this->asBool(dropit, "StealProtected", steal))
+			if (!this->asUInt16Rate(dropit, "Rate", rate))
 				return false;
+
+			drop->rate = rate;
+		} else if (!exist) {
+			this->invalidWarning(dropit, "Monster %s entry has no Rate and is not overriding an existing drop, skipping.\n", nodeName.c_str());
+			continue;
 		}
 
-		uint16 group = 0;
+		if (this->nodeExists(dropit, "StealProtected")) {
+			bool steal = false;
+
+			if (!this->asBool(dropit, "StealProtected", steal))
+				return false;
+
+			drop->steal_protected = steal;
+		} else if (!exist) {
+			drop->steal_protected = false;
+		}
 
 		if (this->nodeExists(dropit, "RandomOptionGroup")) {
 			std::string group_name;
+			uint16 group = 0;
 
 			if (!this->asString(dropit, "RandomOptionGroup", group_name))
 				return false;
 
 			if (!random_option_group.option_get_id(group_name.c_str(), group))
 				this->invalidWarning(dropit["RandomOptionGroup"], "Unknown random option group %s for monster %s, defaulting to no group.\n", group_name.c_str(), nodeName.c_str());
-		}
 
-		drop->nameid = item->nameid;
-		drop->rate = rate;
-		drop->steal_protected = steal;
-		drop->randomopt_group = group;
+			drop->randomopt_group = group;
+		} else if (!exist) {
+			drop->randomopt_group = 0;
+		}
 
 		if( !exist ){
 			drops.push_back( drop );

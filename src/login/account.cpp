@@ -6,6 +6,7 @@
 #include <algorithm> //min / max
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 
 #include <common/malloc.hpp>
 #include <common/mmo.hpp>
@@ -16,6 +17,7 @@
 
 #include "login.hpp" // login_config
 #include "loginchrif.hpp"
+#include "password.hpp"
 
 /// global defines
 
@@ -70,6 +72,7 @@ bool account_db_sql_disable_monitor_vip( AccountDB* self, const uint32 account_i
 
 static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, uint32 account_id);
 static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new, bool refresh_token);
+static void account_db_sql_hash_passwords( AccountDB_SQL* db );
 
 /// public constructor
 AccountDB* account_db_sql(void) {
@@ -141,7 +144,83 @@ static bool account_db_sql_init(AccountDB* self) {
 
 	self->remove_webtokens( self );
 
+	if( login_config.hash_passwords )
+		account_db_sql_hash_passwords( db );
+
 	return true;
+}
+
+/**
+ * Make room for hashed passwords, and hash every plain-text one still stored.
+ *
+ * `user_pass` was varchar(32), too short for a hash, and `pass_flags` records
+ * what a check that needs the plain text (is it weak? the default?) would have
+ * found, since the plain text is gone afterwards. Both are added here as well
+ * as in sql-files, so a database made before this change is upgraded by simply
+ * starting the login server. Server accounts (sex S) keep their plain text: the
+ * char and map servers log in with it.
+ *
+ * Run once, at start-up: that converts a database from before hashing in one
+ * go. Nothing polls for plain text afterwards. A program that writes accounts
+ * directly (the Ragnarok Offline app does) writes the hash and `pass_flags`
+ * itself, in the format of password.hpp; a plain-text password written by hand
+ * still works, and is hashed at the account's next login (login.cpp saves the
+ * account after a successful one) or the next start.
+ * @param db: pointer to db
+ */
+static void account_db_sql_hash_passwords( AccountDB_SQL* db ){
+	Sql* sql_handle = db->accounts;
+	char* data;
+
+	if( SQL_SUCCESS == Sql_Query( sql_handle, "SELECT `CHARACTER_MAXIMUM_LENGTH` FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' AND `COLUMN_NAME` = 'user_pass'", db->account_db )
+		&& SQL_SUCCESS == Sql_NextRow( sql_handle ) ){
+		Sql_GetData( sql_handle, 0, &data, nullptr );
+		int32 length = data != nullptr ? atoi( data ) : 0;
+		Sql_FreeResult( sql_handle );
+		if( length < 128 ){
+			ShowStatus( "Widening `%s`.`user_pass` for hashed passwords...\n", db->account_db );
+			if( SQL_ERROR == Sql_Query( sql_handle, "ALTER TABLE `%s` MODIFY `user_pass` varchar(128) NOT NULL default ''", db->account_db ) ){
+				Sql_ShowDebug( sql_handle );
+				return;
+			}
+		}
+	}else{
+		Sql_FreeResult( sql_handle );
+	}
+
+	if( SQL_SUCCESS == Sql_Query( sql_handle, "SELECT COUNT(*) FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' AND `COLUMN_NAME` = 'pass_flags'", db->account_db )
+		&& SQL_SUCCESS == Sql_NextRow( sql_handle ) ){
+		Sql_GetData( sql_handle, 0, &data, nullptr );
+		bool missing = data == nullptr || atoi( data ) == 0;
+		Sql_FreeResult( sql_handle );
+		if( missing && SQL_ERROR == Sql_Query( sql_handle, "ALTER TABLE `%s` ADD COLUMN `pass_flags` tinyint(3) unsigned NOT NULL default '0' AFTER `user_pass`", db->account_db ) ){
+			Sql_ShowDebug( sql_handle );
+			return;
+		}
+	}else{
+		Sql_FreeResult( sql_handle );
+	}
+
+	// Load and save each: saving is what hashes (mmo_auth_tosql).
+	std::vector<uint32> plain;
+	if( SQL_ERROR == Sql_Query( sql_handle, "SELECT `account_id` FROM `%s` WHERE `sex` <> 'S' AND `user_pass` <> '' AND `user_pass` NOT LIKE '$pbkdf2-sha256$%%'", db->account_db ) ){
+		Sql_ShowDebug( sql_handle );
+		return;
+	}
+	while( SQL_SUCCESS == Sql_NextRow( sql_handle ) ){
+		Sql_GetData( sql_handle, 0, &data, nullptr );
+		plain.push_back( (uint32)strtoul( data, nullptr, 10 ) );
+	}
+	Sql_FreeResult( sql_handle );
+
+	size_t hashed = 0;
+	for( uint32 account_id : plain ){
+		struct mmo_account acc;
+		if( mmo_auth_fromsql( db, &acc, account_id ) && mmo_auth_tosql( db, &acc, false, false ) )
+			hashed++;
+	}
+	if( hashed > 0 )
+		ShowStatus( "Hashed the stored passwords of %zu account(s).\n", hashed );
 }
 
 /**
@@ -568,6 +647,18 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 	SqlStmt stmt{ *sql_handle };
 	bool result = false;
 
+	// A plain-text password is stored as a hash instead (password.hpp). The
+	// account is copied rather than changed, so every statement below stores
+	// the hash as written; what the plain text told us is kept in pass_flags.
+	struct mmo_account hashed;
+	int32 pass_flags = -1;
+	if( login_config.hash_passwords && acc->sex != 'S' && acc->pass[0] != '\0' && !password::is_hashed( acc->pass ) ){
+		hashed = *acc;
+		pass_flags = password::flags( acc->pass, acc->userid );
+		safestrncpy( hashed.pass, password::hash( acc->pass ).c_str(), sizeof( hashed.pass ) );
+		acc = &hashed;
+	}
+
 	// try
 	do
 	{
@@ -646,6 +737,11 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 			SqlStmt_ShowDebug(stmt);
 			break;
 		}
+	}
+
+	if( pass_flags >= 0 && SQL_ERROR == Sql_Query( sql_handle, "UPDATE `%s` SET `pass_flags` = '%d' WHERE `account_id` = '%d'", db->account_db, pass_flags, acc->account_id ) ){
+		Sql_ShowDebug( sql_handle );
+		break;
 	}
 
 	if( acc->sex != 'S' && login_config.use_web_auth_token && refresh_token ){

@@ -35,6 +35,8 @@
 #include "clif.hpp"
 #include "duel.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
+#include "skill_lua.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "instance.hpp"
@@ -5061,6 +5063,7 @@ void MapServer::finalize(){
 	do_final_mercenary();
 	do_final_mob(false);
 	do_final_msg();
+	do_final_skill_lua();
 	do_final_skill();
 	do_final_status();
 	do_final_unit();
@@ -5072,6 +5075,7 @@ void MapServer::finalize(){
 	do_final_vending();
 	do_final_buyingstore();
 	do_final_path();
+	do_final_extensions();
 
 	map_db->destroy(map_db, map_db_final);
 
@@ -5415,6 +5419,7 @@ bool MapServer::initialize( int32 argc, char *argv[] ){
 	
 	map_do_init_msg();
 	do_init_path();
+	do_init_extensions();
 	do_init_atcommand();
 	do_init_battle();
 	do_init_instance();
@@ -5431,6 +5436,7 @@ bool MapServer::initialize( int32 argc, char *argv[] ){
 	do_init_mob();
 	do_init_pc();
 	do_init_status();
+	do_init_skill_lua();
 	do_init_party();
 	do_init_guild();
 	do_init_storage();

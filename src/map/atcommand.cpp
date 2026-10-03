@@ -32,6 +32,7 @@
 #include "clif.hpp"
 #include "duel.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "instance.hpp"
@@ -2156,6 +2157,12 @@ ACMD_FUNC(go)
 		{ MAP_MALAYA,      242, 211 }, // 34=Malaya Port
 		{ MAP_ECLAGE,      110,  39 }, // 35=Eclage
 		{ MAP_LASAGNA,     193, 182 }, // 36=Lasagna
+#ifdef RENEWAL
+		// Renewal content: in pre-renewal the maps load but hold no NPCs and
+		// no way out. Last in the list, so no other number moves.
+		{ MAP_EDEN,         31,  14 }, // 37=Eden Group Headquarters (Renewal)
+		{ MAP_PARA_MARKET,  97,  17 }, // 38=Para Market (Renewal)
+#endif
 	};
 
 	nullpo_retr(-1, sd);
@@ -2192,6 +2199,11 @@ ACMD_FUNC(go)
 	map_name[MAP_NAME_LENGTH-1] = '\0';
 	for (i = 0; map_name[i]; i++)
 		map_name[i] = TOLOWER(map_name[i]);
+	// A name is not a number: if none of the names below matches it, it is an
+	// unknown location, not town 0. atoi() reads "eden" as 0, so an unknown name
+	// used to warp to Prontera and report success.
+	if (!ISDIGIT(map_name[0]))
+		town = -1;
 	// try to identify the map name
 	if (strncmp(map_name, "prontera", 3) == 0) {
 		town = 0;
@@ -2277,6 +2289,13 @@ ACMD_FUNC(go)
 		town = 35;
 	} else if (strncmp(map_name, "lasagna", 2) == 0) {
 		town = 36;
+#ifdef RENEWAL
+	} else if (strncmp(map_name, "eden", 3) == 0 ||
+	           strncmp(map_name, "moc_para01", 8) == 0) {
+		town = 37;
+	} else if (strncmp(map_name, "paramk", 4) == 0) {
+		town = 38;
+#endif
 	}
 
 	if (town >= 0 && town < ARRAYLENGTH(data))
@@ -2296,8 +2315,12 @@ ACMD_FUNC(go)
 			clif_displaymessage(fd, msg_txt(sd,1)); // Map not found.
 			return -1;
 		}
-	} else { // if you arrive here, you have an error in town variable when reading of names
+	} else { // an unknown name: say so, and list the ones that exist
+		const char* text = atcommand_help_string( command );
+
 		clif_displaymessage(fd, msg_txt(sd,38)); // Invalid location number or name.
+		if( text )
+			clif_displaymessage( fd, text );
 		return -1;
 	}
 
@@ -7003,6 +7026,7 @@ ACMD_FUNC(autoloot)
 	if (rate > 10000) rate = 10000;
 
 	sd->state.autoloot = rate;
+	pc_save_loot_prefs(sd); // RAGNAROKMAC: keep the setting across logins
 	if (sd->state.autoloot) {
 		snprintf(atcmd_output, sizeof atcmd_output, msg_txt(sd,1187),((double)sd->state.autoloot)/100.); // Autolooting items with drop rates of %0.02f%% and below.
 		clif_displaymessage(fd, atcmd_output);
@@ -7186,6 +7210,7 @@ ACMD_FUNC(autoloottype)
 				return -1;
 			}
 			sd->state.autoloottype |= (1<<type); // Stores the type
+			pc_save_loot_prefs(sd); // RAGNAROKMAC: keep the setting across logins
 			sprintf(atcmd_output, msg_txt(sd,1483), itemdb_typename(type), type); // Autolooting item type: '%s' {%u}
 			clif_displaymessage(fd, atcmd_output);
 			break;
@@ -7195,6 +7220,7 @@ ACMD_FUNC(autoloottype)
 				return -1;
 			}
 			sd->state.autoloottype &= ~(1<<type);
+			pc_save_loot_prefs(sd); // RAGNAROKMAC: keep the setting across logins
 			sprintf(atcmd_output, msg_txt(sd,1485), itemdb_typename(type), type); // Removed item type: '%s' {%u} from your autoloottype list.
 			clif_displaymessage(fd, atcmd_output);
 			break;
@@ -7218,6 +7244,7 @@ ACMD_FUNC(autoloottype)
 			break;
 		case 4:
 			sd->state.autoloottype = 0;
+			pc_save_loot_prefs(sd); // RAGNAROKMAC: keep the setting across logins
 			clif_displaymessage(fd, msg_txt(sd,1491)); // Your autoloottype list has been reset.
 			break;
 	}
@@ -9167,11 +9194,13 @@ ACMD_FUNC(showexp)
 {
 	if (sd->state.showexp) {
 		sd->state.showexp = 0;
+		pc_save_loot_prefs(sd); // RAGNAROKMAC: keep the setting across logins
 		clif_displaymessage(fd, msg_txt(sd,1316)); // Gained exp will not be shown.
 		return 0;
 	}
 
 	sd->state.showexp = 1;
+	pc_save_loot_prefs(sd); // RAGNAROKMAC: keep the setting across logins
 	clif_displaymessage(fd, msg_txt(sd,1317)); // Gained exp is now shown.
 	return 0;
 }
@@ -11438,6 +11467,94 @@ int32 atcommand_macrochecker_sub( block_list* bl, va_list ap ){
 	return 1;
 }
 
+/**
+ * @extensions -- list every registered extension with its enabled state.
+ * See db/extension_db.yml.
+ */
+ACMD_FUNC(extensions){
+	nullpo_retr(-1, sd);
+
+	if (extension_db.empty()) {
+		clif_displaymessage(fd, "No extensions are registered.");
+		return 0;
+	}
+
+	char output[CHAT_SIZE_MAX];
+	safesnprintf(output, sizeof(output), "%d extension(s) registered:", (int)extension_db.size());
+	clif_displaymessage(fd, output);
+
+	for (const auto& pair : extension_db) {
+		const std::shared_ptr<s_extension>& ext = pair.second;
+
+		safesnprintf(output, sizeof(output), "  %-8s %s -- %s",
+			ext->enabled ? "[ ON ]" : "[ off]",
+			ext->id.c_str(),
+			ext->name.c_str());
+		clif_displaymessage(fd, output);
+	}
+
+	return 0;
+}
+
+/**
+ * @extensioninfo <id> -- show the full description of one extension.
+ */
+ACMD_FUNC(extensioninfo){
+	nullpo_retr(-1, sd);
+
+	char id[64];
+
+	if (!message || !*message || sscanf(message, "%63s", id) < 1) {
+		clif_displaymessage(fd, "Usage: @extensioninfo <id>");
+		return -1;
+	}
+
+	std::shared_ptr<s_extension> ext = extension_db.find(id);
+
+	if (ext == nullptr) {
+		char output[CHAT_SIZE_MAX];
+		safesnprintf(output, sizeof(output), "Extension '%s' is not registered.", id);
+		clif_displaymessage(fd, output);
+		return -1;
+	}
+
+	char output[CHAT_SIZE_MAX];
+	safesnprintf(output, sizeof(output), "%s (%s) [%s]",
+		ext->name.c_str(),
+		ext->id.c_str(),
+		ext->enabled ? "on" : "off");
+	clif_displaymessage(fd, output);
+
+	// The Description YAML field can be multi-line; the client one-lines
+	// each display, so split on '\n' and send one line at a time.
+	std::string desc = ext->description;
+
+	while (!desc.empty()) {
+		size_t nl = desc.find('\n');
+		std::string line = (nl == std::string::npos) ? desc : desc.substr(0, nl);
+
+		if (!line.empty())
+			clif_displaymessage(fd, line.c_str());
+
+		if (nl == std::string::npos)
+			break;
+
+		desc.erase(0, nl + 1);
+	}
+
+	for (const auto& pair : ext->values) {
+		const s_extension_value& value = pair.second;
+
+		if (value.type == EXTVAL_INT)
+			safesnprintf(output, sizeof(output), "  %s = %" PRId64 " (Int, default %" PRId64 ")", pair.first.c_str(), value.int_value, value.int_default);
+		else
+			safesnprintf(output, sizeof(output), "  %s = \"%s\" (String, default \"%s\")", pair.first.c_str(), value.str_value.c_str(), value.str_default.c_str());
+		clif_displaymessage(fd, output);
+	}
+
+	return 0;
+}
+
 ACMD_FUNC(macrochecker){
 	int16 mapid;
 
@@ -11813,6 +11930,8 @@ void atcommand_basecommands(void) {
 		ACMD_DEFR(roulette, ATCMD_NOCONSOLE|ATCMD_NOAUTOTRADE),
 		ACMD_DEF(setcard),
 		ACMD_DEF(macrochecker),
+		ACMD_DEF(extensions),
+		ACMD_DEF(extensioninfo),
 	};
 	AtCommandInfo* atcommand;
 	int32 i;

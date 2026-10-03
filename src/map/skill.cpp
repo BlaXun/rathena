@@ -28,6 +28,7 @@
 #include "clif.hpp"
 #include "date.hpp"
 #include "elemental.hpp"
+#include "extensions.hpp"
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "intif.hpp"
@@ -48,6 +49,7 @@
 
 // Skill factory is compiled as separate translation units per job category
 // to reduce peak memory usage during compilation
+#include "skill_lua.hpp"
 #include "skills/skill_factory.hpp"
 
 using namespace rathena;
@@ -159,8 +161,9 @@ static bool skill_check(uint16 id) {
 	return var;\
 } while(0)
 
+// RAGNAROKMAC: unlearned skills have level zero; never index before the array.
 #define skill_get_lv(id, lv, arrvar) do {\
-	if (!skill_check(id))\
+	if (!skill_check(id) || (lv) == 0)\
 		return 0;\
 	int32 lv_idx = min(lv, MAX_SKILL_LEVEL) - 1;\
 	if (lv > MAX_SKILL_LEVEL && arrvar[lv_idx] > 1 && lv_idx > 1) {\
@@ -3157,6 +3160,18 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 
 	shadow_flag = skill_check_shadowform(bl, damage, dmg.div_);
 
+	// Fire every interested Lua hook now, while the target is certainly
+	// alive: the skill's on_hit (if a mod registered one), on_attack for
+	// each of the attacker's equipped items, on_hit_taken for each of the
+	// defender's. What any of them asks for is applied once the hit has
+	// been dealt.
+	// A skill of the weapon's (-1) or an endowed (-2) element reports the
+	// weapon's, which already carries any endow.
+	int32 lua_element = skill_id != 0 ? skill_get_ele(skill_id, skill_lv) : -1;
+	if (lua_element < 0)
+		lua_element = status_get_status_data(*src)->rhw.ele;
+	std::unique_ptr<s_skill_lua_hit> lua_hit = skill_lua_on_damage(src, bl, skill_id, skill_lv, damage, dmg.flag, dmg.dmg_lv, dmg.type == DMG_CRITICAL, lua_element);
+
 	// Instant damage
 	if( !dmg.amotion ) {
 		//Deal damage before knockback to allow stuff like firewall+storm gust combo.
@@ -3186,6 +3201,8 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 		} else
 			battle_delay_damage(tick, dmg.amotion, src, bl, dmg.flag, skill_id, skill_lv, damage, dmg.dmg_lv, dmg.div_, additional_effects, false);
 	}
+
+	skill_lua_apply(lua_hit);
 
 	if (tsc  && skill_id != NPC_EVILLAND && skill_id != SP_SOULEXPLOSION && skill_id != SJ_NOVAEXPLOSING
 #ifndef RENEWAL
@@ -12529,6 +12546,39 @@ int32 skill_unit_move_sub(block_list* bl, va_list ap)
 
 	if( group->interval != -1 && !skill_get_unit_flag(skill_id, UF_DUALMODE) && skill_id != BD_LULLABY ) //Lullaby is the exception, bugreport:411
 	{	//Non-dualmode unit skills with a timer don't trigger when walking, so just return
+		// Extension "blaze_shield_knockback": apply the pillar's hit the moment a
+		// mob steps onto it, not only on the 100 ms global skill_unit_timer. Without
+		// this a mob fast enough to cross a cell between global ticks skips it, so
+		// most pillars in the 5x5 donut never see the mob. Pins non-endure mobs
+		// with a skill-induced walkdelay sized to the pillar's remaining burn time
+		// (val2 * interval), so the mob eats the full stack of hits before moving
+		// off. Endure (and MD_STATUSIMMUNE in unit_set_walkdelay) skips the pin,
+		// which is the stock escape hatch for firewall-family cells.
+		if ((flag & 1) && skill_id == NJ_KAENSIN && target->type == BL_MOB
+			&& extension_enabled("blaze_shield_knockback")
+			&& (group->bl_flag & target->type)
+			&& battle_check_target(unit, target, group->target_flag) > 0) {
+			if (block_list* ss = map_id2bl(group->src_id); ss != nullptr && !status_isdead(*target)) {
+				int32 count = 0;
+				const int32 x = target->x, y = target->y;
+				do {
+					skill_attack(BF_MAGIC, ss, unit, target, group->skill_id, group->skill_lv,
+						tick + (t_tick)count*group->interval, 0);
+				} while (group->interval > 0 && --unit->val2 && x == target->x && y == target->y
+					&& ++count < SKILLUNITTIMER_INTERVAL/group->interval
+					&& !status_isdead(*target));
+
+				if (unit->val2 > 0 && !status_isendure(*target, tick, false)) {
+					t_tick delay = static_cast<t_tick>(unit->val2) * group->interval;
+					if (delay > 0)
+						unit_set_walkdelay(target, tick, delay, 1, group->skill_id);
+				}
+
+				if (unit->val2 <= 0)
+					skill_delunit(unit);
+			}
+		}
+
 		if( dissonance ) {
 			skill_dance_switch(unit, true);
 			int32 result = skill_unit_onout(unit, target, tick);
@@ -15765,6 +15815,8 @@ void SkillDatabase::loadingFinished(){
 			it.second->impl = std::move( impl );
 		}
 	}
+
+	skill_lua_attach();
 }
 
 /**

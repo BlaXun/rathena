@@ -1609,6 +1609,7 @@ enum npce_event : uint8 {
 	NPCE_KILLPC,
 	NPCE_KILLNPC,
 	NPCE_IDENTIFY,
+	NPCE_DROPITEM,
 	NPCE_MAX
 };
 
@@ -1630,6 +1631,8 @@ static int32 npc_buylist_sub(map_session_data* sd, std::vector<s_npc_buy_list>& 
 uint8 npc_selllist(map_session_data* sd, int32 list_length, const PACKET_CZ_PC_SELL_ITEMLIST_sub* item_list);
 e_purchase_result npc_barter_purchase( map_session_data& sd, std::shared_ptr<s_npc_barter> barter, std::vector<s_barter_purchase>& purchases );
 void npc_parse_mob2(struct spawn_data* mob);
+int32 npc_set_map_mob_count_rate(int16 m, int32 rate);
+int32 npc_get_map_mob_count_rate(int16 m);
 npc_data* npc_add_warp(char* name, int16 from_mapid, int16 from_x, int16 from_y, int16 xs, int16 ys, uint16 to_mapindex, int16 to_x, int16 to_y);
 int32 npc_globalmessage(const char* name,const char* mes);
 const char *npc_get_script_event_name(int32 npce_index);

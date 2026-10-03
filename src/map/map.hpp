@@ -473,6 +473,7 @@ struct spawn_data {
 	uint16 m, x, y;	//Spawn information (map, point, spawn-area around point)
 	int16 xs, ys;
 	uint16 num; //Number of mobs using this structure
+	uint16 num_base; //Number of mobs the spawn line asked for, after mob_count_rate; setmapmobcountrate scales from this
 	uint16 active;//Number of mobs that are already spawned (for mob_remove_damaged: no)
 	uint32 delay1, delay2; //Spawn delay (fixed base + random variance)
 	uint32 level;
@@ -522,6 +523,8 @@ enum _sp {
 	SP_CASHPOINTS, SP_KAFRAPOINTS,
 	SP_PCDIECOUNTER, SP_COOKMASTERY,
 	SP_ACHIEVEMENT_LEVEL,
+	SP_KILLEDDROPID,   // 137 -- item id of the most recent drop from a mob this player killed, set when OnPCDropItemEvent fires
+	SP_KILLEDBYME,     // 138 -- 1 if the drop came from a mob whose killing blow the player also dealt; 0 if a party/merc/homun/anyone else got the kill
 
 	// Mercenaries
 	SP_MERCFLEE=165, SP_MERCKILLS=189, SP_MERCFAITH=190,
