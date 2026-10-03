@@ -104,6 +104,28 @@ Body:
       Off by default; stock behaviour is unchanged.
     Enabled: false
 
+  - Id: map_mob_count_rate
+    Name: Per-map monster counts (setmapmobcountrate)
+    Description: |
+      Lets a script scale how many monsters each spawn line on one map puts
+      out, with setmapmobcountrate "<map>",<rate> -- a percent of what the
+      line asks for after the global mob_count_rate, so the two multiply.
+      200 doubles a map, 50 halves it, 100 puts it back. A line of a single
+      monster stays single, as with mob_count_rate, so a map's boss is not
+      doubled along with its field. Monsters that are out are added or
+      removed at once; a map that spawns on entry (dynamic_mobs) uses the
+      new count the next time it does. Rates last until the scripts are
+      reloaded, so set them in OnInit.
+      Off is stock rAthena: setmapmobcountrate warns and does nothing.
+    Enabled: false
+    Values:
+      - Key: max_rate
+        Type: Int
+        Default: 1000
+        Min: 100
+        Max: 10000
+        Description: Highest rate a script may set, in percent.
+
 Footer:
   Imports:
     - Path: db/import/extension_db.yml

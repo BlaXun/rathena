@@ -3,9 +3,11 @@
 
 #include "npc.hpp"
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdlib>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 #include <common/cbasetypes.hpp>
@@ -5195,6 +5197,113 @@ static const char* npc_parse_function(char* w1, char* w2, char* w3, char* w4, co
  * Parse Mob 2 - Actually Spawns Mob
  * [Wizputer]
  *------------------------------------------*/
+/// Per-map spawn count rates set by setmapmobcountrate, in percent. A map that is not here spawns stock.
+static std::unordered_map<int16, int32> npc_map_mob_count_rate;
+
+/**
+ * How many monsters a spawn line of base_num monsters puts on map m.
+ * A line of one monster stays one, as with mob_count_rate, so a map's boss is not doubled with its field.
+ */
+static uint16 npc_mob_count_for_map(int16 m, uint16 base_num)
+{
+	if (base_num <= 1)
+		return base_num;
+
+	auto it = npc_map_mob_count_rate.find(m);
+
+	if (it == npc_map_mob_count_rate.end())
+		return base_num;
+
+	int64 num = static_cast<int64>(base_num) * it->second / 100;
+
+	return static_cast<uint16>(cap_value(num, 1, UINT16_MAX));
+}
+
+/**
+ * Scale the monster count of every spawn line on map m to rate percent of what the line asked for.
+ * Lines whose monsters are out gain or lose monsters now; a map that spawns on entry (dynamic_mobs)
+ * spawns the new count when it next does. Monsters awaiting respawn are removed before living ones.
+ * Requires the map_mob_count_rate extension; the caller checks it.
+ * @param m: map id
+ * @param rate: percent, 100 is stock
+ * @return number of spawn lines whose count changed
+ */
+int32 npc_set_map_mob_count_rate(int16 m, int32 rate)
+{
+	if (rate == 100)
+		npc_map_mob_count_rate.erase(m);
+	else
+		npc_map_mob_count_rate[m] = rate;
+
+	struct map_data* mapdata = map_getmapdata(m);
+	std::map<spawn_data*, std::vector<mob_data*>> lines;
+
+	for (spawn_data* spawn : mapdata->moblist) {
+		if (spawn != nullptr)
+			lines[spawn];
+	}
+
+	struct s_mapiterator* iter = mapit_geteachmob();
+
+	for (mob_data* md = (mob_data*)mapit_first(iter); mapit_exists(iter); md = (mob_data*)mapit_next(iter)) {
+		if (md->spawn != nullptr && md->spawn->m == m)
+			lines[md->spawn].push_back(md);
+	}
+	mapit_free(iter);
+
+	int32 changed = 0;
+
+	for (auto& [spawn, mobs] : lines) {
+		if (spawn->num_base == 0) // Not from a spawn line
+			continue;
+
+		uint16 target = npc_mob_count_for_map(m, spawn->num_base);
+		uint16 old_num = spawn->num;
+
+		if (target == old_num && spawn->active <= target)
+			continue;
+
+		if (spawn->active > target) {
+			// Monsters that are dead and waiting to respawn go first
+			std::stable_partition(mobs.begin(), mobs.end(), [](mob_data* md) { return md->spawn_timer != INVALID_TIMER; });
+
+			size_t surplus = spawn->active - target;
+
+			for (size_t i = 0; i < surplus && i < mobs.size(); i++)
+				unit_free(mobs[i], CLR_OUTSIGHT); // Lowers active, and num for a line that is not dynamic
+		}
+
+		spawn->num = target;
+
+		if (spawn->active < target && (!spawn->state.dynamic || mapdata->users > 0 || spawn->active > 0))
+			npc_parse_mob2(spawn);
+
+		// Keep the spawn lookup (@whereis, the monster info) in step
+		auto spawns = mob_spawn_data.find(spawn->id);
+
+		if (spawns != mob_spawn_data.end()) {
+			for (spawn_info& info : spawns->second) {
+				if (info.mapindex == mapdata->index) {
+					info.qty = static_cast<uint16>(cap_value(static_cast<int32>(info.qty) + target - old_num, 0, UINT16_MAX));
+					break;
+				}
+			}
+		}
+
+		changed++;
+	}
+
+	return changed;
+}
+
+/// The spawn count rate of map m in percent, 100 when setmapmobcountrate has not changed it.
+int32 npc_get_map_mob_count_rate(int16 m)
+{
+	auto it = npc_map_mob_count_rate.find(m);
+
+	return it != npc_map_mob_count_rate.end() ? it->second : 100;
+}
+
 void npc_parse_mob2(struct spawn_data* mob)
 {
 	int32 i;
@@ -5342,6 +5451,8 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 		if ((mob.num = mob.num * battle_config.mob_count_rate / 100) < 1)
 			mob.num = 1;
 	}
+	mob.num_base = mob.num;
+	mob.num = npc_mob_count_for_map(m, mob.num_base);
 
 	if (battle_config.force_random_spawn || (mob.x == 0 && mob.y == 0)
 		|| (mob.xs == 1 && mob.ys == 1 && !map_getcell(mob.m, mob.x, mob.y, CELL_CHKREACH)))
@@ -6066,6 +6177,9 @@ int32 npc_reload(void) {
 
 	/* clear guild flag cache */
 	guild_flags_clear();
+
+	// Scripts set these again in OnInit
+	npc_map_mob_count_rate.clear();
 
 	npc_clear_pathlist();
 

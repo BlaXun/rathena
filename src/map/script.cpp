@@ -17194,6 +17194,55 @@ BUILDIN_FUNC(getextensionvalue)
 	return SCRIPT_CMD_SUCCESS;
 }
 
+/**
+ * Scale how many monsters every spawn line on a map puts out.
+ * setmapmobcountrate "<map name>",<rate>;
+ * <rate> is a percent of what each line asks for (after mob_count_rate): 200 doubles the map,
+ * 100 puts it back. Needs the map_mob_count_rate extension.
+ * -> the number of spawn lines changed, or -1 if nothing was done
+ */
+BUILDIN_FUNC(setmapmobcountrate)
+{
+	const char* mapname = script_getstr(st, 2);
+	int32 rate = script_getnum(st, 3);
+
+	if (!extension_enabled("map_mob_count_rate")) {
+		ShowWarning("buildin_setmapmobcountrate: Extension map_mob_count_rate is off, %s keeps its stock spawns.\n", mapname);
+		script_pushint(st, -1);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	int16 m = map_mapname2mapid(mapname);
+
+	if (m < 0) {
+		ShowWarning("buildin_setmapmobcountrate: Unknown map %s.\n", mapname);
+		script_pushint(st, -1);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	int32 max = static_cast<int32>(extension_int("map_mob_count_rate", "max_rate", 1000));
+
+	if (rate < 1 || rate > max) {
+		ShowWarning("buildin_setmapmobcountrate: Rate %d for %s must be between 1 and %d, capping.\n", rate, mapname, max);
+		rate = cap_value(rate, 1, max);
+	}
+
+	script_pushint(st, npc_set_map_mob_count_rate(m, rate));
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * getmapmobcountrate("<map name>")
+ * -> the map's spawn count rate in percent, 100 when it has not been changed
+ */
+BUILDIN_FUNC(getmapmobcountrate)
+{
+	int16 m = map_mapname2mapid(script_getstr(st, 2));
+
+	script_pushint(st, m < 0 ? 100 : npc_get_map_mob_count_rate(m));
+	return SCRIPT_CMD_SUCCESS;
+}
+
 //=======================================================
 // strlen [Valaris]
 //-------------------------------------------------------
@@ -28443,6 +28492,8 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getbattleflag,"s"),
 	BUILDIN_DEF(getextension,"s"),
 	BUILDIN_DEF(getextensionvalue,"ss?"),
+	BUILDIN_DEF(setmapmobcountrate,"si"),
+	BUILDIN_DEF(getmapmobcountrate,"s"),
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
 	BUILDIN_DEF(undisguise,"?"), //undisguise player. Lupus
