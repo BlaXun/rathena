@@ -42,7 +42,6 @@
 #include "date.hpp" // is_day_of_*()
 #include "duel.hpp"
 #include "elemental.hpp"
-#include "extensions.hpp" // extension_enabled()
 #include "guild.hpp"
 #include "homunculus.hpp"
 #include "instance.hpp"
@@ -13193,7 +13192,7 @@ void pc_overheat(map_session_data &sd, int16 heat) {
  */
 bool pc_isautolooting(map_session_data *sd, t_itemid nameid)
 {
-	int32 i = 0;
+	uint8 i = 0;
 
 	if (sd->state.autoloottype && sd->state.autoloottype&(1<<itemdb_type(nameid)))
 		return true;
@@ -13202,21 +13201,9 @@ bool pc_isautolooting(map_session_data *sd, t_itemid nameid)
 		return false;
 
 	if (sd->state.autolooting)
-		ARR_FIND(0, AUTOLOOTITEM_SIZE_MAX, i, sd->state.autolootid[i] == nameid);
+		ARR_FIND(0, AUTOLOOTITEM_SIZE, i, sd->state.autolootid[i] == nameid);
 
-	return (i != AUTOLOOTITEM_SIZE_MAX);
-}
-
-/**
- * How many items a player may put on the @autolootid list.
- * AUTOLOOTITEM_SIZE, unless the autoloot_item_limit extension raises it.
- */
-int32 pc_autolootitem_limit()
-{
-	if (!extension_enabled("autoloot_item_limit"))
-		return AUTOLOOTITEM_SIZE;
-
-	return static_cast<int32>(cap_value(extension_int("autoloot_item_limit", "limit", AUTOLOOTITEM_SIZE), 1, AUTOLOOTITEM_SIZE_MAX));
+	return (i != AUTOLOOTITEM_SIZE);
 }
 
 /**

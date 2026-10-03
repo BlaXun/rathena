@@ -126,23 +126,6 @@ Body:
         Max: 10000
         Description: Highest rate a script may set, in percent.
 
-  - Id: autoloot_item_limit
-    Name: Longer @autolootid list
-    Description: |
-      Lets @autolootid hold more than the stock 10 items: as many as the
-      limit value, up to 100. getautolootitemlimit() reports the size in use.
-      Lowering the limit keeps a longer list a player already has, but
-      nothing more can be added until it is under the limit again.
-      Off is stock rAthena: 10 items.
-    Enabled: false
-    Values:
-      - Key: limit
-        Type: Int
-        Default: 10
-        Min: 1
-        Max: 100
-        Description: Items the @autolootid list holds.
-
 Footer:
   Imports:
     - Path: db/import/extension_db.yml

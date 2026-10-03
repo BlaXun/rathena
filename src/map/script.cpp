@@ -17305,7 +17305,7 @@ BUILDIN_FUNC(getautolootitems)
 	int32 start = reference_getindex(data);
 	int32 count = 0;
 
-	for (int32 i = 0; i < AUTOLOOTITEM_SIZE_MAX; i++) {
+	for (int32 i = 0; i < AUTOLOOTITEM_SIZE; i++) {
 		if (sd->state.autolootid[i] == 0)
 			continue;
 		set_reg_num(st, sd, reference_uid(id, start + count), name, sd->state.autolootid[i], reference_getref(data));
@@ -17317,13 +17317,12 @@ BUILDIN_FUNC(getautolootitems)
 }
 
 /**
- * How many items @autolootid accepts: AUTOLOOTITEM_SIZE, unless the
- * autoloot_item_limit extension changes it.
+ * How many items @autolootid accepts (AUTOLOOTITEM_SIZE).
  * getautolootitemlimit()
  */
 BUILDIN_FUNC(getautolootitemlimit)
 {
-	script_pushint(st, pc_autolootitem_limit());
+	script_pushint(st, AUTOLOOTITEM_SIZE);
 	return SCRIPT_CMD_SUCCESS;
 }
 

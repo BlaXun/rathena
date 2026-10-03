@@ -91,4 +91,3 @@ server restarts (the app's **Apply**).
 |---|---|
 | `pc_drop_item_event` | Fires an `OnPCDropItemEvent` script event for each item a monster drops for a player |
 | `map_mob_count_rate` | Enables `setmapmobcountrate`, which scales the monster count of every spawn line on one map |
-| `autoloot_item_limit` | Lets the `@autolootid` list hold more than 10 items, up to 100 |

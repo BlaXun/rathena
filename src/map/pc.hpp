@@ -468,7 +468,7 @@ public:
 		uint32 callshop : 1; // flag to indicate that a script used callshop; on a shop
 		int16 pmap; // Previous map on Map Change
 		uint16 autoloot;
-		t_itemid autolootid[AUTOLOOTITEM_SIZE_MAX]; // [Zephyrus]
+		t_itemid autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
 		uint16 autoloottype;
 		uint32 autolooting : 1; //performance-saver, autolooting state for @alootid
 		uint32 gmaster_flag : 1;
@@ -1704,7 +1704,6 @@ void pc_inventory_rental_add(map_session_data *sd, uint32 seconds);
 int32 pc_read_motd(void); // [Valaris]
 int32 pc_disguise(map_session_data *sd, int32 class_);
 bool pc_isautolooting(map_session_data *sd, t_itemid nameid);
-int32 pc_autolootitem_limit();
 // RAGNAROKMAC: write the current loot/exp preferences to character variables.
 void pc_save_loot_prefs(map_session_data *sd);
 

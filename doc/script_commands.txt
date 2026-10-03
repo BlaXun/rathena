@@ -3975,8 +3975,8 @@ getautoloottype returns the @autoloottype list as a bitmask of item types:
 getautolootitems fills <array variable> with the item IDs on the @autolootid
 list and returns how many there are.
 
-getautolootitemlimit returns how many items the @autolootid list holds: 10, or
-the 'autoloot_item_limit' extension's limit when it is enabled.
+getautolootitemlimit returns how many items the @autolootid list holds
+(AUTOLOOTITEM_SIZE in src/config/core.hpp).
 
 Example:
 
