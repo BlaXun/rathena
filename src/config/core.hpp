@@ -14,6 +14,10 @@
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10
 
+/// Room kept for the @autolootid list; the autoloot_item_limit extension may
+/// raise the list's size up to this. With it off, AUTOLOOTITEM_SIZE applies.
+#define AUTOLOOTITEM_SIZE_MAX 100
+
 /// The maximum number of atcommand and @warp suggestions
 #define MAX_SUGGESTIONS 10
 
