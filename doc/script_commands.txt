@@ -3957,10 +3957,15 @@ Example:
 ---------------------------------------
 
 *getautolootitems(<array variable>{,<char id>})
+*setautolootitems(<array variable>{,<char id>})
 
-Fills <array variable> with the item IDs on the attached player's (or <char
-id>'s) @autolootid list and returns how many there are. The list holds up to
-AUTOLOOTITEM_SIZE items (src/config/core.hpp).
+getautolootitems fills <array variable> with the item IDs on the attached
+player's (or <char id>'s) @autolootid list and returns how many there are. The
+list holds up to AUTOLOOTITEM_SIZE items (src/config/core.hpp).
+
+setautolootitems replaces that list with the item IDs in <array variable>,
+quietly (@autolootitem prints a chat line per item), and returns how many are
+on it now. Unknown items, zeros and repeats are skipped.
 
 The @autoloot rate and @autoloottype list are kept in the character variables
 AUTOLOOT_RATE (1/100 of a percent: 10000 loots everything, 0 is off) and
@@ -3974,6 +3979,7 @@ Example:
 		dispbottom "You are looting every card.";
 	.@n = getautolootitems(.@items);
 	dispbottom "Autolooting " + .@n + " items.";
+	setautolootitems(.@saved);	// back to a list kept earlier
 
 ---------------------------------------
 

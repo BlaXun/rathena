@@ -17283,6 +17283,63 @@ BUILDIN_FUNC(getautolootitems)
 }
 
 /**
+ * Replace the player's @autolootid list with the item IDs in an integer array,
+ * without the chat line @autolootitem prints per item. Unknown items, zeros and
+ * repeats are skipped; at most AUTOLOOTITEM_SIZE are kept.
+ * setautolootitems(<array variable>{,<char id>})
+ * -> the number of items now on the list
+ */
+BUILDIN_FUNC(setautolootitems)
+{
+	script_data* data = script_getdata(st, 2);
+	const char* name = reference_getname(data);
+
+	if (!data_isreference(data) || is_string_variable(name)) {
+		ShowError("buildin_setautolootitems: Argument %s is not an integer array.\n", name);
+		script_reportdata(data);
+		st->state = END;
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	map_session_data* sd;
+
+	if (!script_charid2sd(3, sd)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	// The array belongs to the attached player, as for inarray.
+	map_session_data* owner = nullptr;
+
+	if (not_server_variable(*name) && !script_rid2sd(owner)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	reg_db* ref = reference_getref(data);
+	int32 id = reference_getid(data);
+	uint32 end = script_array_highest_key(st, owner, name, ref);
+	int32 count = 0;
+
+	memset(sd->state.autolootid, 0, sizeof(sd->state.autolootid));
+	for (uint32 i = reference_getindex(data); i < end && count < AUTOLOOTITEM_SIZE; ++i) {
+		t_itemid nameid = static_cast<t_itemid>(get_val2_num(st, reference_uid(id, i), ref));
+		int32 j;
+
+		if (nameid == 0 || item_db.find(nameid) == nullptr)
+			continue;
+		ARR_FIND(0, count, j, sd->state.autolootid[j] == nameid);
+		if (j < count)
+			continue;
+		sd->state.autolootid[count++] = nameid;
+	}
+	sd->state.autolooting = (count > 0);
+
+	script_pushint(st, count);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
  * The chance a monster drops an item when the player kills it, in 1/100 of a
  * percent, after the server's drop rates and the player's own bonuses -- the
  * number the server rolls against. A monster spawned bigger or smaller than
@@ -28579,6 +28636,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(setmapmobcountrate,"si"),
 	BUILDIN_DEF(getmapmobcountrate,"s"),
 	BUILDIN_DEF(getautolootitems,"r?"),
+	BUILDIN_DEF(setautolootitems,"r?"),
 	BUILDIN_DEF(getmobdroprate,"ii?"),
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
