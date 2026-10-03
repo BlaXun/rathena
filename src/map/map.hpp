@@ -473,6 +473,7 @@ struct spawn_data {
 	uint16 m, x, y;	//Spawn information (map, point, spawn-area around point)
 	int16 xs, ys;
 	uint16 num; //Number of mobs using this structure
+	uint16 num_base; //Number of mobs the spawn line asked for, after mob_count_rate; setmapmobcountrate scales from this
 	uint16 active;//Number of mobs that are already spawned (for mob_remove_damaged: no)
 	uint32 delay1, delay2; //Spawn delay (fixed base + random variance)
 	uint32 level;

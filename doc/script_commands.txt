@@ -8001,6 +8001,35 @@ The optional parameter 'type' is used in the 'skill_damage' mapflag:
 
 ---------------------------------------
 
+*setmapmobcountrate "<map name>",<rate>;
+*getmapmobcountrate("<map name>")
+
+Scales how many monsters every spawn line on a map puts out. <rate> is a
+percent of what each line asks for after the global 'mob_count_rate' battle
+flag, so the two multiply: 200 doubles the map, 50 halves it, 100 puts it
+back. A line that spawns a single monster stays single. Monsters already out
+are added or removed at once (ones waiting to respawn are removed first); a
+map whose monsters are spawned on entry (dynamic_mobs) uses the new count the
+next time a player enters it.
+
+Rates are cleared when scripts are reloaded, so set them in OnInit.
+setmapmobcountrate returns the number of spawn lines it changed, or -1 if it
+did nothing. getmapmobcountrate returns the map's rate, 100 when unchanged.
+
+This is a fork extension: it does nothing, and warns, unless the
+'map_mob_count_rate' extension is enabled in db/import/extension_db.yml.
+The highest rate allowed is that extension's 'max_rate' value (1000 by default).
+
+Example:
+
+	-	script	more_porings	-1,{
+	OnInit:
+		setmapmobcountrate "prt_fild08",200;
+		end;
+	}
+
+---------------------------------------
+
 *setbattleflag "<battle flag>",<value>{,<reload>};
 *getbattleflag("<battle flag>")
 
