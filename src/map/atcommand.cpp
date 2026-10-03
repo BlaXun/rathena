@@ -7042,7 +7042,7 @@ ACMD_FUNC(autoloot)
 ACMD_FUNC(autolootitem)
 {
 	std::shared_ptr<item_data> item_data;
-	int32 i;
+	int32 i, count;
 	int32 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
 
 	nullpo_retr(-1, sd);
@@ -7077,13 +7077,18 @@ ACMD_FUNC(autolootitem)
 
 	switch(action) {
 	case 1:
-		ARR_FIND(0, AUTOLOOTITEM_SIZE, i, sd->state.autolootid[i] == item_data->nameid);
-		if (i != AUTOLOOTITEM_SIZE) {
+		ARR_FIND(0, AUTOLOOTITEM_SIZE_MAX, i, sd->state.autolootid[i] == item_data->nameid);
+		if (i != AUTOLOOTITEM_SIZE_MAX) {
 			clif_displaymessage(fd, msg_txt(sd,1190)); // You're already autolooting this item.
 			return -1;
 		}
-		ARR_FIND(0, AUTOLOOTITEM_SIZE, i, sd->state.autolootid[i] == 0);
-		if (i == AUTOLOOTITEM_SIZE) {
+		// Count rather than look for a free slot below the limit: the limit
+		// can be lowered while a list longer than it is still loaded.
+		for (i = 0, count = 0; i < AUTOLOOTITEM_SIZE_MAX; i++)
+			if (sd->state.autolootid[i] != 0)
+				count++;
+		ARR_FIND(0, AUTOLOOTITEM_SIZE_MAX, i, sd->state.autolootid[i] == 0);
+		if (count >= pc_autolootitem_limit() || i == AUTOLOOTITEM_SIZE_MAX) {
 			clif_displaymessage(fd, msg_txt(sd,1191)); // Your autolootitem list is full. Remove some items first with @autolootid -<item name or ID>.
 			return -1;
 		}
@@ -7093,30 +7098,30 @@ ACMD_FUNC(autolootitem)
 		sd->state.autolooting = 1;
 		break;
 	case 2:
-		ARR_FIND(0, AUTOLOOTITEM_SIZE, i, sd->state.autolootid[i] == item_data->nameid);
-		if (i == AUTOLOOTITEM_SIZE) {
+		ARR_FIND(0, AUTOLOOTITEM_SIZE_MAX, i, sd->state.autolootid[i] == item_data->nameid);
+		if (i == AUTOLOOTITEM_SIZE_MAX) {
 			clif_displaymessage(fd, msg_txt(sd,1193)); // You're currently not autolooting this item.
 			return -1;
 		}
 		sd->state.autolootid[i] = 0;
 		sprintf(atcmd_output, msg_txt(sd,1194), item_data->name.c_str(), item_db.create_item_link( item_data ).c_str(), item_data->nameid); // Removed item: '%s'/'%s' {%u} from your autolootitem list.
 		clif_displaymessage(fd, atcmd_output);
-		ARR_FIND(0, AUTOLOOTITEM_SIZE, i, sd->state.autolootid[i] != 0);
-		if (i == AUTOLOOTITEM_SIZE) {
+		ARR_FIND(0, AUTOLOOTITEM_SIZE_MAX, i, sd->state.autolootid[i] != 0);
+		if (i == AUTOLOOTITEM_SIZE_MAX) {
 			sd->state.autolooting = 0;
 		}
 		break;
 	case 3:
-		sprintf(atcmd_output, msg_txt(sd,1195), AUTOLOOTITEM_SIZE); // You can have %d items on your autolootitem list.
+		sprintf(atcmd_output, msg_txt(sd,1195), pc_autolootitem_limit()); // You can have %d items on your autolootitem list.
 		clif_displaymessage(fd, atcmd_output);
 		clif_displaymessage(fd, msg_txt(sd,1196)); // To add an item to the list, use "@alootid +<item name or ID>". To remove an item, use "@alootid -<item name or ID>".
 		clif_displaymessage(fd, msg_txt(sd,1197)); // "@alootid reset" will clear your autolootitem list.
-		ARR_FIND(0, AUTOLOOTITEM_SIZE, i, sd->state.autolootid[i] != 0);
-		if (i == AUTOLOOTITEM_SIZE) {
+		ARR_FIND(0, AUTOLOOTITEM_SIZE_MAX, i, sd->state.autolootid[i] != 0);
+		if (i == AUTOLOOTITEM_SIZE_MAX) {
 			clif_displaymessage(fd, msg_txt(sd,1198)); // Your autolootitem list is empty.
 		} else {
 			clif_displaymessage(fd, msg_txt(sd,1199)); // Items on your autolootitem list:
-			for(i = 0; i < AUTOLOOTITEM_SIZE; i++)
+			for(i = 0; i < AUTOLOOTITEM_SIZE_MAX; i++)
 			{
 				if (sd->state.autolootid[i] == 0)
 					continue;

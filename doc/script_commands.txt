@@ -3934,6 +3934,59 @@ Example:
 
 ---------------------------------------
 
+*getmobdroprate(<mob id>,<item id>{,<char id>})
+
+Returns the chance that the monster drops the item when the attached player
+(or <char id>) kills it, in 1/100 of a percent (1 = .01%). Unlike the rate
+'getmobdrops' reports, this is the number the server rolls against: it counts
+the server's drop rate settings, the renewal level penalty and the player's own
+bonuses (bDropAddRace, bDropAddClass, Bubble Gum, VIP, LUK if drops_by_luk is
+set). It does not count mob_size_influence, as it asks about no particular
+monster. If the monster lists the item more than once, the best chance is
+returned. Returns -1 if the monster does not drop the item at all.
+
+@autoloot compares the base rate from 'getmobdrops' to its threshold, unless
+the 'autoloot_adjust' battle flag is on; then it compares this one.
+
+Example:
+
+	.@rate = getmobdroprate(1002, 909);	// Poring, Jellopy
+	if (.@rate >= 0)
+		mes "You have a " + (.@rate / 100) + "." + (.@rate % 100) + "% chance.";
+
+---------------------------------------
+
+*getautolootrate({<char id>})
+*getautoloottype({<char id>})
+*getautolootitems(<array variable>{,<char id>})
+*getautolootitemlimit()
+
+Read what the attached player (or <char id>) has set with @autoloot,
+@autoloottype and @autolootid. To change the settings, a script runs the
+commands themselves with 'atcommand', which does not need the player to be
+allowed them.
+
+getautolootrate returns the @autoloot threshold in 1/100 of a percent: items
+whose drop rate is at or below it are looted. 10000 loots everything, 0 is off.
+
+getautoloottype returns the @autoloottype list as a bitmask of item types:
+(1<<IT_CARD) is set if cards are looted.
+
+getautolootitems fills <array variable> with the item IDs on the @autolootid
+list and returns how many there are.
+
+getautolootitemlimit returns how many items the @autolootid list holds: 10, or
+the 'autoloot_item_limit' extension's limit when it is enabled.
+
+Example:
+
+	if (getautoloottype() & (1<<IT_CARD))
+		dispbottom "You are looting every card.";
+	.@n = getautolootitems(.@items);
+	dispbottom "Autolooting " + .@n + " of " + getautolootitemlimit() + " items.";
+
+---------------------------------------
+
 *skillpointcount({<char_id>})
 
 Returns the total amount of skill points a character possesses (SkillPoint+SP's used in skills)
