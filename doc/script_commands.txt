@@ -3956,34 +3956,24 @@ Example:
 
 ---------------------------------------
 
-*getautolootrate({<char id>})
-*getautoloottype({<char id>})
 *getautolootitems(<array variable>{,<char id>})
-*getautolootitemlimit()
 
-Read what the attached player (or <char id>) has set with @autoloot,
-@autoloottype and @autolootid. To change the settings, a script runs the
-commands themselves with 'atcommand', which does not need the player to be
-allowed them.
+Fills <array variable> with the item IDs on the attached player's (or <char
+id>'s) @autolootid list and returns how many there are. The list holds up to
+AUTOLOOTITEM_SIZE items (src/config/core.hpp).
 
-getautolootrate returns the @autoloot threshold in 1/100 of a percent: items
-whose drop rate is at or below it are looted. 10000 loots everything, 0 is off.
-
-getautoloottype returns the @autoloottype list as a bitmask of item types:
-(1<<IT_CARD) is set if cards are looted.
-
-getautolootitems fills <array variable> with the item IDs on the @autolootid
-list and returns how many there are.
-
-getautolootitemlimit returns how many items the @autolootid list holds
-(AUTOLOOTITEM_SIZE in src/config/core.hpp).
+The @autoloot rate and @autoloottype list are kept in the character variables
+AUTOLOOT_RATE (1/100 of a percent: 10000 loots everything, 0 is off) and
+AUTOLOOT_TYPE (a bitmask of 1<<IT_* item types), which a script can read
+directly. To change any of these settings, a script runs the commands
+themselves with 'atcommand', which does not need the player to be allowed them.
 
 Example:
 
-	if (getautoloottype() & (1<<IT_CARD))
+	if (AUTOLOOT_TYPE & (1<<IT_CARD))
 		dispbottom "You are looting every card.";
 	.@n = getautolootitems(.@items);
-	dispbottom "Autolooting " + .@n + " of " + getautolootitemlimit() + " items.";
+	dispbottom "Autolooting " + .@n + " items.";
 
 ---------------------------------------
 

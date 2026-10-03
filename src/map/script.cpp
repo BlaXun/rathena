@@ -17244,40 +17244,6 @@ BUILDIN_FUNC(getmapmobcountrate)
 }
 
 /**
- * The player's @autoloot threshold, in 1/100 of a percent (500 is 5%).
- * getautolootrate({<char id>})
- */
-BUILDIN_FUNC(getautolootrate)
-{
-	map_session_data* sd;
-
-	if (!script_charid2sd(2, sd)) {
-		script_pushint(st, 0);
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	script_pushint(st, sd->state.autoloot);
-	return SCRIPT_CMD_SUCCESS;
-}
-
-/**
- * The player's @autoloottype list, as a bitmask of 1<<IT_* item types.
- * getautoloottype({<char id>})
- */
-BUILDIN_FUNC(getautoloottype)
-{
-	map_session_data* sd;
-
-	if (!script_charid2sd(2, sd)) {
-		script_pushint(st, 0);
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	script_pushint(st, sd->state.autoloottype);
-	return SCRIPT_CMD_SUCCESS;
-}
-
-/**
  * Copy the player's @autolootid list into an integer array.
  * getautolootitems(<array variable>{,<char id>})
  * -> the number of items copied
@@ -17313,16 +17279,6 @@ BUILDIN_FUNC(getautolootitems)
 	}
 
 	script_pushint(st, count);
-	return SCRIPT_CMD_SUCCESS;
-}
-
-/**
- * How many items @autolootid accepts (AUTOLOOTITEM_SIZE).
- * getautolootitemlimit()
- */
-BUILDIN_FUNC(getautolootitemlimit)
-{
-	script_pushint(st, AUTOLOOTITEM_SIZE);
 	return SCRIPT_CMD_SUCCESS;
 }
 
@@ -27919,6 +27875,7 @@ BUILDIN_FUNC(autoloot) {
 	}
 
 	sd->state.autoloot = rate;
+	pc_save_loot_prefs(sd); // RAGNAROKMAC: as @autoloot does, so AUTOLOOT_RATE stays current
 	script_pushint(st, true);
 
 	return SCRIPT_CMD_SUCCESS;
@@ -28621,10 +28578,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getextensionvalue,"ss?"),
 	BUILDIN_DEF(setmapmobcountrate,"si"),
 	BUILDIN_DEF(getmapmobcountrate,"s"),
-	BUILDIN_DEF(getautolootrate,"?"),
-	BUILDIN_DEF(getautoloottype,"?"),
 	BUILDIN_DEF(getautolootitems,"r?"),
-	BUILDIN_DEF(getautolootitemlimit,""),
 	BUILDIN_DEF(getmobdroprate,"ii?"),
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
