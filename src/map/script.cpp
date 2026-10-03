@@ -17243,6 +17243,134 @@ BUILDIN_FUNC(getmapmobcountrate)
 	return SCRIPT_CMD_SUCCESS;
 }
 
+/**
+ * The player's @autoloot threshold, in 1/100 of a percent (500 is 5%).
+ * getautolootrate({<char id>})
+ */
+BUILDIN_FUNC(getautolootrate)
+{
+	map_session_data* sd;
+
+	if (!script_charid2sd(2, sd)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	script_pushint(st, sd->state.autoloot);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * The player's @autoloottype list, as a bitmask of 1<<IT_* item types.
+ * getautoloottype({<char id>})
+ */
+BUILDIN_FUNC(getautoloottype)
+{
+	map_session_data* sd;
+
+	if (!script_charid2sd(2, sd)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	script_pushint(st, sd->state.autoloottype);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * Copy the player's @autolootid list into an integer array.
+ * getautolootitems(<array variable>{,<char id>})
+ * -> the number of items copied
+ */
+BUILDIN_FUNC(getautolootitems)
+{
+	script_data* data = script_getdata(st, 2);
+	const char* name = reference_getname(data);
+
+	if (!data_isreference(data) || is_string_variable(name)) {
+		ShowError("buildin_getautolootitems: Argument %s is not an integer array.\n", name);
+		script_reportdata(data);
+		st->state = END;
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	map_session_data* sd;
+
+	if (!script_charid2sd(3, sd)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	int32 id = reference_getid(data);
+	int32 start = reference_getindex(data);
+	int32 count = 0;
+
+	for (int32 i = 0; i < AUTOLOOTITEM_SIZE_MAX; i++) {
+		if (sd->state.autolootid[i] == 0)
+			continue;
+		set_reg_num(st, sd, reference_uid(id, start + count), name, sd->state.autolootid[i], reference_getref(data));
+		count++;
+	}
+
+	script_pushint(st, count);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * How many items @autolootid accepts: AUTOLOOTITEM_SIZE, unless the
+ * autoloot_item_limit extension changes it.
+ * getautolootitemlimit()
+ */
+BUILDIN_FUNC(getautolootitemlimit)
+{
+	script_pushint(st, pc_autolootitem_limit());
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * The chance a monster drops an item when the player kills it, in 1/100 of a
+ * percent, after the server's drop rates and the player's own bonuses -- the
+ * number the server rolls against. A monster spawned bigger or smaller than
+ * usual (mob_size_influence) is not counted, as no particular monster is.
+ * getmobdroprate(<monster id>,<item id>{,<char id>})
+ * -> the rate, or -1 if the monster does not drop the item
+ */
+BUILDIN_FUNC(getmobdroprate)
+{
+	int32 mob_id = script_getnum(st, 2);
+	t_itemid nameid = script_getnum(st, 3);
+	map_session_data* sd;
+
+	if (!script_charid2sd(4, sd)) {
+		script_pushint(st, -1);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	std::shared_ptr<s_mob_db> mob = mob_db.find(mob_id);
+
+	if (mob == nullptr) {
+		script_pushint(st, -1);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	int32 drop_modifier = 100;
+
+#ifdef RENEWAL_DROP
+	drop_modifier = pc_level_penalty_mod(sd, PENALTY_DROP, mob);
+#endif
+	int32 rate = -1;
+
+	// A monster can list the same item more than once; report the best chance.
+	for (const std::shared_ptr<s_mob_drop>& entry : mob->dropitem) {
+		if (entry->nameid != nameid)
+			continue;
+		rate = max(rate, mob_getdroprate(sd, mob, entry->rate, drop_modifier));
+	}
+
+	script_pushint(st, rate);
+	return SCRIPT_CMD_SUCCESS;
+}
+
 //=======================================================
 // strlen [Valaris]
 //-------------------------------------------------------
@@ -28494,6 +28622,11 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getextensionvalue,"ss?"),
 	BUILDIN_DEF(setmapmobcountrate,"si"),
 	BUILDIN_DEF(getmapmobcountrate,"s"),
+	BUILDIN_DEF(getautolootrate,"?"),
+	BUILDIN_DEF(getautoloottype,"?"),
+	BUILDIN_DEF(getautolootitems,"r?"),
+	BUILDIN_DEF(getautolootitemlimit,""),
+	BUILDIN_DEF(getmobdroprate,"ii?"),
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
 	BUILDIN_DEF(undisguise,"?"), //undisguise player. Lupus
