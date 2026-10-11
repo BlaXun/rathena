@@ -17273,6 +17273,70 @@ BUILDIN_FUNC(setmapmobcountrate)
 }
 
 /**
+ * Change one day's reward of the running attendance period.
+ * setattendancereward <day>,<item id>,<amount>;
+ * <day> starts at 1. Lasts until db/attendance.yml is read again, so set it in OnInit.
+ * Needs the attendance_script_rewards extension.
+ * -> 1 if the reward was changed, 0 if not (the reason is in the log)
+ */
+BUILDIN_FUNC(setattendancereward)
+{
+	int32 day = script_getnum(st, 2);
+	int32 item_id = script_getnum(st, 3);
+	int32 amount = script_getnum(st, 4);
+
+	if (!extension_enabled("attendance_script_rewards")) {
+		ShowWarning("buildin_setattendancereward: Extension attendance_script_rewards is off, day %d keeps its reward.\n", day);
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	if (day < 1 || item_id < 1 || amount < 1 || amount > MAX_AMOUNT) {
+		ShowWarning("buildin_setattendancereward: Invalid day %d, item ID %d or amount %d.\n", day, item_id, amount);
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	bool changed = pc_attendance_set_reward(static_cast<uint32>(day), static_cast<t_itemid>(item_id), static_cast<uint16>(amount));
+
+	script_pushint(st, changed ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * getattendancereward(<day>{,<type>})
+ * One day's reward of the running attendance period: <type> 0 (default) is the item ID, 1 the amount.
+ * getattendancereward(0) is the number of days in the period.
+ * -> 0 when no period is running or it has no such day
+ */
+BUILDIN_FUNC(getattendancereward)
+{
+	int32 day = script_getnum(st, 2);
+	int32 type = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
+	std::shared_ptr<s_attendance_period> period = pc_attendance_period();
+
+	if (period == nullptr || day < 0) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	if (day == 0) {
+		script_pushint(st, static_cast<int32>(period->rewards.size()));
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	std::shared_ptr<s_attendance_reward> reward = util::map_find(period->rewards, static_cast<uint32>(day - 1));
+
+	if (reward == nullptr)
+		script_pushint(st, 0);
+	else if (type == 1)
+		script_pushint(st, reward->amount);
+	else
+		script_pushint(st, reward->item_id);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
  * getmapmobcountrate("<map name>")
  * -> the map's spawn count rate in percent, 100 when it has not been changed
  */
@@ -28677,6 +28741,8 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getextensionvalue,"ss?"),
 	BUILDIN_DEF(setmapmobcountrate,"si"),
 	BUILDIN_DEF(getmapmobcountrate,"s"),
+	BUILDIN_DEF(setattendancereward,"iii"),
+	BUILDIN_DEF(getattendancereward,"i?"),
 	BUILDIN_DEF(getautolootitems,"r?"),
 	BUILDIN_DEF(setautolootitems,"r?"),
 	BUILDIN_DEF(getmobdroprate,"ii?"),
