@@ -51,3 +51,4 @@ Footer:
   - Path: npc/re/merchants/barters.yml
     Mode: Renewal
   - Path: npc/custom/barters.yml
+  - Path: db/import/barters.yml
