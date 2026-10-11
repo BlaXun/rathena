@@ -552,7 +552,7 @@ int32 skill_calc_heal(block_list *src, block_list *target, uint16 skill_id, uint
 			if (sd && ((skill = pc_checkskill(sd, HP_MEDITATIO)) > 0))
 				hp_bonus += skill * 2;
 #else
-			hp = ((status_get_lv(src) + status_get_int(src)) / 8) * (4 + ((sd ? pc_checkskill(sd, AL_HEAL) : 1) * 8));
+			hp = ((status_get_lv_dmg(src, skill_id) + status_get_int(src)) / 8) * (4 + ((sd ? pc_checkskill(sd, AL_HEAL) : 1) * 8));
 			hp = (hp * (17 + 3 * skill_lv)) / 10;
 #endif
 			break;
@@ -587,7 +587,7 @@ int32 skill_calc_heal(block_list *src, block_list *target, uint16 skill_id, uint
 			 */
 			hp = (status_get_lv(src) + status_get_int(src)) / 5 * 30 * skill_lv / 10;
 #else
-			hp = (status_get_lv(src) + status_get_int(src)) / 8 * (4 + (skill_lv * 8));
+			hp = (status_get_lv_dmg(src, skill_id) + status_get_int(src)) / 8 * (4 + (skill_lv * 8));
 #endif
 
 			if (sd && ((skill = pc_checkskill(sd, HP_MEDITATIO)) > 0))

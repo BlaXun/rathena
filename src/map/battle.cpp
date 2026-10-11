@@ -2292,7 +2292,7 @@ int64 battle_addmastery(map_session_data *sd,block_list *target,int64 dmg,int32 
 	if((skill = pc_checkskill(sd,AL_DEMONBANE)) > 0 &&
 		target->type == BL_MOB && //This bonus doesn't work against players.
 		(battle_check_undead(status->race,status->def_ele) || status->race == RC_DEMON) )
-		damage += static_cast<decltype(damage)>(skill * (sd->status.base_level / 20.0 + 3.0));
+		damage += static_cast<decltype(damage)>(skill * (status_get_lv_dmg(sd, AL_DEMONBANE) / 20.0 + 3.0));
 	if( (skill = pc_checkskill(sd, RA_RANGERMAIN)) > 0 && (status->race == RC_BRUTE || status->race == RC_PLAYER_DORAM || status->race == RC_PLANT || status->race == RC_FISH) )
 		damage += (skill * 5);
 	if( (skill = pc_checkskill(sd,NC_RESEARCHFE)) > 0 && (status->def_ele == ELE_FIRE || status->def_ele == ELE_EARTH) )
@@ -4080,8 +4080,8 @@ static void battle_calc_skill_base_damage(struct Damage* wd, block_list *src,blo
 		case RK_DRAGONBREATH_WATER:
 			{
 				int32 damagevalue = (sstatus->hp / 50 + status_get_max_sp(src) / 4) * skill_lv;
-				if(status_get_lv(src) > 100)
-					damagevalue = damagevalue * status_get_lv(src) / 100;
+				if(status_get_lv_dmg(src, skill_id) > 100)
+					damagevalue = damagevalue * status_get_lv_dmg(src, skill_id) / 100;
 				if(sd) {
 					if (pc_checkskill( sd, DK_DRAGONIC_AURA ) >= 1) {
 						damagevalue = damagevalue * (90 + 10 * pc_checkskill( sd, RK_DRAGONTRAINING ) + sstatus->pow / 5 ) / 100;
@@ -4101,8 +4101,8 @@ static void battle_calc_skill_base_damage(struct Damage* wd, block_list *src,blo
 		case NC_SELFDESTRUCTION: {
 				int32 damagevalue = (skill_lv + 1) * ((sd ? pc_checkskill(sd,NC_MAINFRAME) : 0) + 8) * (status_get_sp(src) + sstatus->vit);
 
-				if(status_get_lv(src) > 100)
-					damagevalue = damagevalue * status_get_lv(src) / 100;
+				if(status_get_lv_dmg(src, skill_id) > 100)
+					damagevalue = damagevalue * status_get_lv_dmg(src, skill_id) / 100;
 				damagevalue = damagevalue + sstatus->hp;
 				ATK_ADD(wd->damage, wd->damage2, damagevalue);
 #ifdef RENEWAL
@@ -4691,7 +4691,7 @@ static void battle_attack_sc_bonus(struct Damage* wd, block_list *src, block_lis
 
 	uint16 anger_level;
 	if (sd != nullptr && anger_id < MAX_PC_FEELHATE && (anger_level = pc_checkskill(sd, sg_info[anger_id].anger_id))) {
-		int32 skillratio = sd->status.base_level + sstatus->dex + sstatus->luk;
+		int32 skillratio = status_get_lv_dmg(sd, sg_info[anger_id].anger_id) + sstatus->dex + sstatus->luk;
 
 		if (anger_id == 2)
 			skillratio += sstatus->str; // SG_STAR_ANGER additionally has STR added in its formula.
@@ -5208,7 +5208,7 @@ static void battle_calc_weapon_final_atk_modifiers(struct Damage* wd, block_list
 	if( tsc && tsc->getSCE(SC_CRESCENTELBOW) && wd->flag&BF_SHORT && rnd()%100 < tsc->getSCE(SC_CRESCENTELBOW)->val2 ) {
 		//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
 		int64 rdamage = 0;
-		int32 ratio = (int64)(status_get_hp(src) / 100) * tsc->getSCE(SC_CRESCENTELBOW)->val1 * status_get_lv(target) / 125;
+		int32 ratio = (int64)(status_get_hp(src) / 100) * tsc->getSCE(SC_CRESCENTELBOW)->val1 * status_get_lv_dmg(target, SR_CRESCENTELBOW) / 125;
 		if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
 		rdamage = battle_calc_base_damage(target,tstatus,&tstatus->rhw,tsc,sstatus->size,0);
 		rdamage = (int64)rdamage * ratio / 100 + wd->damage * (10 + tsc->getSCE(SC_CRESCENTELBOW)->val1 * 20 / 10) / 10;
@@ -5688,9 +5688,9 @@ static struct Damage battle_calc_weapon_attack(block_list *src, block_list *targ
 
 			ATK_ADD(wd.damage, wd.damage2, sstatus->max_hp - sstatus->hp);
 			if(sc && sc->getSCE(SC_COMBO) && sc->getSCE(SC_COMBO)->val1 == SR_FALLENEMPIRE) {
-				ATK_ADD(wd.damage, wd.damage2, static_cast<int64>(sstatus->max_sp * bonus) + 40 * status_get_lv(src));
+				ATK_ADD(wd.damage, wd.damage2, static_cast<int64>(sstatus->max_sp * bonus) + 40 * status_get_lv_dmg(src, SR_GATEOFHELL));
 			} else
-				ATK_ADD(wd.damage, wd.damage2, static_cast<int64>(sstatus->sp * bonus) + 10 * status_get_lv(src));
+				ATK_ADD(wd.damage, wd.damage2, static_cast<int64>(sstatus->sp * bonus) + 10 * status_get_lv_dmg(src, SR_GATEOFHELL));
 		}
 			break;
 		case MH_TINDER_BREAKER:
@@ -5905,7 +5905,7 @@ struct Damage battle_calc_magic_attack(block_list *src,block_list *target,uint16
 				i = 10 * skill_lv + sstatus->luk + sstatus->int_ + status_get_lv(src)
 				  	+ 300 - 300 * tstatus->hp / tstatus->max_hp;
 #else
-				i = 20 * skill_lv + sstatus->luk + sstatus->int_ + status_get_lv(src)
+				i = 20 * skill_lv + sstatus->luk + sstatus->int_ + status_get_lv_dmg(src, skill_id)
 				  	+ 200 - 200 * tstatus->hp / tstatus->max_hp;
 #endif
 				if(i > 700)
@@ -5921,7 +5921,7 @@ struct Damage battle_calc_magic_attack(block_list *src,block_list *target,uint16
 					}
 					MATK_RATE(skill_lv);
 #else
-					ad.damage = status_get_lv(src) + sstatus->int_ + skill_lv * 10;
+					ad.damage = status_get_lv_dmg(src, skill_id) + sstatus->int_ + skill_lv * 10;
 #endif
 				}
 				break;
@@ -5932,7 +5932,7 @@ struct Damage battle_calc_magic_attack(block_list *src,block_list *target,uint16
 				ad.damage = tstatus->sp * 2;
 				break;
 			case AB_RENOVATIO:
-				ad.damage = status_get_lv(src) * 10 + sstatus->int_;
+				ad.damage = status_get_lv_dmg(src, AB_RENOVATIO) * 10 + sstatus->int_;
 				break;
 			case NPC_EARTHQUAKE:
 				if (mflag & NPC_EARTHQUAKE_FLAG) {

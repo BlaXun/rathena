@@ -31,7 +31,7 @@ void SkillKoCrossSlash::calculateSkillRatio(const Damage *wd, const block_list *
 	skillratio += -100 + 200 * skill_lv;
 	RE_LVL_DMOD(120);
 	if(tsc && tsc->getSCE(SC_JYUMONJIKIRI))
-		skillratio += skill_lv * status_get_lv(src);
+		skillratio += skill_lv * status_get_lv_dmg(src, getSkillId());
 	if (sc && sc->getSCE(SC_KAGEMUSYA))
 		skillratio += skillratio * sc->getSCE(SC_KAGEMUSYA)->val2 / 100;
 }

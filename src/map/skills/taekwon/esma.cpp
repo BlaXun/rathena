@@ -12,7 +12,7 @@ SkillEsma::SkillEsma() : SkillImpl(SL_SMA) {
 
 void SkillEsma::calculateSkillRatio(const Damage *wd, const block_list *src, const block_list *target, uint16 skill_lv, int32 &base_skillratio, int32 mflag) const {
 	// Base damage is 40% + lv%
-	base_skillratio += -60 + status_get_lv(src);
+	base_skillratio += -60 + status_get_lv_dmg(src, getSkillId());
 }
 
 void SkillEsma::castendDamageId(block_list *src, block_list *target, uint16 skill_lv, t_tick tick, int32& flag) const {

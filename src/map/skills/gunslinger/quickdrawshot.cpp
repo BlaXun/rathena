@@ -16,7 +16,7 @@ void SkillQuickDrawShot::modifyDamageData(Damage& dmg, const block_list& src, co
 	dmg.div_ = 1;
 	
 	if (sd != nullptr) {
-		dmg.div_ += sd->status.job_level / 20;
+		dmg.div_ += status_get_joblv_dmg(sd, 0, getSkillId()) / 20;
 	}
 }
 

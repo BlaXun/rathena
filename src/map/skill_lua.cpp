@@ -78,8 +78,8 @@ void count_hook(lua_State* state, lua_Debug*) {
 // Hooks, by skill name and then by id
 // ---------------------------------------------------------------------------
 
-enum e_hook : uint8 { HOOK_RATIO = 0, HOOK_HIT, HOOK_ELEMENT, HOOK_ON_HIT, HOOK_ON_STEAL, HOOK_MAX };
-const char* const hook_names[HOOK_MAX] = { "ratio", "hit", "element", "on_hit", "on_steal" };
+enum e_hook : uint8 { HOOK_RATIO = 0, HOOK_HIT, HOOK_ELEMENT, HOOK_ON_HIT, HOOK_ON_STEAL, HOOK_LEVEL, HOOK_JOB_LEVEL, HOOK_HEAL, HOOK_MAX };
+const char* const hook_names[HOOK_MAX] = { "ratio", "hit", "element", "on_hit", "on_steal", "level", "job_level", "heal" };
 
 enum e_item_hook : uint8 { ITEM_HOOK_ON_ATTACK = 0, ITEM_HOOK_ON_HIT_TAKEN, ITEM_HOOK_MAX };
 const char* const item_hook_names[ITEM_HOOK_MAX] = { "on_attack", "on_hit_taken" };
@@ -431,7 +431,7 @@ void push_context(uint16 skill_id, uint16 skill_lv, const block_list* src, const
 /// registered hook runs in priority order; each sees what the previous one
 /// returned as `stock`, and returning nil keeps the running value. A hook
 /// that fails is switched off and the chain carries on with the rest.
-void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int64& value) {
+void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int64& value, const int64* base = nullptr) {
 	s_skill_hooks* hooks = hooks_for(skill_id);
 
 	if (hooks == nullptr || hooks->hooks[which].empty())
@@ -443,6 +443,8 @@ void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const bloc
 
 		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
 		push_context(skill_id, skill_lv, src, target, nullptr);
+		if (base != nullptr)
+			set_int("base", *base);  // heal: the amount before the skill's own bonus
 		lua_pushinteger(L, value);
 		if (!protected_call(hook, hooks->skill.c_str(), 2, 1))
 			continue;
@@ -456,6 +458,19 @@ void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const bloc
 		}
 		lua_pop(L, 1);
 	}
+}
+
+/// level and job_level: the level a skill's formula reads for `bl`. Runs by
+/// skill id, so it reaches skills that have no class. There is no target and
+/// no skill level here: a hook sees c.caster only.
+int32 call_level_hook(e_hook which, uint16 skill_id, const block_list* bl, int32 stock) {
+	int64 value = stock;
+
+	call_number_hook(which, skill_id, 0, bl, nullptr, value);
+
+	if (value == stock)
+		return stock;  // no hook, or none changed it: the stock level, untouched
+	return static_cast<int32>(std::clamp<int64>(value, 0, MAX_LEVEL));
 }
 
 // ---------------------------------------------------------------------------
@@ -564,7 +579,7 @@ int32 lua_register_skill(lua_State* state) {
 			if (strcmp(key, hook_names[i]) == 0)
 				which = i;
 		if (which < 0)
-			return luaL_error(state, "skill %s: unknown hook \"%s\" (ratio, hit, element, on_hit, on_steal or priority)", name, key);
+			return luaL_error(state, "skill %s: unknown hook \"%s\" (ratio, hit, element, on_hit, on_steal, level, job_level, heal or priority)", name, key);
 		if (!lua_isfunction(state, -1))
 			return luaL_error(state, "skill %s: %s must be a function", name, key);
 
@@ -1420,6 +1435,25 @@ bool is_stealable(const mob_data& md, t_itemid nameid) {
 }
 
 } // namespace
+
+int32 skill_lua_level(uint16 skill_id, const block_list* bl, int32 stock) {
+	return call_level_hook(HOOK_LEVEL, skill_id, bl, stock);
+}
+
+int32 skill_lua_job_level(uint16 skill_id, const block_list* bl, int32 stock) {
+	return call_level_hook(HOOK_JOB_LEVEL, skill_id, bl, stock);
+}
+
+int32 skill_lua_heal(uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int32 stock, int32 base) {
+	int64 value = stock;
+	const int64 before_bonus = base;
+
+	call_number_hook(HOOK_HEAL, skill_id, skill_lv, src, target, value, &before_bonus);
+
+	if (value == stock)
+		return stock;  // no hook, or none changed it: the stock amount, untouched
+	return static_cast<int32>(std::clamp<int64>(value, 0, INT32_MAX));
+}
 
 t_itemid skill_lua_on_steal(block_list* src, block_list* target, uint16 skill_lv) {
 	// in_lua_cast refuses re-entry the same way on_damage does: an item

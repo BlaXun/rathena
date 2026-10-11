@@ -20,7 +20,7 @@ void SkillGravityControl::castendNoDamageId(block_list *src, block_list *target,
 	if (target->type == BL_PC)
 		fall_damage += dstsd->weight / 10 - tstatus->def;
 	else // Monster's don't have weight. Put something in its place.
-		fall_damage += 50 * status_get_lv(src) - tstatus->def;
+		fall_damage += 50 * status_get_lv_dmg(src, getSkillId()) - tstatus->def;
 
 	fall_damage = max(1, fall_damage);
 

@@ -5,6 +5,7 @@
 
 #include "../../mob.hpp"
 #include "../../pc.hpp"
+#include "../../skill_lua.hpp"
 
 SkillHeal::SkillHeal() : SkillImpl(AL_HEAL)
 {
@@ -19,6 +20,7 @@ void SkillHeal::castendNoDamageId(block_list *src, block_list *bl, uint16 skill_
 	mob_data *dstmd = BL_CAST(BL_MOB, bl);
 
 	int32 heal = skill_calc_heal(src, bl, getSkillId(), skill_lv, true);
+	heal = skill_lua_heal(getSkillId(), skill_lv, src, bl, heal, heal);
 
 	if (status_isimmune(bl) || (dstmd && (status_get_class(bl) == MOBID_EMPERIUM || status_get_class_(bl) == CLASS_BATTLEFIELD)))
 		heal = 0;
