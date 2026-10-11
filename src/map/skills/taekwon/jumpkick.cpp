@@ -15,9 +15,9 @@ void SkillJumpKick::calculateSkillRatio(const Damage *wd, const block_list *src,
 	const status_change *sc = status_get_sc(src);
 	// Different damage formulas depending on damage trigger
 	if (sc && sc->getSCE(SC_COMBO) && sc->getSCE(SC_COMBO)->val1 == getSkillId())
-		base_skillratio += -100 + 4 * status_get_lv(src); // Tumble formula [4%*baselevel]
+		base_skillratio += -100 + 4 * status_get_lv_dmg(src, getSkillId()); // Tumble formula [4%*baselevel]
 	else if (wd->miscflag) {
-		base_skillratio += -100 + 4 * status_get_lv(src); // Running formula [4%*baselevel]
+		base_skillratio += -100 + 4 * status_get_lv_dmg(src, getSkillId()); // Running formula [4%*baselevel]
 		if (sc && sc->getSCE(SC_SPURT)) // Spurt formula [8%*baselevel]
 			base_skillratio *= 2;
 	} else

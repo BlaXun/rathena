@@ -20,6 +20,7 @@
 #include <common/utils.hpp>
 
 #include "battle.hpp"
+#include "skill_lua.hpp"
 #include "battleground.hpp"
 #include "clif.hpp"
 #include "elemental.hpp"
@@ -3640,6 +3641,41 @@ static uint32 status_calc_maxap_pc( map_session_data& sd ){
 	}
 
 	return cap_value( static_cast<uint32>( dmax ), 0, std::numeric_limits<uint32>::max() );
+}
+
+/**
+ * Base level as a skill's output may read it: the player's level, unless a
+ * mod's Lua `level` hook on that skill says otherwise. Monsters and other
+ * units always give their own level.
+ * @param bl: Object whose level a formula reads
+ * @param skill_id: The skill whose formula is asking
+ * @return Level for the formula
+ */
+int32 status_get_lv_dmg(const block_list* bl, uint16 skill_id) {
+	int32 lv = status_get_lv(bl);
+
+	// Only a player's level is ever changed.
+	if (bl == nullptr || bl->type != BL_PC) {
+		return lv;
+	}
+
+	return skill_lua_level(skill_id, bl, lv);
+}
+
+/**
+ * Job level as a skill's output may read it: the player's job level, unless
+ * a mod's Lua `job_level` hook on that skill says otherwise.
+ * @param sd: Player (may be nullptr)
+ * @param fallback: Value for a unit that is not a player
+ * @param skill_id: The skill whose formula is asking
+ * @return Job level for the formula
+ */
+int32 status_get_joblv_dmg(const map_session_data* sd, int32 fallback, uint16 skill_id) {
+	if (sd == nullptr) {
+		return fallback;
+	}
+
+	return skill_lua_job_level(skill_id, sd, sd->status.job_level);
 }
 
 /**
@@ -12057,7 +12093,7 @@ static bool status_change_start_post_delay(block_list* src, block_list* bl, sc_t
 			break;
 		case SC_MOONLITSERENADE: // MATK Increase
 		case SC_RUSHWINDMILL: // ATK Increase
-			val3 = 4 + val1 * 3 + val2 + (sd?sd->status.job_level:50) / 5;
+			val3 = 4 + val1 * 3 + val2 + status_get_joblv_dmg(sd, 50, type == SC_RUSHWINDMILL ? MI_RUSH_WINDMILL : WA_MOONLIT_SERENADE) / 5;
 			break;
 		case SC_ECHOSONG:
 			val3 = 6 * val1 + val2 + (sd?sd->status.job_level:50) / 4; // DEF Increase
@@ -12138,7 +12174,7 @@ static bool status_change_start_post_delay(block_list* src, block_list* bl, sc_t
 				int16 index = sd->equip_index[EQI_HAND_R];
 
 				if (index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON)
-					val2 += 15 * sd->status.job_level + sd->inventory_data[index]->weight / 10 * sd->inventory_data[index]->weapon_level * status_get_lv(bl) / 100;
+					val2 += 15 * status_get_joblv_dmg(sd, 0, LG_EXEEDBREAK) + sd->inventory_data[index]->weight / 10 * sd->inventory_data[index]->weapon_level * status_get_lv_dmg(bl, LG_EXEEDBREAK) / 100;
 			} else // Monster
 				val2 += 750;
 			break;
@@ -12348,14 +12384,14 @@ static bool status_change_start_post_delay(block_list* src, block_list* bl, sc_t
 			break;
 		case SC_ZANGETSU:
 			if( status_get_hp(bl) % 2 == 0 )
-				val2 = (status_get_lv(bl) / 3) + (20 * val1); //+Watk
+				val2 = (status_get_lv_dmg(bl, OB_ZANGETSU) / 3) + (20 * val1); //+Watk
 			else
-				val2 -= (status_get_lv(bl) / 3) + (30 * val1); //-Watk
+				val2 -= (status_get_lv_dmg(bl, OB_ZANGETSU) / 3) + (30 * val1); //-Watk
 
 			if( status_get_sp(bl) % 2 == 0 )
-				val3 = (status_get_lv(bl) / 3) + (20 * val1); //+Matk
+				val3 = (status_get_lv_dmg(bl, OB_ZANGETSU) / 3) + (20 * val1); //+Matk
 			else
-				val3 -= (status_get_lv(bl) / 3) + (30 * val1); //-Matk
+				val3 -= (status_get_lv_dmg(bl, OB_ZANGETSU) / 3) + (30 * val1); //-Matk
 			break;
 		case SC_GENSOU:
 			{

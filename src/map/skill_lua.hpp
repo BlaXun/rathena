@@ -53,6 +53,27 @@
  * drop; returning nil lets the stock slot-order loop run as if no hook
  * existed. First non-nil return in the priority chain wins.
  *
+ * Two more hooks decide which level a skill's formula reads:
+ *
+ *   skill("SR_GATEOFHELL", {
+ *     level     = function(c, stock) return math.min(stock, 99) end,
+ *     job_level = function(c, stock) return 70 end,
+ *   })
+ *
+ * They run wherever a formula reads a player's base or job level for that
+ * skill's output, also for skills with no class of their own. level:
+ * RK_DRAGONBREATH, RK_DRAGONBREATH_WATER, RK_ENCHANTBLADE,
+ * NC_SELFDESTRUCTION, SR_GATEOFHELL, SR_CRESCENTELBOW, AB_RENOVATIO,
+ * LG_EXEEDBREAK, OB_ZANGETSU, KO_JYUMONJIKIRI, SJ_GRAVITYCONTROL, the
+ * Elemental Master's EM_EL_ skills (the master's level), and in pre-renewal
+ * AL_HEAL, AB_HIGHNESSHEAL, PR_TURNUNDEAD; AL_DEMONBANE, SL_SMA,
+ * TK_JUMPKICK, SG_SUN_ANGER, SG_MOON_ANGER, SG_STAR_ANGER. job_level:
+ * RL_QD_SHOT, LG_EXEEDBREAK, MI_RUSH_WINDMILL, WA_MOONLIT_SERENADE.
+ * `stock` is the real level. c.caster is the player; there is
+ * no c.target and c.skill_lv is 0, so a hook that reads c.target fails and is
+ * switched off. The result is kept between 0 and the server's level limit.
+ * Monsters' levels are never asked about.
+ *
  * Two mods may hook the same part of the same skill: every registered hook
  * runs, in ascending priority order (ties broken by mod load order). For
  * ratio, hit and element each hook sees what the previous one returned as
@@ -156,5 +177,13 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit);
 /// slot-order loop in pc_steal_item run as normal. Caller must still check
 /// that the returned nameid names a stealable entry on the mob.
 t_itemid skill_lua_on_steal(struct block_list* src, struct block_list* target, uint16 skill_lv);
+
+/// The base level a skill's formula should read for `bl`: `stock` unless a
+/// mod's level hook on that skill says otherwise. Always `stock` when no hook
+/// is registered.
+int32 skill_lua_level(uint16 skill_id, const block_list* bl, int32 stock);
+
+/// As skill_lua_level(), for the job level and the job_level hook.
+int32 skill_lua_job_level(uint16 skill_id, const block_list* bl, int32 stock);
 
 #endif /* SKILL_LUA_HPP */

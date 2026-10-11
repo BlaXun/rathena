@@ -14,5 +14,5 @@ void SkillEnchantBlade::castendNoDamageId(block_list* src, block_list* target, u
 	const status_data* sstatus = status_get_status_data(*src);
 
 	clif_skill_nodamage(src, *target, getSkillId(), skill_lv,
-		sc_start2(src, target, type, 100, skill_lv, ((100 + 20 * skill_lv) * status_get_lv(src)) / 100 + sstatus->int_, skill_get_time(getSkillId(), skill_lv)));
+		sc_start2(src, target, type, 100, skill_lv, ((100 + 20 * skill_lv) * status_get_lv_dmg(src, getSkillId())) / 100 + sstatus->int_, skill_get_time(getSkillId(), skill_lv)));
 }

@@ -16,7 +16,7 @@ void SkillAvalanche::calculateSkillRatio(const Damage *wd, const block_list *src
 
 	base_skillratio += -100 + 450;
 	if (ed)
-		base_skillratio += base_skillratio * status_get_lv(ed->master) / 100;
+		base_skillratio += base_skillratio * status_get_lv_dmg(ed->master, getSkillId()) / 100;
 }
 
 void SkillAvalanche::splashSearch(block_list* src, block_list* target, uint16 skill_lv, t_tick tick, int32 flag) const {
