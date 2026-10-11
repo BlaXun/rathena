@@ -74,6 +74,17 @@
  * switched off. The result is kept between 0 and the server's level limit.
  * Monsters' levels are never asked about.
  *
+ * And one decides what a heal skill restores:
+ *
+ *   skill("AB_CHEAL", {
+ *     heal = function(c, stock) return c.base * 85 // 100 end,
+ *   })
+ *
+ * heal runs for AL_HEAL, AB_HIGHNESSHEAL and AB_CHEAL when they heal (not
+ * when Heal damages an Undead). `stock` is the amount the server would
+ * restore; c.base is that amount before the skill's own bonus, which only
+ * AB_CHEAL has (2.5 % per party member). c.target is the unit being healed.
+ *
  * Two mods may hook the same part of the same skill: every registered hook
  * runs, in ascending priority order (ties broken by mod load order). For
  * ratio, hit and element each hook sees what the previous one returned as
@@ -185,5 +196,10 @@ int32 skill_lua_level(uint16 skill_id, const block_list* bl, int32 stock);
 
 /// As skill_lua_level(), for the job level and the job_level hook.
 int32 skill_lua_job_level(uint16 skill_id, const block_list* bl, int32 stock);
+
+/// The amount a heal skill restores: `stock` unless a mod's heal hook on that
+/// skill says otherwise. `base` is the amount before the skill's own bonus
+/// (Coluceo Heal's bonus per party member); the hook reads it as c.base.
+int32 skill_lua_heal(uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int32 stock, int32 base);
 
 #endif /* SKILL_LUA_HPP */

@@ -6,6 +6,7 @@
 #include "map/clif.hpp"
 #include "map/party.hpp"
 #include "map/pc.hpp"
+#include "map/skill_lua.hpp"
 #include "map/status.hpp"
 
 SkillColuceoHeal::SkillColuceoHeal() : SkillImpl(AB_CHEAL) {
@@ -20,10 +21,14 @@ void SkillColuceoHeal::castendNoDamageId(block_list *src, block_list *target, ui
 		if( sd && tstatus && !battle_check_undead(tstatus->race, tstatus->def_ele) && !tsc->getSCE(SC_BERSERK) ) {
 			int32 partycount = (sd->status.party_id ? party_foreachsamemap(party_sub_count, sd, 0) : 0);
 
-			int32 i = skill_calc_heal(src, target, AL_HEAL, pc_checkskill(sd, AL_HEAL), true);
+			// What the caster's own Heal would restore on this member.
+			const int32 base_heal = skill_calc_heal(src, target, AL_HEAL, pc_checkskill(sd, AL_HEAL), true);
+			int32 i = base_heal;
 
 			if( partycount > 1 )
 				i += (i / 100) * (partycount * 10) / 4;
+			// A mod's heal hook has the last word; it sees base_heal as c.base.
+			i = skill_lua_heal(getSkillId(), skill_lv, src, target, i, base_heal);
 			if (status_isimmune(target))
 				i = 0; // Should heal by 0 or won't do anything?? in iRO it breaks the healing to members.. [malufett]
 

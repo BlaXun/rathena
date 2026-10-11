@@ -6,6 +6,7 @@
 #include "map/clif.hpp"
 #include "map/mob.hpp"
 #include "map/pc.hpp"
+#include "map/skill_lua.hpp"
 #include "map/status.hpp"
 
 SkillHighnessHeal::SkillHighnessHeal() : SkillImpl(AB_HIGHNESSHEAL) {
@@ -23,6 +24,7 @@ void SkillHighnessHeal::castendNoDamageId(block_list *src, block_list *target, u
 	map_session_data* dstsd = BL_CAST( BL_PC, target );
 
 	int32 heal = skill_calc_heal(src, target, getSkillId(), skill_lv, true);
+	heal = skill_lua_heal(getSkillId(), skill_lv, src, target, heal, heal);
 
 	if (status_isimmune(target) || (dstmd && (status_get_class(target) == MOBID_EMPERIUM || status_get_class_(target) == CLASS_BATTLEFIELD)))
 		heal = 0;

@@ -431,7 +431,7 @@ void push_context(uint16 skill_id, uint16 skill_lv, const block_list* src, const
 /// registered hook runs in priority order; each sees what the previous one
 /// returned as `stock`, and returning nil keeps the running value. A hook
 /// that fails is switched off and the chain carries on with the rest.
-void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int64& value) {
+void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int64& value, const int64* base = nullptr) {
 	s_skill_hooks* hooks = hooks_for(skill_id);
 
 	if (hooks == nullptr || hooks->hooks[which].empty())
@@ -443,6 +443,8 @@ void call_number_hook(e_hook which, uint16 skill_id, uint16 skill_lv, const bloc
 
 		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
 		push_context(skill_id, skill_lv, src, target, nullptr);
+		if (base != nullptr)
+			set_int("base", *base);  // heal: the amount before the skill's own bonus
 		lua_pushinteger(L, value);
 		if (!protected_call(hook, hooks->skill.c_str(), 2, 1))
 			continue;
@@ -1438,6 +1440,15 @@ int32 skill_lua_level(uint16 skill_id, const block_list* bl, int32 stock) {
 
 int32 skill_lua_job_level(uint16 skill_id, const block_list* bl, int32 stock) {
 	return call_level_hook(HOOK_JOB_LEVEL, skill_id, bl, stock);
+}
+
+int32 skill_lua_heal(uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int32 stock, int32 base) {
+	int64 value = stock;
+	const int64 before_bonus = base;
+
+	call_number_hook(HOOK_HEAL, skill_id, skill_lv, src, target, value, &before_bonus);
+
+	return static_cast<int32>(std::clamp<int64>(value, 0, INT32_MAX));
 }
 
 t_itemid skill_lua_on_steal(block_list* src, block_list* target, uint16 skill_lv) {
