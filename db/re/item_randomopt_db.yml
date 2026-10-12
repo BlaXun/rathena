@@ -668,15 +668,15 @@ Body:
   - Id: 160
     Option: DAMAGE_SIZE_SMALL_USER
     Script: |
-      bonus2 bSubSize,Size_Small,getrandomoptinfo(ROA_VALUE);
+      bonus2 bWeaponSubSize,Size_Small,getrandomoptinfo(ROA_VALUE);
   - Id: 161
     Option: DAMAGE_SIZE_MIDIUM_USER
     Script: |
-      bonus2 bSubSize,Size_Medium,getrandomoptinfo(ROA_VALUE);
+      bonus2 bWeaponSubSize,Size_Medium,getrandomoptinfo(ROA_VALUE);
   - Id: 162
     Option: DAMAGE_SIZE_LARGE_USER
     Script: |
-      bonus2 bSubSize,Size_Large,getrandomoptinfo(ROA_VALUE);
+      bonus2 bWeaponSubSize,Size_Large,getrandomoptinfo(ROA_VALUE);
   - Id: 163
     Option: DAMAGE_SIZE_PERFECT
     Script: |
