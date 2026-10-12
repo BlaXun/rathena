@@ -12150,7 +12150,7 @@ Body:
             MinValue: 1
             MaxValue: 5
             Chance: 769
-          - Option: DAMAGE_SIZE_MIDIUM_USER
+          - Option: DAMAGE_SIZE_MIDIUM_TARGET
             MinValue: 1
             MaxValue: 5
             Chance: 769
