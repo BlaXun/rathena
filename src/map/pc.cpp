@@ -15637,6 +15637,49 @@ bool pc_attendance_enabled(){
 	return pc_attendance_period() != nullptr;
 }
 
+/**
+ * Extension attendance_script_rewards: change one day's reward of the running period.
+ * The change lasts until db/attendance.yml is read again (server start, @reloadattendancedb).
+ * @param day: Day of the period, from 1
+ * @param item_id: Item to give; must exist in the item database
+ * @param amount: How many, 1 to MAX_AMOUNT
+ * @return false if nothing was changed; the reason is in the log
+ */
+bool pc_attendance_set_reward( uint32 day, t_itemid item_id, uint16 amount ){
+	std::shared_ptr<s_attendance_period> period = pc_attendance_period();
+
+	if( period == nullptr ){
+		ShowWarning( "pc_attendance_set_reward: No attendance period is running, day %u keeps its reward.\n", day );
+		return false;
+	}
+
+	std::shared_ptr<s_attendance_reward> reward = nullptr;
+
+	if( day > 0 ){
+		reward = util::map_find( period->rewards, day - 1 );
+	}
+
+	if( reward == nullptr ){
+		ShowWarning( "pc_attendance_set_reward: The running attendance period has no day %u (it has %zu).\n", day, period->rewards.size() );
+		return false;
+	}
+
+	if( !item_db.exists( item_id ) ){
+		ShowWarning( "pc_attendance_set_reward: Unknown item ID %u for day %u, the day keeps its reward.\n", item_id, day );
+		return false;
+	}
+
+	if( amount == 0 || amount > MAX_AMOUNT ){
+		ShowWarning( "pc_attendance_set_reward: Reward count %hu for day %u must be between 1 and %hu, the day keeps its reward.\n", amount, day, MAX_AMOUNT );
+		return false;
+	}
+
+	reward->item_id = item_id;
+	reward->amount = amount;
+
+	return true;
+}
+
 static inline bool pc_attendance_rewarded_today( map_session_data* sd ){
 	return pc_readreg2( sd, ATTENDANCE_DATE_VAR ) >= date_get(DT_YYYYMMDD);
 }

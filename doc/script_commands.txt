@@ -8088,6 +8088,39 @@ Example:
 
 ---------------------------------------
 
+*setattendancereward <day>,<item id>,<amount>;
+*getattendancereward(<day>{,<type>})
+
+setattendancereward changes the reward of one day of the running attendance
+period (db/attendance.yml); <day> starts at 1. An unknown item ID, a day the
+period does not have, or an amount outside 1 to MAX_AMOUNT is refused with a
+warning and the day keeps its reward. Returns 1 if the reward was changed,
+0 if not.
+
+Changes last until db/attendance.yml is read again (server start or
+@reloadattendancedb), so set them in OnInit. The client draws the Attendance
+Check window from its own System/CheckAttendance.lub, which this does not
+change.
+
+getattendancereward returns the item ID (<type> 0, the default) or the amount
+(<type> 1) of a day of the running period, or 0 when no period is running or
+it has no such day. getattendancereward(0) returns the number of days in the
+period. It works with the extension off.
+
+setattendancereward is a fork extension: it does nothing, and warns, unless
+the 'attendance_script_rewards' extension is enabled in
+db/import/extension_db.yml.
+
+Example:
+
+	-	script	my_rewards	-1,{
+	OnInit:
+		setattendancereward 1,501,10;	// day 1: 10 Red Potions
+		end;
+	}
+
+---------------------------------------
+
 *setbattleflag "<battle flag>",<value>{,<reload>};
 *getbattleflag("<battle flag>")
 

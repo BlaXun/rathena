@@ -1784,7 +1784,9 @@ bool pc_job_can_entermap(enum e_job jobid, int32 m, int32 group_lv);
 uint16 pc_level_penalty_mod( map_session_data* sd, e_penalty_type type, std::shared_ptr<s_mob_db> mob, mob_data* md = nullptr );
 #endif
 
+std::shared_ptr<s_attendance_period> pc_attendance_period();
 bool pc_attendance_enabled();
+bool pc_attendance_set_reward( uint32 day, t_itemid item_id, uint16 amount );
 int32 pc_attendance_counter( map_session_data* sd );
 void pc_attendance_claim_reward( map_session_data* sd );
 

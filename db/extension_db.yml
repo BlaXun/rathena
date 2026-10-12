@@ -138,6 +138,20 @@ Body:
       a new period starts.
     Enabled: false
 
+  - Id: attendance_script_rewards
+    Name: Scripts can change attendance rewards (setattendancereward)
+    Description: |
+      Lets a script change the reward of one day of the running attendance
+      period (db/attendance.yml) with setattendancereward <day>,<item id>,
+      <amount>, so a mod can take the rewards from its settings. An unknown
+      item ID or an amount out of range is refused with a warning and the
+      day keeps its reward. Changes last until db/attendance.yml is read
+      again (server start or @reloadattendancedb), so set them in OnInit.
+      The client still shows its own System/CheckAttendance.lub;
+      getattendancereward reads the rewards back, e.g. for a client plugin.
+      Off is stock rAthena: setattendancereward warns and does nothing.
+    Enabled: false
+
 Footer:
   Imports:
     - Path: db/import/extension_db.yml
