@@ -624,11 +624,11 @@ Body:
   - Id: 149
     Option: CLASS_DAMAGE_NORMAL_USER
     Script: |
-      bonus2 bSubClass,Class_Normal,getrandomoptinfo(ROA_VALUE);
+      bonus2 bWeaponSubClass,Class_Normal,getrandomoptinfo(ROA_VALUE);
   - Id: 150
     Option: CLASS_DAMAGE_BOSS_USER
     Script: |
-      bonus2 bSubClass,Class_Boss,getrandomoptinfo(ROA_VALUE);
+      bonus2 bWeaponSubClass,Class_Boss,getrandomoptinfo(ROA_VALUE);
   - Id: 151
     Option: CLASS_MDAMAGE_NORMAL
     Script: |
