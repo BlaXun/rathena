@@ -171,7 +171,7 @@ Body:
   - Id: 35
     Option: ATTR_TOLERACE_ALLBUTNOTHING
     Script: |
-      for(.@i = Ele_Water; .@i < Ele_Undead; ++.@i)
+      for(.@i = Ele_Water; .@i <= Ele_Undead; ++.@i)
         bonus2 bSubEle,.@i,getrandomoptinfo(ROA_VALUE);
   - Id: 36
     Option: DAMAGE_PROPERTY_NOTHING_USER
