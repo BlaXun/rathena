@@ -82,6 +82,24 @@ Header:
   Version: 4
 
 Body:
+  # The alternate outfits are jobs of their own. pc_changelook only applies a
+  # LOOK_BODY2 that is in the job database, and logging in resets a saved body
+  # that is not, so without this entry @bodystyle says "Appearance changed"
+  # and nothing changes.
+  - Jobs:
+      Rune_Knight_2nd: true
+      Mechanic_2nd: true
+      Guillotine_Cross_2nd: true
+      Warlock_2nd: true
+      ArchBishop_2nd: true
+      Ranger_2nd: true
+      Royal_Guard_2nd: true
+      Genetic_2nd: true
+      Shadow_Chaser_2nd: true
+      Sorcerer_2nd: true
+      Sura_2nd: true
+      Minstrel_2nd: true
+      Wanderer_2nd: true
   - Jobs:
       Rune_Knight: true
       Rune_Knight2: true
