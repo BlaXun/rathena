@@ -5657,6 +5657,12 @@ static struct Damage battle_calc_weapon_attack(block_list *src, block_list *targ
 	}
 #endif
 
+	if (tsd != nullptr && tsd->bonus.non_crit_def_rate != 0 && !is_attack_critical(&wd, src, target, skill_id, skill_lv, false)) {
+		std::shared_ptr<s_skill_db> skill = skill_db.find(skill_id);
+		if (skill == nullptr || (skill->skill_type == BF_WEAPON && !skill->inf2[INF2_IGNORENONCRITATKBONUS]))
+			ATK_ADDRATE(wd.damage, wd.damage2, -tsd->bonus.non_crit_def_rate);
+	}
+
 	switch (skill_id) {
 		case TK_DOWNKICK:
 		case TK_STORMKICK:

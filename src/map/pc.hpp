@@ -695,6 +695,7 @@ public:
 		int32 crit_atk_rate;
 		int32 non_crit_atk_rate;
 		int32 crit_def_rate;
+		int32 non_crit_def_rate;
 		int32 classchange; // [Valaris]
 		int32 speed_rate, speed_add_rate, aspd_add;
 		int32 itemhealrate2; // [Epoque] Increase heal rate of all healing items.
