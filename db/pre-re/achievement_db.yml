@@ -2118,7 +2118,7 @@ Body:
     Targets:
       - Id: 0
         Count: 10000
-    Condition: " ARG0 >= 10000 "
+    Condition: " ARG0 > 0 "
     Score: 10
   - Id: 220010
     Group: Spend_Zeny
@@ -2126,7 +2126,7 @@ Body:
     Targets:
       - Id: 0
         Count: 100000
-    Condition: " ARG0 >= 100000 "
+    Condition: " ARG0 > 0 "
     Score: 15
   - Id: 220011
     Group: Spend_Zeny
@@ -2134,7 +2134,7 @@ Body:
     Targets:
       - Id: 0
         Count: 500000
-    Condition: " ARG0 >= 500000 "
+    Condition: " ARG0 > 0 "
     Score: 20
   - Id: 220012
     Group: Spend_Zeny
@@ -2142,7 +2142,7 @@ Body:
     Targets:
       - Id: 0
         Count: 1000000
-    Condition: " ARG0 >= 1000000 "
+    Condition: " ARG0 > 0 "
     Score: 30
   - Id: 220013
     Group: Spend_Zeny
@@ -2150,7 +2150,7 @@ Body:
     Targets:
       - Id: 0
         Count: 5000000
-    Condition: " ARG0 >= 5000000 "
+    Condition: " ARG0 > 0 "
     Score: 50
   - Id: 220014
     Group: Enchant_Success
