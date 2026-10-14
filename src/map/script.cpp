@@ -17337,6 +17337,64 @@ BUILDIN_FUNC(getattendancereward)
 }
 
 /**
+ * Set the cost of every option of one look in the stylist window, in place of stylist.yml's.
+ * setstylistcost <look>,<zeny>{,<item id>{,<item box id>}};
+ * 0 means none; with both Zeny and an item, both are taken. The item box is taken instead of the
+ * item when the player has no item. Lasts until the scripts are loaded again, so set it in OnInit.
+ * Needs the stylist_script_costs extension.
+ * -> 1 if the cost was changed, 0 if not (the reason is in the log)
+ */
+BUILDIN_FUNC(setstylistcost)
+{
+	int32 look = script_getnum(st, 2);
+	int32 price = script_getnum(st, 3);
+	int32 item_id = script_hasdata(st, 4) ? script_getnum(st, 4) : 0;
+	int32 box_id = script_hasdata(st, 5) ? script_getnum(st, 5) : 0;
+
+	if (!extension_enabled("stylist_script_costs")) {
+		ShowWarning("buildin_setstylistcost: Extension stylist_script_costs is off, look %d keeps stylist.yml's costs.\n", look);
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	if (look < 0 || look >= LOOK_MAX || price < 0 || item_id < 0 || box_id < 0) {
+		ShowWarning("buildin_setstylistcost: Invalid look %d, price %d, item ID %d or item box ID %d.\n", look, price, item_id, box_id);
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	bool changed = stylist_script_cost_set(static_cast<uint16>(look), static_cast<uint32>(price), static_cast<t_itemid>(item_id), static_cast<t_itemid>(box_id));
+
+	script_pushint(st, changed ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * getstylistcost(<look>{,<type>})
+ * The cost setstylistcost set for a look: <type> 0 (default) is the Zeny, 1 the item ID, 2 the item box ID.
+ * -> -1 when no script set one (stylist.yml's costs apply)
+ */
+BUILDIN_FUNC(getstylistcost)
+{
+	int32 look = script_getnum(st, 2);
+	int32 type = script_hasdata(st, 3) ? script_getnum(st, 3) : 0;
+	std::shared_ptr<s_stylist_costs> costs = nullptr;
+
+	if (look >= 0 && look < LOOK_MAX)
+		costs = stylist_script_cost(static_cast<uint16>(look));
+
+	if (costs == nullptr)
+		script_pushint(st, -1);
+	else if (type == 1)
+		script_pushint(st, costs->requiredItem);
+	else if (type == 2)
+		script_pushint(st, costs->requiredItemBox);
+	else
+		script_pushint(st, costs->price);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
  * getmapmobcountrate("<map name>")
  * -> the map's spawn count rate in percent, 100 when it has not been changed
  */
@@ -28743,6 +28801,8 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getmapmobcountrate,"s"),
 	BUILDIN_DEF(setattendancereward,"iii"),
 	BUILDIN_DEF(getattendancereward,"i?"),
+	BUILDIN_DEF(setstylistcost,"ii??"),
+	BUILDIN_DEF(getstylistcost,"i?"),
 	BUILDIN_DEF(getautolootitems,"r?"),
 	BUILDIN_DEF(setautolootitems,"r?"),
 	BUILDIN_DEF(getmobdroprate,"ii?"),

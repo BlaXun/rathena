@@ -152,6 +152,19 @@ Body:
       Off is stock rAthena: setattendancereward warns and does nothing.
     Enabled: false
 
+  - Id: stylist_script_costs
+    Name: Scripts can set the stylist window's costs (setstylistcost)
+    Description: |
+      Lets a script set the cost of every option of one look in the stylist
+      window (openstylist, @stylist) with setstylistcost <look>,<zeny>
+      {,<item id>{,<item box id>}}, for humans and Doram alike, so a mod can
+      take the prices from its settings. The options stay stylist.yml's.
+      Also buys an order with several changes as a whole: if anything is
+      missing, nothing is charged or changed. Costs last until the scripts
+      are loaded again, so set them in OnInit. Off is stock rAthena:
+      setstylistcost warns and does nothing.
+    Enabled: false
+
 Footer:
   Imports:
     - Path: db/import/extension_db.yml

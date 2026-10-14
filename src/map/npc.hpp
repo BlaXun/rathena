@@ -80,6 +80,11 @@ public:
 
 extern StylistDatabase stylist_db;
 
+// Extension stylist_script_costs: one cost per look, set by a script, used instead of stylist.yml's
+bool stylist_script_cost_set( uint16 look, uint32 price, t_itemid item, t_itemid box );
+std::shared_ptr<s_stylist_costs> stylist_script_cost( uint16 look );
+void stylist_script_cost_clear();
+
 struct s_npc_barter_requirement{
 	uint16 index;
 	t_itemid nameid;
