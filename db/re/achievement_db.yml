@@ -1871,7 +1871,7 @@ Body:
   - Id: 200006
     Group: Job_Change
     Name: First step of job change!
-    Condition: " Class >= JOB_SWORDMAN && Class <= JOB_THIEF "
+    Condition: " Class >= JOB_SWORDMAN_HIGH && Class <= JOB_THIEF_HIGH "
     Rewards:
       Script: " specialeffect2 EF_INCAGILITY; sc_start SC_INCREASEAGI,30000,10; "
     Score: 20
