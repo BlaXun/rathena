@@ -399,13 +399,15 @@ static std::unordered_map<uint16, std::shared_ptr<s_stylist_costs>> stylist_scri
 /**
  * Extension stylist_script_costs: set the cost of every option of one look in the stylist window,
  * for humans and Doram alike, in place of stylist.yml's costs. The option list stays stylist.yml's.
+ * The player pays either the Zeny or the coupon, as chosen with setstylistpayment.
  * The cost lasts until the scripts are loaded again (server start, @reloadscript), so set it in OnInit.
  * @param look: LOOK_HAIR, LOOK_HAIR_COLOR, LOOK_CLOTHES_COLOR, LOOK_BODY2 or LOOK_HEAD_TOP/MID/BOTTOM
- * @param price: Zeny, 0 for none
- * @param item: Item to give up, 0 for none
+ * @param price: Zeny when paying in Zeny, 0 for free
+ * @param item: Coupon when paying with coupons, 0 for none (the look is then paid in Zeny)
  * @param box: Item to give up instead when the player has no <item>, 0 for none
  * @return false if nothing was changed; the reason is in the log
  */
+
 bool stylist_script_cost_set( uint16 look, uint32 price, t_itemid item, t_itemid box ){
 	switch( look ){
 		case LOOK_HAIR:

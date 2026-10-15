@@ -489,6 +489,8 @@ public:
 		bool cashshop_open;
 		bool sale_open;
 		bool stylist_open;
+		uint8 stylist_payment; // Extension stylist_script_costs: e_stylist_payment the player chose
+
 		bool barter_open;
 		bool barter_extended_open;
 		bool enchantgrade_open; // Whether the enchantgrade window is open or not

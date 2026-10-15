@@ -21972,6 +21972,7 @@ void clif_ui_open( map_session_data& sd, enum out_ui_type ui_type, int32 data ){
 	switch( ui_type ){
 		case OUT_UI_STYLIST:
 			sd.state.stylist_open = true;
+			sd.state.stylist_payment = STYLIST_PAY_ZENY; // Extension stylist_script_costs: a choice is made per visit
 			break;
 		case OUT_UI_ENCHANTGRADE:
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200724
@@ -22967,6 +22968,8 @@ bool clif_parse_stylist_buy_sub( map_session_data* sd, _look look, int16 index )
 /**
  * Extension stylist_script_costs: buys every part of one stylist order, or none of them.
  * A look's cost is the one a script set with setstylistcost, else stylist.yml's.
+ * A script-set cost is paid in Zeny, or with its coupon when the player chose coupons
+ * (setstylistpayment) and the look has one; stylist.yml's costs are paid as stock rAthena does.
  * @param order: Look and window index of each part, in the order stock rAthena buys them
  * @return false if the order was refused; nothing was charged or changed then
  */
@@ -23002,6 +23005,7 @@ static bool clif_parse_stylist_buy_order( map_session_data* sd, const std::vecto
 		}
 
 		std::shared_ptr<s_stylist_costs> costs = stylist_script_cost( look );
+		bool script_cost = costs != nullptr;
 
 		if( costs == nullptr ){
 			if( ( sd->class_ & MAPID_FIRSTMASK ) == MAPID_SUMMONER ){
@@ -23015,15 +23019,29 @@ static bool clif_parse_stylist_buy_order( map_session_data* sd, const std::vecto
 			return false;
 		}
 
-		if( costs->requiredItem != 0 && spare( costs->requiredItem ) > 0 ){
-			items[costs->requiredItem]++;
-		}else if( costs->requiredItemBox != 0 && spare( costs->requiredItemBox ) > 0 ){
-			items[costs->requiredItemBox]++;
-		}else if( costs->requiredItem != 0 || costs->requiredItemBox != 0 ){
+		uint32 zeny = costs->price;
+		t_itemid item = costs->requiredItem;
+		t_itemid box = costs->requiredItemBox;
+
+		// A script-set cost is Zeny or a coupon, not both
+		if( script_cost ){
+			if( sd->state.stylist_payment == STYLIST_PAY_COUPON && ( item != 0 || box != 0 ) ){
+				zeny = 0;
+			}else{
+				item = 0;
+				box = 0;
+			}
+		}
+
+		if( item != 0 && spare( item ) > 0 ){
+			items[item]++;
+		}else if( box != 0 && spare( box ) > 0 ){
+			items[box]++;
+		}else if( item != 0 || box != 0 ){
 			return false;
 		}
 
-		price += costs->price;
+		price += zeny;
 		parts.emplace_back( look, entry );
 	}
 

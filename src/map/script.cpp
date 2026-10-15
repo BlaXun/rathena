@@ -17339,7 +17339,8 @@ BUILDIN_FUNC(getattendancereward)
 /**
  * Set the cost of every option of one look in the stylist window, in place of stylist.yml's.
  * setstylistcost <look>,<zeny>{,<item id>{,<item box id>}};
- * 0 means none; with both Zeny and an item, both are taken. The item box is taken instead of the
+ * The player pays the Zeny, or the item when paying with coupons (setstylistpayment); a look
+ * without an item is paid in Zeny either way. 0 means none. The item box is taken instead of the
  * item when the player has no item. Lasts until the scripts are loaded again, so set it in OnInit.
  * Needs the stylist_script_costs extension.
  * -> 1 if the cost was changed, 0 if not (the reason is in the log)
@@ -17391,6 +17392,56 @@ BUILDIN_FUNC(getstylistcost)
 		script_pushint(st, costs->requiredItemBox);
 	else
 		script_pushint(st, costs->price);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * How a player pays for the looks setstylistcost set a cost for: 0 in Zeny, 1 with coupons.
+ * setstylistpayment <mode>{,<char id>};
+ * Opening the stylist window sets it back to 0. Needs the stylist_script_costs extension.
+ * -> 1 if it was set, 0 if not (the reason is in the log)
+ */
+BUILDIN_FUNC(setstylistpayment)
+{
+	int32 mode = script_getnum(st, 2);
+	map_session_data* sd;
+
+	if (!script_charid2sd(3, sd)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	if (!extension_enabled("stylist_script_costs")) {
+		ShowWarning("buildin_setstylistpayment: Extension stylist_script_costs is off, the payment is unchanged.\n");
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	if (mode != STYLIST_PAY_ZENY && mode != STYLIST_PAY_COUPON) {
+		ShowWarning("buildin_setstylistpayment: Invalid mode %d, use 0 (Zeny) or 1 (coupons).\n", mode);
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	sd->state.stylist_payment = static_cast<uint8>(mode);
+	script_pushint(st, 1);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * getstylistpayment({<char id>})
+ * -> 0 when the player pays in Zeny, 1 with coupons
+ */
+BUILDIN_FUNC(getstylistpayment)
+{
+	map_session_data* sd;
+
+	if (!script_charid2sd(2, sd)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	script_pushint(st, sd->state.stylist_payment);
 	return SCRIPT_CMD_SUCCESS;
 }
 
@@ -28803,6 +28854,9 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getattendancereward,"i?"),
 	BUILDIN_DEF(setstylistcost,"ii??"),
 	BUILDIN_DEF(getstylistcost,"i?"),
+	BUILDIN_DEF(setstylistpayment,"i?"),
+	BUILDIN_DEF(getstylistpayment,"?"),
+
 	BUILDIN_DEF(getautolootitems,"r?"),
 	BUILDIN_DEF(setautolootitems,"r?"),
 	BUILDIN_DEF(getmobdroprate,"ii?"),
