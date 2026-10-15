@@ -22861,6 +22861,25 @@ void clif_stylist_response( map_session_data* sd, bool failed ){
 #endif
 }
 
+/// The job whose look a stylist Body2 option puts on: option 0 is the job's own outfit,
+/// option 1 its alternative outfit. -1 if the job has no alternative outfit.
+static int32 clif_stylist_body_style( map_session_data* sd, int32 option ){
+	std::shared_ptr<s_job_info> job = job_db.find( sd->status.class_ );
+
+	if( job == nullptr || job->alternate_outfits.empty() ){
+		return -1;
+	}
+
+	switch( option ){
+		case 0:
+			return sd->status.class_;
+		case 1:
+			return job->alternate_outfits.front();
+		default:
+			return -1;
+	}
+}
+
 bool clif_parse_stylist_buy_sub( map_session_data* sd, _look look, int16 index ){
 	std::shared_ptr<s_stylist_list> list = stylist_db.find( look );
 
@@ -22872,6 +22891,18 @@ bool clif_parse_stylist_buy_sub( map_session_data* sd, _look look, int16 index )
 
 	if( entry == nullptr ){
 		return false;
+	}
+
+	int32 value = entry->value;
+
+	// stylist.yml's Body2 values are options (0 standard, 1 alternative outfit),
+	// but LOOK_BODY2 takes a job ID. Check it before anything is paid.
+	if( look == LOOK_BODY2 ){
+		value = clif_stylist_body_style( sd, value );
+
+		if( value < 0 ){
+			return false;
+		}
 	}
 
 	std::shared_ptr<s_stylist_costs> costs;
@@ -22930,7 +22961,7 @@ bool clif_parse_stylist_buy_sub( map_session_data* sd, _look look, int16 index )
 		case LOOK_HAIR_COLOR:
 		case LOOK_CLOTHES_COLOR:
 		case LOOK_BODY2:
-			pc_changelook( sd, look, entry->value );
+			pc_changelook( sd, look, value );
 			break;
 		case LOOK_HEAD_BOTTOM:
 		case LOOK_HEAD_MID:
@@ -23002,7 +23033,8 @@ void clif_parse_stylist_buy( int32 fd, map_session_data* sd ){
 		return;
 	}
 #elif PACKETVER >= 20180516
-	if( p->BodyStyle != 0 && ( sd->class_ & JOBL_THIRD ) != 0 && ( sd->class_ & JOBL_FOURTH ) == 0 && !clif_parse_stylist_buy_sub( sd, LOOK_BODY2, p->BodyStyle ) ){
+	// Jobs without an alternative outfit are refused in clif_parse_stylist_buy_sub
+	if( p->BodyStyle != 0 && !clif_parse_stylist_buy_sub( sd, LOOK_BODY2, p->BodyStyle ) ){
 		clif_stylist_response( sd, true );
 		return;
 	}
