@@ -407,7 +407,6 @@ static std::unordered_map<uint16, std::shared_ptr<s_stylist_costs>> stylist_scri
  * @param box: Item to give up instead when the player has no <item>, 0 for none
  * @return false if nothing was changed; the reason is in the log
  */
-
 bool stylist_script_cost_set( uint16 look, uint32 price, t_itemid item, t_itemid box ){
 	switch( look ){
 		case LOOK_HAIR:

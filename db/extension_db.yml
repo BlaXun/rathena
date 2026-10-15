@@ -161,7 +161,6 @@ Body:
       take the prices from its settings. The options stay stylist.yml's.
       The player pays the Zeny or the item (a coupon), as
       setstylistpayment <mode> says (0 Zeny, the default, 1 coupons).
-
       Also buys an order with several changes as a whole: if anything is
       missing, nothing is charged or changed. Costs last until the scripts
       are loaded again, so set them in OnInit. Off is stock rAthena:

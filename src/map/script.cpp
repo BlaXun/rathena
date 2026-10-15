@@ -28856,7 +28856,6 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getstylistcost,"i?"),
 	BUILDIN_DEF(setstylistpayment,"i?"),
 	BUILDIN_DEF(getstylistpayment,"?"),
-
 	BUILDIN_DEF(getautolootitems,"r?"),
 	BUILDIN_DEF(setautolootitems,"r?"),
 	BUILDIN_DEF(getmobdroprate,"ii?"),
