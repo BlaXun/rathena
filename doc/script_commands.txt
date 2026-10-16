@@ -8744,8 +8744,9 @@ setstylistpayment sets how the attached player (or the given character) pays
 for the looks setstylistcost set a cost for: 0 in Zeny, 1 with coupons. With
 coupons, a look that has an item takes the item and one without takes its
 Zeny; if the player has neither the item nor the item box, the whole order is
-refused (the window shows the refusal), with no fallback to Zeny. Opening the stylist window sets it back to 0, so set it after the window
-is open and before the purchase; a client window can do that through a command
+refused (the window shows the refusal), with no fallback to Zeny. Opening
+the stylist window sets it back to 0, so set it after the window is open and
+before the purchase; a client window can do that through a command
 the mod binds with bindatcmd. Returns 1 if it was set, 0 if not.
 getstylistpayment returns the player's current mode. Looks priced only by
 db/stylist.yml are paid as stock rAthena does, whatever the mode.
