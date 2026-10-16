@@ -609,6 +609,7 @@ public:
 		int32 subdefele[ELE_MAX];
 		int32 subrace[RC_MAX];
 		int32 subclass[CLASS_MAX];
+		int32 weapon_subclass[CLASS_MAX];
 		int32 subrace2[RC2_MAX];
 		int32 subsize[SZ_MAX];
 		int16 coma_class[CLASS_MAX];
