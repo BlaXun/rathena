@@ -593,3 +593,10 @@ Body:
       Y: 73
     AdditionalMaps:
       1@air2: true
+  - Id: 10001
+    Name: Dragon's Test
+    TimeLimit: 3600
+    Enter:
+      Map: 1@4drk
+      X: 266
+      Y: 40

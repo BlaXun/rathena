@@ -110183,10 +110183,66 @@ Body:
 #    AegisName: WAR_NUT
 #  - Id: 20874
 #    AegisName: MOLE_TW
-#  - Id: 20875
-#    AegisName: 4JOB_LETICIA
-#  - Id: 20876
-#    AegisName: 4JOB_ACIDUS
+  # Ragnarok Offline: 4JOB_LETICIA and 4JOB_ACIDUS are the Dragon Knight job
+  # change monsters (npc/re/instances/DragonsTest.txt). The official stats are
+  # unknown; these are our own, Leticia's taken from Detardeurus (DETALE).
+  - Id: 20875
+    AegisName: 4JOB_LETICIA
+    Name: Leticia
+    Level: 135
+    Hp: 6005000
+    Attack: 6108
+    Attack2: 2662
+    Defense: 364
+    MagicDefense: 166
+    Str: 165
+    Agi: 153
+    Vit: 171
+    Int: 136
+    Dex: 278
+    Luk: 72
+    AttackRange: 3
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Dragon
+    Element: Dark
+    ElementLevel: 3
+    WalkSpeed: 250
+    AttackDelay: 432
+    AttackMotion: 936
+    ClientAttackMotion: 240
+    DamageMotion: 360
+    Ai: 21
+    Class: Boss
+  - Id: 20876
+    AegisName: 4JOB_ACIDUS
+    Name: Golden Acidus
+    Level: 130
+    Hp: 200000
+    Attack: 1
+    Attack2: 1
+    Defense: 101
+    MagicDefense: 90
+    Str: 109
+    Agi: 78
+    Vit: 50
+    Int: 55
+    Dex: 108
+    Luk: 55
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 20
+    Size: Large
+    Race: Dragon
+    Element: Holy
+    ElementLevel: 2
+    WalkSpeed: 170
+    AttackDelay: 168
+    AttackMotion: 1008
+    ClientAttackMotion: 528
+    DamageMotion: 300
+    Ai: 04
 #  - Id: 20877
 #    AegisName: G_ILL_SROPHO
 #  - Id: 20878

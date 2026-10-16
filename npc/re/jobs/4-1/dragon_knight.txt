@@ -1,0 +1,152 @@
+//===== rAthena Script =======================================
+//= Job change : Dragon Knight
+//===== Description: =========================================
+//- [Walkthrough conversion]
+//- Follows the official quest flow; the dialog is our own
+//- wording, not a translation of the official text.
+//- The trials take place in an instance
+//- (npc/re/instances/DragonsTest.txt).
+//===== Changelogs: ==========================================
+//= 1.0 First version. [MondoTruth]
+//============================================================
+
+gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
+	.@md_name$ = "Dragon's Test";
+
+	if (Class == JOB_DRAGON_KNIGHT) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "How is your new partner treating you, Dragon Knight?";
+		mes "Leticia still talks about your test, you know.";
+		close3;
+	}
+	if (Class != JOB_RUNE_KNIGHT && Class != JOB_RUNE_KNIGHT_T) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "Dragons choose their companions carefully.";
+		mes "I'm waiting for a Rune Knight who has walked a long road with a dragon.";
+		close3;
+	}
+	if (BaseLevel < 200 || JobLevel < 70) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "You ride well, Rune Knight, but the trial of the dragons would crush you today.";
+		mes "Come back at ^dd5555Base Level 200 and Job Level 70^000000.";
+		close3;
+	}
+	if (isbegin_quest(12508) == 0) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "So you're the Rune Knight who keeps a dragon by their side.";
+		mes "There is a test that only dragons may hold, and few riders are ever invited to it.";
+		next;
+		mes "[Oscar]";
+		mes "Those who pass become ^ff0000Dragon Knights^000000, true companions of the dragons.";
+		mes "Those who fail... well, they go home tired.";
+		next;
+		if (select( "I want to take the test.", "Maybe later." ) == 2) {
+			mes "[Oscar]";
+			mes "The dragons are patient. I'll be here.";
+			close3;
+		}
+		setquest 12508;
+		mes "[Oscar]";
+		mes "Good. The test has four parts: life, protection, strength and patience.";
+		mes "Each one is held in the Dragon's Test, a place I will open for you.";
+		next;
+	}
+	if (isbegin_quest(12509) == 1) {
+		if (checkquest(12509,PLAYTIME) != 2) {
+			cutin "OSCAR03.bmp",2;
+			mes "[Oscar]";
+			mes "You pushed yourself too hard last time.";
+			mes "Rest for a while, then come back to me.";
+			close3;
+		}
+		erasequest 12509;
+	}
+	if (SkillPoint > 0) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "You still have skill points left to learn.";
+		mes "Use all of them before you take the test.";
+		close3;
+	}
+	if (getcharid(1) == 0 || is_party_leader() == false) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "The test is opened for a party leader.";
+		mes "Make a party of your own and lead it.";
+		close3;
+	}
+	getpartymember getcharid(1), 0;
+	if ($@partymembercount > 1) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "This test is meant for you alone.";
+		mes "Make a party with ^0000ffonly yourself^000000 in it.";
+		close3;
+	}
+	cutin "OSCAR03.bmp",2;
+	mes "[Oscar]";
+	mes "Are you ready to face the Dragon's Test?";
+	next;
+	switch( select( "Apply for the Dragon's Test.", "Enter the Dragon's Test.", "Not now." ) ) {
+	case 1:
+		.@id = instance_create(.@md_name$);
+		if (.@id == -3) {
+			mes "[Oscar]";
+			mes "The way into the test is already open for you.";
+			mes "Choose to enter it.";
+			close3;
+		}
+		if (.@id < 0) {
+			mes "[Oscar]";
+			mes "Hmm, the way won't open right now. Try again in a moment.";
+			close3;
+		}
+		mes "[Oscar]";
+		mes "There. The way is open.";
+		mes "Talk to me again when you want to go in.";
+		close3;
+	case 2:
+		// Back to the trial in progress, e.g. after dying inside.
+		.@x = -1;
+		.@y = -1;
+		.@iid = instance_id(IM_PARTY);
+		if (.@iid > 0) {
+			.@step = getinstancevar('dk_step, .@iid);
+			if (.@step >= 40) {
+				.@x = 211;
+				.@y = 165;
+			} else if (.@step >= 30) {
+				.@x = 92;
+				.@y = 46;
+			} else if (.@step >= 2) {
+				.@x = 19;
+				.@y = 72;
+			}
+		}
+		switch( instance_enter(.@md_name$, .@x, .@y) ) {
+		case IE_OTHER:
+			mes "^ff0000An unknown error occurred.^000000";
+			close3;
+		case IE_NOINSTANCE:
+			mes "[Oscar]";
+			mes "The way isn't open yet. Apply for the test first.";
+			close3;
+		case IE_NOMEMBER:
+			mes "[Oscar]";
+			mes "Only the party that applied may enter.";
+			close3;
+		case IE_OK:
+			cutin "",255;
+			mapannounce "gef_fild08", strcharinfo(0) + " of the " + getpartyname( getcharid(1) ) + " party is entering the " + .@md_name$ + ".", bc_map, 0xFF99;
+			end;
+		}
+		end;
+	case 3:
+		close3;
+	}
+	end;
+}
