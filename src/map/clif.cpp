@@ -21613,10 +21613,10 @@ void clif_sale_amount( const sale_item_data* sale_item, const block_list* bl, en
 }
 
 /// The client requested a refresh of the current remaining count of a sale item
-/// 09ac <account id>.L <item id>.W (CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO)
+/// 09c3 <account id>.L <item id>.W/.L (CZ_REQ_COUNT_BARGAIN_SALE_ITEM)
 void clif_parse_sale_refresh( int32 fd, map_session_data* sd ){
 #if PACKETVER_SUPPORTS_SALES
-	const PACKET_CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO* p = reinterpret_cast<PACKET_CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO*>( RFIFOP( fd, 0 ) );
+	const PACKET_CZ_REQ_COUNT_BARGAIN_SALE_ITEM* p = reinterpret_cast<PACKET_CZ_REQ_COUNT_BARGAIN_SALE_ITEM*>( RFIFOP( fd, 0 ) );
 
 	struct sale_item_data* sale;
 
