@@ -6801,6 +6801,7 @@ struct Damage battle_calc_attack(int32 attack_type,block_list *bl,block_list *ta
 			memset(&d,0,sizeof(d));
 			break;
 		}
+	skill_lua_damage(attack_type, bl, target, skill_id, skill_lv, d);
 	if( d.damage + d.damage2 < 1 )
 	{	//Miss/Absorbed
 		//Weapon attacks should go through to cause additional effects.

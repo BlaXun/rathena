@@ -5278,6 +5278,7 @@ TIMER_FUNC(skill_castend_id){
 			skill_castend_nodamage_id(src,target,ud->skill_id,ud->skill_lv,tick,flag);
 		else
 			skill_castend_damage_id(src,target,ud->skill_id,ud->skill_lv,tick,flag);
+		skill_lua_on_cast(src, target, target->x, target->y, ud->skill_id, ud->skill_lv);
 
 		if( sd && sd->skill_keep_using.tid == INVALID_TIMER && sd->skill_keep_using.skill_id > 0 && sd->skill_keep_using.skill_id == ud->skill_id && !skill_isNotOk(ud->skill_id, *sd) && skill_check_condition_castbegin(*sd, ud->skill_id, ud->skill_lv) ){
 			sd->skill_keep_using.tid = add_timer( sd->ud.canact_tick + 100, skill_keep_using, sd->id, 0 );
@@ -5481,6 +5482,7 @@ TIMER_FUNC(skill_castend_pos){
 			unit_set_walkdelay(src, tick, battle_config.default_walk_delay + skill_get_walkdelay(ud->skill_id, ud->skill_lv), 1);
 		FreeBlockLock freeLock;
 		skill_castend_pos2(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv,tick,0);
+		skill_lua_on_cast(src, nullptr, ud->skillx, ud->skilly, ud->skill_id, ud->skill_lv);
 
 		if (ud->skill_id != RA_CAMOUFLAGE)
 			status_change_end(src, SC_CAMOUFLAGE); // Applies to the first skill if active
@@ -9510,6 +9512,9 @@ bool skill_check_condition_castbegin( map_session_data& sd, uint16 skill_id, uin
 		}
 	}
 
+	if( !skill_lua_can_cast( sd, skill_id, skill_lv ) )
+		return false;
+
 	return true;
 }
 
@@ -10314,6 +10319,8 @@ struct s_skill_condition skill_get_requirement(map_session_data* sd, uint16 skil
 		if (req_opt & SKILL_REQ_APRATECOST)
 			req.ap_rate = 0;
 	}
+
+	skill_lua_requirement(*sd, skill_id, skill_lv, req);
 
 	return req;
 }

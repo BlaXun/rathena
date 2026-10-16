@@ -1682,6 +1682,9 @@ int32 status_damage(block_list *src,block_list *target,int64 dhp, int64 dsp, int
 		return (int32)(hp+sp+ap);
 	}
 
+	if (skill_lua_on_kill(src, target, skill_id)) // A mod's on_death kept it alive
+		return (int32)(hp+sp+ap);
+
 	status->hp = 0;
 	/** [Skotlex]
 	* NOTE: These dead functions should return:
@@ -4237,6 +4240,7 @@ int32 status_calc_pc_sub(map_session_data* sd, uint8 opt)
 	}
 
 	pc_bonus_script(sd);
+	skill_lua_bonus(sd);
 
 	if( sd->pd ) { // Pet Bonus
 		pet_data *pd = sd->pd;
@@ -6611,6 +6615,8 @@ void status_calc_bl_main(block_list& bl, std::bitset<SCB_MAX> flag)
 
 	if(flag[SCB_REGEN] && bl.type & BL_REGEN)
 		status_calc_regen_rate(&bl, status_get_regen_data(&bl), sc);
+
+	skill_lua_stats(bl, flag);
 }
 
 /**
@@ -10332,6 +10338,9 @@ bool status_change_start(block_list* src, block_list* bl, sc_type type, int32 ra
 
 	int32 tick = (int32)duration;
 
+	if (!skill_lua_status_start(src, bl, type, val1, val2, val3, val4, tick, flag))
+		return false;
+
 	// Type-specific checks that need to happen before the delay
 	switch (type) {
 		case SC_STONE:
@@ -13623,6 +13632,8 @@ int32 status_change_end( block_list* bl, enum sc_type type, int32 tid ){
 	if( scdb == nullptr ){
 		return 0;
 	}
+
+	skill_lua_status_end( bl, type );
 
 	if( scdb->state.any() ){
 		status_calc_state( *bl, *sc, scdb, false );
