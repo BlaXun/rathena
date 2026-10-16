@@ -539,6 +539,7 @@ enum _sp {
 	// upstream's 2000- block, so an upstream bonus appended there never reuses one.
 	// Take the next value here for a new one.
 	SP_WEAPON_SUBCLASS = 2900, // 2900
+	SP_NON_CRIT_DEF_RATE, // 2901
 
 	// original 1000-
 	SP_ATTACKRANGE=1000,	SP_ATKELE,SP_DEFELE,	// 1000-1002
