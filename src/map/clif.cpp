@@ -20880,7 +20880,7 @@ void clif_roulette_open( map_session_data* sd ){
 	p.PacketType = 0xa1a;
 	p.Result = 0; // result
 	p.Serial = 0; // serial
-	p.Step = (sd->roulette.claimPrize) ? sd->roulette.stage - 1 : 0;
+	p.Step = (sd->roulette.claimPrize) ? sd->roulette.prizeStage : 0;
 	p.Idx = (sd->roulette.claimPrize) ? sd->roulette.prizeIdx : -1;
 	p.AdditionItemID = sd->roulette.bonusItemID;
 	p.GoldPoint = sd->roulette_point.gold;
