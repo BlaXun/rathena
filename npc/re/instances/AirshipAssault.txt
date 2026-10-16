@@ -60,6 +60,10 @@ dali02,142,81,3	script	Dimensional Device#air1	PORTAL,{
 		close;
 	}
 	.@now = gettimetick(2);
+	// Normal keeps its lockout in character variables rather than a quest timer:
+	// it has no official quest Id, and an invented one could collide with a
+	// later upstream or client quest. Same rules as Hard's 15050/15051: reset at
+	// 04:00, re-entry allowed for 5 minutes after the first entry.
 	if (.@ferlock == 3188) {
 		if (airship_normal_reset > .@now && airship_normal_reentry <= .@now) {
 			mes "^ff0000Memorial Dungeon cannot be reentered within 23 hours after your last entrance.^000000";
