@@ -1389,9 +1389,9 @@ Body:
   - Id: 128039
     Group: Battle
     Name: Show Jailbreak to the weak captain
-    #Targets:
-    #  - Id: 0
-    #    Mob: E2_FELOCK
+    Targets:
+      - Id: 0
+        Mob: E2_FELOCK
     Score: 10
   - Id: 128040
     Group: Battle
@@ -1406,7 +1406,7 @@ Body:
     Name: Turmoil on board
     Targets:
       - Id: 0
-        Mob: E1_FELOCK
+        Mob: E2_FELOCK
         Count: 10
     Score: 20
   - Id: 128042
@@ -1420,10 +1420,10 @@ Body:
   - Id: 128043
     Group: Battle
     Name: Revolt of Riot
-    #Targets:
-    #  - Id: 0
-    #    Mob: E2_FELOCK
-    #    Count: 50
+    Targets:
+      - Id: 0
+        Mob: E2_FELOCK
+        Count: 50
     Score: 50
   - Id: 128044
     Group: Battle
