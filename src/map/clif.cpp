@@ -19564,6 +19564,9 @@ void clif_search_store_info_ack( const map_session_data& sd ){
 
 		clif_addcards( &entry.slot, &it );
 #if PACKETVER >= 20150226
+		for( int32 j = 0; j < MAX_ITEM_RDM_OPT; j++ ){
+			it.option[j] = ssitem->option[j];
+		}
 		clif_add_random_options( entry.option_data, it );
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200724
 		entry.grade = ssitem->enchantgrade;

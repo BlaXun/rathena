@@ -503,6 +503,9 @@ bool vending_searchall( const map_session_data* sd, const struct s_search_store_
 		for( int32 j = 0; j < MAX_SLOTS; j++ ){
 			ssitem->card[j] = it->card[j];
 		}
+		for( int32 j = 0; j < MAX_ITEM_RDM_OPT; j++ ){
+			ssitem->option[j] = it->option[j];
+		}
 		ssitem->refine = it->refine;
 		ssitem->enchantgrade = it->enchantgrade;
 
