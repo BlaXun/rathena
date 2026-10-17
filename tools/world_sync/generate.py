@@ -181,6 +181,21 @@ def add_to_cache(path, maps):
     return added
 
 
+def other_npcs(dirs):
+    """(map, x, y, name) of the NPCs in more script folders."""
+    out = []
+    for d in dirs:
+        for base, _, fns in os.walk(d):
+            for fn in fns:
+                if not fn.endswith('.txt'):
+                    continue
+                for line in open(os.path.join(base, fn), errors='replace'):
+                    m = HDR.match(line)
+                    if m and m.group(2) and not m.group(5).lower().startswith('warp') and 'monster' not in m.group(5).lower():
+                        out.append((m.group(1).lower(), int(m.group(2)), int(m.group(3)), m.group(6).lower()))
+    return out
+
+
 # ------------------------------------------------------------------ output
 
 def esc(s):
@@ -209,7 +224,7 @@ def npc_role(name):
         return 'kafra'
     if re.fullmatch(r'tool (?:dealer|merchant|shop)', low):
         return 'tools'
-    if re.search(r'storage locker|storage box', low):
+    if re.search(r'storage locker|storage box|storage keeper', low):
         return 'locker'
     if re.search(r'guild storage', low):
         return 'guild'
@@ -227,6 +242,10 @@ def main():
     ap.add_argument('--iro-navi', help='folder with navi_*_us.lub')
     ap.add_argument('--kro-navi', help='folder with navi_*_krpri.lub')
     ap.add_argument('--grf', action='append', default=[], help='GRFs to read map cells from, most recent first')
+    ap.add_argument('--other-npcs', action='append', default=[],
+                    help='more NPC script folders the server loads (e.g. the app\'s npc/mods); only used to keep '
+                         'new NPCs from standing on top of theirs')
+    ap.add_argument('--signboards', help="the client's signboardlist.lub (markers for NPCs the server lacks)")
     ap.add_argument('--report')
     a = ap.parse_args()
     root = os.path.abspath(a.rathena)
@@ -327,6 +346,47 @@ def main():
             if '\t' in line and not line.startswith('#'):
                 k, v = line.rstrip('\n').split('\t', 1)
                 names_en[k.strip()] = v.strip()
+    positions = {}
+    pf = os.path.join(HERE, 'npc_positions.txt')
+    if os.path.exists(pf):
+        for line in open(pf, encoding='utf-8'):
+            m = re.match(r'\s*(\d+)\s+([a-z0-9_@.\-]+)\s+(\d+)\s+(\d+)', line)
+            if m:
+                positions[int(m.group(1))] = (m.group(2), int(m.group(3)), int(m.group(4)))
+    scripted = {n[0] for n in s_npcs}            # maps whose NPCs rAthena's own scripts run
+    taken = collections.defaultdict(set)         # cells with an NPC or a portal on them
+    for n in s_npcs + other_npcs(a.other_npcs):
+        taken[n[0]].add((n[1], n[2]))
+    for w in s_warps:
+        taken[w[0]].add((w[1], w[2]))
+    cells = {}
+
+    def walkable(mp, x, y):
+        if mp not in cells:
+            cells[mp] = map_cells(grfs, mp) if grfs else None
+        c = cells[mp]
+        if not c:
+            return True
+        xs, ys, data = c
+        return 0 <= x < xs and 0 <= y < ys and data[x + y * xs] in (0, 3)
+
+    def free(mp, x, y, gap):
+        return all(max(abs(x - tx), abs(y - ty)) > gap for tx, ty in taken[mp])
+
+    def place(mp, x, y):
+        """The spot itself when nothing stands within a cell of it, else the nearest walkable cell
+        at least two cells from every other NPC (rings up to 8 cells out)."""
+        if free(mp, x, y, 1):
+            return x, y
+        for rad in range(2, 9):
+            ring = [(x + dx, y + dy) for dx in range(-rad, rad + 1) for dy in range(-rad, rad + 1)
+                    if max(abs(dx), abs(dy)) == rad]
+            ring.sort(key=lambda c: abs(c[0] - x) + abs(c[1] - y))
+            for cx, cy in ring:
+                if walkable(mp, cx, cy) and free(mp, cx, cy, 1):
+                    return cx, cy
+        return x, y
+
     npcs, seen = [], set()
     for tag, r in nv['npc']:
         mp, name = str(r.get(1, '')).lower(), str(r.get(5, '') or '')
@@ -336,14 +396,29 @@ def main():
         seen.add((mp, x, y))
         if has_npc(mp, x, y, name):
             continue
+        n = npc_name(names_en.get(name.strip(), name))
+        role = npc_role(n)
+        if mp in scripted and not role:
+            # rAthena's scripts run this map: the client lists NPCs its quests show and hide on
+            # cue, and an always-there copy with no logic only gets in the way
+            report['NPCs left out (map already scripted by rAthena)'].append('%s %s' % (mp, n))
+            continue
+        nid = r.get(2, 0)
+        if nid in positions:
+            mp, x, y = positions[nid]
+            report['NPCs at a position from npc_positions.txt'].append('%s %s' % (mp, n))
+        else:
+            nx, ny = place(mp, x, y)
+            if (nx, ny) != (x, y):
+                report['NPCs moved off another NPC'].append('%s %s %d,%d -> %d,%d' % (mp, n, x, y, nx, ny))
+            x, y = nx, ny
+        taken[mp].add((x, y))
         if (20000 <= sprite < 30000 or 1001 <= sprite < 4000) and sprite not in mobdb:
             # a monster's look for a monster the db doesn't have yet
             report['NPCs drawn as a townsperson (their monster sprite is not in the db)'].append('%s %s %d' % (mp, name, sprite))
             sprite = 'FALLBACK'
-        n = npc_name(names_en.get(name.strip(), name))
         if re.search(r'[\uac00-\ud7a3]', n):
             report['NPC names only in Korean (kRO-only NPCs)'].append('%s %s' % (mp, n))
-        role = npc_role(n)
         if role == 'tools':
             npcs.append('%s,%d,%d,4\tshop\t%s#ws%d\t%s,%s' % (mp, x, y, n, r.get(2, 0), '4_M_01' if sprite == 'FALLBACK' else sprite,
                                                             ','.join('%d:-1' % t for t in TOOLS)))
@@ -355,6 +430,27 @@ def main():
         else:
             body = '\tmes "[%s]";\n\tmes "Hello there, adventurer.";\n\tclose;\n' % esc(n)
         npcs.append('%s,%d,%d,4\tscript\t%s#ws%d\t%s,{\n%s}' % (mp, x, y, n, r.get(2, 0), '4_M_01' if sprite == 'FALLBACK' else sprite, body))
+
+    # --- signboards with no NPC under them (iRO's S3 Season NPCs and the like)
+    if a.signboards:
+        before = {k: set(v) for k, v in taken.items()}   # signs only yield to real NPCs, not each other
+
+        def free(mp, x, y, gap):
+            return all(max(abs(x - tx), abs(y - ty)) > gap for tx, ty in before.get(mp, ()))
+        sb = luadata.ordered_lines(luadata.run([a.signboards], 'latin-1').get('SignBoardList') or {})
+        for i, r in enumerate(sb):
+            if not isinstance(r, dict):
+                continue
+            mp, x, y, label = str(r.get(1, '')).lower(), r.get(2, 0), r.get(3, 0), str(r.get(7, '') or '')
+            if mp not in loaded or not re.fullmatch(r'[A-Za-z][ -~]*', label) or re.search(r'\bonly\b|\.\d$', label):
+                continue                           # notes ("Level 180 only.") aren't NPCs
+            if not free(mp, x, y, 5) or has_npc(mp, x, y, label):
+                continue                           # marks an NPC that is there
+            n = npc_name(label)
+            taken[mp].add((x, y))
+            npcs.append('%s,%d,%d,4\tscript\t%s#wsb%d\t4_M_01,{\n\tmes "[%s]";\n'
+                        '\tmes "Hello there, adventurer.";\n\tclose;\n}' % (mp, x, y, n, i, esc(n)))
+            report['NPCs placed at a signboard with nothing under it'].append('%s %s' % (mp, n))
 
     # --- write
     out = os.path.join(root, 'npc', 're', 'world_sync')
@@ -372,8 +468,9 @@ def main():
         with open(os.path.join(out, fn), 'w', encoding='cp949', errors='replace', newline='\n') as o:
             o.write(head % title + '\n'.join(lines) + '\n')
     with open(os.path.join(root, 'npc', 're', 'scripts_world_sync.conf'), 'w', newline='\n') as o:
+        static = [fn for fn in ('npc_mover.txt', 'rune_tablet.txt') if os.path.exists(os.path.join(out, fn))]
         o.write('// World sync (generated by tools/world_sync/generate.py)\n' +
-                ''.join('npc: npc/re/world_sync/%s\n' % fn for fn in files))
+                ''.join('npc: npc/re/world_sync/%s\n' % fn for fn in list(files) + static))
     main_conf = os.path.join(root, 'npc', 're', 'scripts_main.conf')
     mc = open(main_conf).read()
     if 'scripts_world_sync.conf' not in mc:

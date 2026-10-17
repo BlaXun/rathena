@@ -1,0 +1,5 @@
+# Positions for world-sync NPCs, used by generate.py instead of the
+# clients' spot. One per line:  <navi id> <map> <x> <y>
+# The navi id is the number after "#ws" in the NPC's name (e.g.
+# "Costumed Child#ws29973" -> 29973). In game, @npcplace moves any NPC
+# and keeps it there; "@npcplace list" prints what was moved.
