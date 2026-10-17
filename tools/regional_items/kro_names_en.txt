@@ -1,0 +1,240 @@
+# English names for kRO-only items (Id<TAB>Name). kRO's client has only Korean
+# names, and rAthena's Name is the English one. Follows iRO's wording where iRO
+# already names the family (Eden Group, Muqaddas, Glacier Flower Spell, ...).
+105210	Amplify (Grinder Axe)
+105211	Muqaddas Tablet (Garz)
+105854	HP Restorative Box (Basic)
+105855	HP Restorative Box (Intermediate)
+105856	HP Restorative Box (Advanced)
+105857	HP Restorative Box (Superior)
+105858	SP Restorative Box (Basic)
+105859	SP Restorative Box (Intermediate)
+105860	SP Restorative Box (Advanced)
+105861	SP Restorative Box (Superior)
+105862	Potion of Blessing I
+105863	Potion of Blessing II
+105864	Potion of Blessing III
+105865	Potion of Blessing IV
+105866	Potion of Blessing V
+105867	Potion of Blessing VI
+105868	Special Event Costume Box
+105869	Growth Support Box (260)
+105870	Growth Support Box (250)
+105871	Growth Support Box (240)
+105872	Growth Support Box (230)
+105873	Growth Support Box (220)
+105874	Growth Support Box (210)
+105875	Growth Support Box (200)
+105876	Growth Support Box (175)
+105877	Growth Support Box (150)
+105878	Growth Support Box (125)
+105879	Growth Support Box (100)
+105880	Growth Support Box (90)
+105881	Growth Support Box (80)
+105882	Growth Support Box (60)
+105883	Growth Support Box (40)
+105884	Growth Support Box (20)
+105885	Growth Support Box (1)
+106191	Requiem M Gift Box
+106224	3rd/Expanded Stone IV (Garment) Box
+106225	Transcendent/Expanded Stone III (Upper) Box
+106226	Transcendent/Expanded Stone III (Middle) Box
+106227	Transcendent/Expanded Stone III (Lower) Box
+106233	Costume Enchant Stone Box 42
+106247	SSVIP Gift
+106249	[Not For Sale] Infinite Giant Fly Wing 1 Hour Box
+106250	Boundary Tuning (Frontier Claw Axe)
+106251	Dimensional Tuning (Faithful Bandage)
+106252	Dimensional Tuning (Demonic Wing Bow)
+106253	Dimensional Tuning (Huuma Shuriken Melody)
+106254	Dimensional Tuning (Uas)
+106255	Dimensional Tuning (Garlic Foxtail)
+106256	Dimensional Tuning (Kopis)
+106297	Mallanggaeng
+106299	Costume Angelic Long Selection Box
+106408	Fire Activation Reward
+106409	Fire Completion Reward
+106410	Predator Activation Reward
+106411	Predator Completion Reward
+106412	Bizarre Fruit Activation Reward
+106413	Bizarre Fruit Completion Reward
+106414	Bizarre Fruit 2-Set Reward
+106498	Biolo Selection Box
+106502	Heart of Blue Flame
+200795	Druid Update Package
+200796	Year-End Celebration Package I
+200797	Year-End Celebration Package II
+200798	Year-End Celebration Package III
+200799	Year-End Celebration Package IV
+200820	Nyangvine Costume Mileage Package I (Stone Box 42)
+200821	Nyangvine Costume Mileage Package II (Stone Box 42)
+200822	Nyangvine Costume Mileage Package III (Stone Box 42)
+200828	(Account Bound) Character Slot Expansion Card Package
+200829	(Account Bound) Gym Pass 10 Box
+200830	(Account Bound) Riding Reins Box
+200836	Lunar New Year Limited Package I
+200837	Lunar New Year Limited Package II
+200845	Monthly Buff Package I
+200846	Monthly Buff Package II
+200847	Monthly Buff Package III
+200848	Monthly Support Package
+300683	Howell Megas Walter Card
+314269	Pinion Shot Tuning Device
+314270	Quill Spear Tuning Device
+314271	Automatic Orb (Chop Chop Slash)
+314272	Automatic Orb (Gust Hail)
+314273	Automatic Orb (Nature)
+314274	Wolf Orb (Chop Chop Slash)
+314275	Wolf Orb (Gust Hail)
+314276	Wolf Orb (Nature)
+314277	Glacier Flower Spell (Chop Chop)
+314278	Glacier Flower Spell (Double Slash)
+314279	Glacier Flower Spell (Sharpen Gust)
+314280	Glacier Flower Spell (Sharpen Hail)
+314281	Glacier Flower Spell (Feather Sprinkle)
+314282	Glacier Flower Spell (Ice Splash)
+314283	Glacier Flower Spell (Thundering Orb)
+314284	Glacier Flower Spell (Thundering Focus)
+314285	Glacier Flower Spell (Earth Drill)
+314286	Glacier Flower Spell (Earth Stamp)
+314287	Glacier Flower Spell (Glacier Nova)
+314288	Glacier Flower Spell (Glacier Shard)
+314289	Glacier Flower Spell (Roaring Piercer)
+314290	Glacier Flower Spell (Terra Wave)
+314291	Glacier Flower Spell (Terra Harvest)
+314292	Glacier Flower Spell (Quill Spear)
+314293	Glacier Flower Spell (Pinion Shot)
+314294	Glacier Flower Spell (Frenzy Fang)
+314295	Glacier Flower Spell (Claw)
+314296	Ice Flower Spell (Chop Chop Slash)
+314297	Ice Flower Spell (Gust Hail)
+314298	Ice Flower Spell (Nature)
+314804	Alitea Soul (Alpha Claw)
+314805	Alitea Soul (Frenzy Fang)
+314806	Alitea Soul (Pinion Shot)
+314807	Alitea Soul (Quill Spear)
+314808	Alitea Soul (Glacier Shard)
+314809	Alitea Soul (Roaring Piercer)
+314810	Alitea Soul (Terra Harvest)
+314848	Karnos Stone (Garment)
+314849	Alitea Stone (Garment)
+314850	Druid Stone (Upper)
+314851	Druid Stone (Middle)
+314852	Druid Stone (Lower)
+314853	Karnos Stone (Upper)
+314854	Karnos Stone (Middle)
+314855	Karnos Stone (Lower)
+400998	Circlet of Time (Karnos)
+400999	Time Dimensions Rune Crown (Alitea)
+401171	Celestial Rune Crown (Shadow Cross)
+401172	Celestial Rune Crown (Arch Mage)
+401173	Celestial Rune Crown (Biolo)
+401174	Celestial Rune Crown (Troubadour & Trouvere)
+401175	Celestial Rune Crown (Alitea)
+401176	Crown of Wrath (Alitea)
+401195	Frontier Rune Crown (Alitea)
+401216	Celestial Rune Crown (Dragon Knight)
+401217	Celestial Rune Crown (Elemental Master)
+401218	Celestial Rune Crown (Shinkiro & Shiranui)
+401219	Celestial Rune Crown (Night Watch)
+401220	Celestial Rune Crown (Spirit Handler)
+410573	Costume Baby Seal
+450472	Noblesse Slash Suits
+450473	Noblesse Sharpen Suits
+450474	Noblesse Nature Robe
+450475	Imperial Slash Suits
+450476	Imperial Sharpen Suits
+450477	Imperial Nature Robe
+450478	Grace Slash Suits
+450479	Grace Sharpen Suits
+450480	Grace Nature Robe
+500136	Celestial Thorns Sword
+510184	Repeat Dagger-OS
+510185	Repeat Dagger-OSAD
+510186	Gula Drill
+510187	Herosria Nature Dagger
+510188	Fortify Windsor
+510189	Solid Windsor
+510190	Glacier Nature Knife
+510191	Dim Glacier Nature Knife
+510193	Dimensions Nature Dagger
+510200	Gust Hail Booster Dagger
+510205	Kopis
+520045	Eden Group Druid Axe
+520046	Grinder Axe
+520047	Flush Grinder Axe
+520048	Poenitentia Securis
+520049	Adulter Fides Nature Axe
+520050	Vivatus Fides Nature Axe
+520052	Furious Axe
+520053	Harmony Axe
+520054	Eroded Axe
+520055	Frontier Claw Axe
+540125	Celestial Elemental Book
+550194	Celestial Dead Soul
+550195	Uas
+550196	Garlic Foxtail
+550197	Celestial Seonang Wand
+560088	Faithful Bandage
+570093	Celestial Song
+580093	Celestial Dance
+590099	Eden Group Druid Mace
+590100	Eden Group Karnos Mace
+590101	Guardian Knights Jewel Scepter
+590102	Herosria Nature Mace
+590103	Poenitentia Scipione
+590104	Muqaddas Garz
+590105	Adulter Fides Nature Scepter
+590106	Vivatus Fides Nature Scepter
+590116	Celestial Glacial Scepter
+590117	Scepter of Wrath
+590118	Earth Bright Scepter
+610093	Celestial Slasher
+620054	Eden Group Karnos Two-Handed Axe
+620055	Herosria Nature Axe
+620056	Glacier Nature Axe
+620057	Dim Glacier Nature Axe
+620059	Dimensions Nature Axe
+620064	Slash Chop Chop Booster Axe
+630066	Celestial Dragon Pierce
+650061	Huuma Shuriken Melody
+650062	Celestial Frost Huuma
+700127	Demonic Wing Bow
+830047	Celestial Night Shot
+1002347	Automatic Module (Chop Chop Slash)
+1002348	Automatic Module (Gust Hail)
+1002349	Automatic Module (Nature)
+1002350	Ice Flower Magic Stone (Chop Chop Slash)
+1002351	Ice Flower Magic Stone (Gust Hail)
+1002352	Ice Flower Magic Stone (Nature)
+1002625	Karnos Stone (Garment)
+1002626	Alitea Stone (Garment)
+1002627	Druid Stone (Upper)
+1002628	Druid Stone (Middle)
+1002629	Druid Stone (Lower)
+1002630	Karnos Stone (Upper)
+1002631	Karnos Stone (Middle)
+1002632	Karnos Stone (Lower)
+1100038	HP Restorative (Basic)
+1100039	HP Restorative (Intermediate)
+1100040	HP Restorative (Advanced)
+1100041	HP Restorative (Superior)
+1100042	SP Restorative (Basic)
+1100043	SP Restorative (Intermediate)
+1100044	SP Restorative (Advanced)
+1100045	SP Restorative (Superior)
+1100047	Malopi
+1270129	Karnos Eden Group Advanced Shadow Weapon
+1270161	Karnos Booster Shadow Weapon
+1270175	Alpha Fang Shadow Armor
+1270176	Alpha Fang Shadow Shoes
+1270177	Pinion Spear Shadow Earring
+1270178	Pinion Spear Shadow Pendant
+1270179	Shard Nova Shadow Armor
+1270180	Shard Nova Shadow Shoes
+1270181	Terra Piercer Shadow Earring
+1270182	Terra Piercer Shadow Pendant
+1270183	M.Alitea Shadow Armor
+1270184	M.Alitea Shadow Shoes
+1270185	M.Alitea Shadow Earring
+1270186	M.Alitea Shadow Pendant
