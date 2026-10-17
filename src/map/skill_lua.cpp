@@ -4596,7 +4596,7 @@ int32 sphere_limit(map_session_data& sd) {
 
 /// Put a skill into a player's Plagiarism (slot 1) or Reproduce (slot 2)
 /// slot, as skill_do_copy does once it has decided to copy.
-void copy_skill(map_session_data& sd, uint16 skill_id, uint16 lv, int32 slot) {
+void copy_skill(map_session_data& sd, uint16 skill_id, uint8 lv, int32 slot) {
 	uint16 idx = skill_get_index(skill_id);
 
 	if (idx == 0)
@@ -4837,7 +4837,7 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 				break;
 			case SKILL_LUA_COPY_SKILL:
 				if (map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr; sd != nullptr)
-					copy_skill(*sd, static_cast<uint16>(action.type), static_cast<uint16>(action.val1), action.flag);
+					copy_skill(*sd, static_cast<uint16>(action.type), static_cast<uint8>(action.val1), action.flag);
 				break;
 			case SKILL_LUA_ITEMSKILL:
 				if (map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr; sd != nullptr && sd->ud.skilltimer == INVALID_TIMER && !pc_isdead(sd)) {
