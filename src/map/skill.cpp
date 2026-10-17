@@ -8515,7 +8515,7 @@ bool skill_check_condition_castbegin( map_session_data& sd, uint16 skill_id, uin
 		}
 	}
 	// perform skill-specific checks (and actions)
-	switch( skill_id ) {
+	switch( skill_lua_stock_checks( skill_id ) ? skill_id : 0 ) {
 		case RG_GRAFFITI:
 			if (map_foreachinmap(skill_graffitiremover,sd.m,BL_SKILL,0)) { // If a previous Graffiti exists skill fails to cast.
 				clif_skill_fail( sd, skill_id );
@@ -9581,7 +9581,7 @@ bool skill_check_condition_castend( map_session_data& sd, uint16 skill_id, uint1
 	}
 
 	// perform skill-specific checks (and actions)
-	switch( skill_id ) {
+	switch( skill_lua_stock_checks( skill_id ) ? skill_id : 0 ) {
 		case PR_BENEDICTIO:
 			skill_check_pc_partner(&sd, skill_id, &skill_lv, 1, 1);
 			break;

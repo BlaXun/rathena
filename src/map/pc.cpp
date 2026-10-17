@@ -58,7 +58,7 @@
 #include "pet.hpp" // pet_unlocktarget()
 #include "quest.hpp"
 #include "skill.hpp" // skill_isCopyable()
-#include "skill_lua.hpp" // skill_lua_on_steal(), skill_lua_use_item()
+#include "skill_lua.hpp" // skill_lua_on_steal()
 #include "script.hpp" // struct script_reg, struct script_regstr
 #include "searchstore.hpp"  // struct s_search_store_info
 #include "status.hpp" // OPTION_*, struct weapon_atk

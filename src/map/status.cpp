@@ -13635,7 +13635,7 @@ int32 status_change_end( block_list* bl, enum sc_type type, int32 tid ){
 		return 0;
 	}
 
-	skill_lua_status_end( bl, type );
+	skill_lua_status_end( bl, type, val1, val2, val3, val4 );
 
 	if( scdb->state.any() ){
 		status_calc_state( *bl, *sc, scdb, false );

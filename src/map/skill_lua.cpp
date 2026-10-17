@@ -142,6 +142,7 @@ struct s_skill_hooks {
 	std::vector<s_hook> hooks[HOOK_MAX];
 	bool custom = false;   ///< a mod's own skill: give it the generic class if it has none
 	bool replace = false;  ///< use the generic class even over the server's own
+	bool stock_checks = true;  ///< false: skip the server's skill-specific use checks
 };
 
 /// Same shape as s_skill_hooks, keyed by item AegisName; mod registrations
@@ -170,11 +171,24 @@ s_skill_hooks* hooks_for(uint16 skill_id) {
 	return it == hooks_by_id.end() ? nullptr : it->second;
 }
 
+} // namespace
+
+bool skill_lua_stock_checks(uint16 skill_id) {
+	const s_skill_hooks* h = hooks_for(skill_id);
+
+	return h == nullptr || h->stock_checks;
+}
+
+namespace {
+
 std::unordered_map<std::string, s_item_hooks> item_hooks_by_name;
 std::unordered_map<t_itemid, s_item_hooks*> item_hooks_by_id;
 
-// While a skill cast from Lua (c:cast) runs, no Lua hook runs: an item whose
-// on_attack casts a skill that hits would otherwise trigger itself forever.
+// While a skill cast from Lua (c:cast, c:attack) runs, no hook that can act
+// on what it does runs: not the attack hooks, nor the skill's before_cast,
+// on_cast, on_skill, heal or on_steal. An item whose on_attack casts a skill
+// that hits would otherwise trigger itself forever. Its damage still goes
+// through ratio, damage_dealt and the like.
 bool in_lua_cast = false;
 
 s_item_hooks* item_hooks_for(t_itemid nameid) {
@@ -610,6 +624,13 @@ const char* status_name(int32 type) {
 	return it->second.c_str();
 }
 
+/// What a hook calls a debuff: one of the common ailments (stone, freeze,
+/// stun, sleep, poison, curse, silence, confusion, blind, bleeding), which
+/// status.yml leaves unflagged, or a status it flags Debuff.
+bool is_debuff(int32 type, const s_status_change_db* scdb) {
+	return (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) || (scdb != nullptr && scdb->flag[SCF_DEBUFF]);
+}
+
 // unit:statuses({ debuff = true }) -- what the unit carries: an array of
 // { name, remaining, debuff, mod }; the server's statuses, then the mods'.
 int32 lua_unit_statuses(lua_State* state) {
@@ -636,7 +657,7 @@ int32 lua_unit_statuses(lua_State* state) {
 			if (scdb == nullptr)
 				continue;
 
-			bool debuff = scdb->flag[SCF_DEBUFF];
+			bool debuff = is_debuff(type, scdb.get());
 
 			if (only_debuffs && !debuff)
 				continue;
@@ -674,8 +695,29 @@ int32 lua_unit_statuses(lua_State* state) {
 	return 1;
 }
 
+/// Sets a ground skill's x and y on the table at the top: the middle of the
+/// cells it was placed on, which is where it was cast for a square or a cross.
+void set_group_middle(lua_State* state, const s_skill_unit_group& group) {
+	if (group.unit_count <= 0)
+		return;
+
+	int16 x0 = group.unit[0].x, x1 = x0, y0 = group.unit[0].y, y1 = y0;
+
+	for (int32 i = 1; i < group.unit_count; i++) {
+		x0 = std::min(x0, group.unit[i].x);
+		x1 = std::max(x1, group.unit[i].x);
+		y0 = std::min(y0, group.unit[i].y);
+		y1 = std::max(y1, group.unit[i].y);
+	}
+	lua_pushinteger(state, (x0 + x1) / 2);
+	lua_setfield(state, -2, "x");
+	lua_pushinteger(state, (y0 + y1) / 2);
+	lua_setfield(state, -2, "y");
+}
+
 // unit:ground_units({skill}) -- the ground skills the unit has placed: an
-// array of { group, skill, level, map, x, y, remaining, cells = { {x, y}, ... } }.
+// array of { group, skill, level, map, x, y, remaining, cells = { {x, y}, ... } },
+// x and y the middle of its cells.
 int32 lua_unit_ground_units(lua_State* state) {
 	luaL_checktype(state, 1, LUA_TTABLE);
 	uint16 only = lua_isnoneornil(state, 2) ? 0 : check_skill(state, 2, "unit:ground_units");
@@ -703,6 +745,7 @@ int32 lua_unit_ground_units(lua_State* state) {
 		lua_setfield(state, -2, "map");
 		lua_pushinteger(state, std::max<t_tick>(0, group->limit - DIFF_TICK(gettick(), group->tick)));
 		lua_setfield(state, -2, "remaining");
+		set_group_middle(state, *group);
 		lua_newtable(state);
 		for (int32 i = 0; i < group->unit_count; i++) {
 			const skill_unit& su = group->unit[i];
@@ -715,14 +758,6 @@ int32 lua_unit_ground_units(lua_State* state) {
 			lua_pushinteger(state, su.y);
 			lua_setfield(state, -2, "y");
 			lua_rawseti(state, -2, ++cells);
-			if (cells == 1) {
-				// The group's place: its first living cell. The stack holds the
-				// result array, the group and its cells.
-				lua_pushinteger(state, su.x);
-				lua_setfield(state, -3, "x");
-				lua_pushinteger(state, su.y);
-				lua_setfield(state, -3, "y");
-			}
 		}
 		lua_setfield(state, -2, "cells");
 		lua_rawseti(state, -2, ++n);
@@ -1276,7 +1311,8 @@ int32 collect_skill_unit(block_list* bl, va_list ap) {
 
 // ground_units_around(where, radius, {filter}) -- the ground skills anyone
 // has placed with a cell in that square: an array of { group, skill, level,
-// owner_id, x, y, cells, remaining }, cells counting those in the square.
+// owner_id, x, y, cells, remaining }, x and y the middle of its cells and
+// cells counting those in the square.
 // filter.enemy_of: only those whose owner is that unit's enemy.
 int32 lua_ground_units_around(lua_State* state) {
 	int16 m, x, y;
@@ -1333,15 +1369,7 @@ int32 lua_ground_units_around(lua_State* state) {
 		lua_setfield(state, -2, "level");
 		lua_pushinteger(state, group->src_id);
 		lua_setfield(state, -2, "owner_id");
-		for (int32 i = 0; i < group->unit_count; i++) {
-			if (group->unit[i].alive) {
-				lua_pushinteger(state, group->unit[i].x);
-				lua_setfield(state, -2, "x");
-				lua_pushinteger(state, group->unit[i].y);
-				lua_setfield(state, -2, "y");
-				break;
-			}
-		}
+		set_group_middle(state, *group);
 		lua_pushinteger(state, count);
 		lua_setfield(state, -2, "cells");
 		lua_pushinteger(state, std::max<t_tick>(0, group->limit - DIFF_TICK(gettick(), group->tick)));
@@ -2565,10 +2593,10 @@ int32 lua_register_skill(lua_State* state) {
 			lua_pop(state, 1);
 			continue;
 		}
-		if (strcmp(key, "custom") == 0 || strcmp(key, "replace") == 0) {
+		if (strcmp(key, "custom") == 0 || strcmp(key, "replace") == 0 || strcmp(key, "stock_checks") == 0) {
 			if (!lua_isboolean(state, -1))
 				return luaL_error(state, "skill %s: %s must be true or false", name, key);
-			(key[0] == 'c' ? entry.custom : entry.replace) = lua_toboolean(state, -1);
+			(key[0] == 'c' ? entry.custom : key[0] == 'r' ? entry.replace : entry.stock_checks) = lua_toboolean(state, -1);
 			lua_pop(state, 1);
 			continue;
 		}
@@ -2576,7 +2604,7 @@ int32 lua_register_skill(lua_State* state) {
 		int32 which = name_index(key, hook_names, HOOK_MAX);
 
 		if (which < 0)
-			return luaL_error(state, "skill %s: unknown key \"%s\" (a hook: %s; or priority, custom, replace)", name, key, name_list(hook_names, HOOK_MAX).c_str());
+			return luaL_error(state, "skill %s: unknown key \"%s\" (a hook: %s; or priority, custom, replace, stock_checks)", name, key, name_list(hook_names, HOOK_MAX).c_str());
 		if (!lua_isfunction(state, -1))
 			return luaL_error(state, "skill %s: %s must be a function", name, key);
 		add_hook(state, entry.hooks[which], priority);
@@ -2612,7 +2640,7 @@ int32 lua_register_item(lua_State* state) {
 		int32 which = name_index(key, item_hook_names, ITEM_HOOK_MAX);
 
 		if (which < 0)
-			return luaL_error(state, "item %s: unknown hook \"%s\" (on_attack, on_hit_taken or priority)", name, key);
+			return luaL_error(state, "item %s: unknown key \"%s\" (a hook: %s; or priority)", name, key, name_list(item_hook_names, ITEM_HOOK_MAX).c_str());
 		if (!lua_isfunction(state, -1))
 			return luaL_error(state, "item %s: %s must be a function", name, key);
 		add_hook(state, entry.hooks[which], priority);
@@ -3211,7 +3239,7 @@ void recalc(block_list& bl, const s_lua_status& def) {
 	if (map_session_data* sd = BL_CAST(BL_PC, &bl); sd != nullptr && !def.hooks[SHOOK_BONUS].empty())
 		status_calc_pc(sd, SCO_NONE);
 	else if (!def.hooks[SHOOK_STATS].empty())
-		status_calc_bl(&bl, { SCB_DEF, SCB_MDEF, SCB_HIT, SCB_FLEE, SCB_FLEE2, SCB_CRI, SCB_SPEED, SCB_BATK, SCB_WATK, SCB_MATK });
+		status_calc_bl(&bl, { SCB_DEF, SCB_DEF2, SCB_MDEF, SCB_MDEF2, SCB_HIT, SCB_FLEE, SCB_FLEE2, SCB_CRI, SCB_SPEED, SCB_BATK, SCB_WATK, SCB_MATK, SCB_ASPD, SCB_MAXHP, SCB_MAXSP });
 }
 
 /// on_start, on_end or tick of one instance of `def` on `unit`. What the hooks
@@ -3890,8 +3918,9 @@ public:
 
 /// Cast a skill the way bAutoSpell does (skill_additional_effect): the same
 /// "can this be cast here" check, ground-skill limit, cost (its HP, spheres
-/// and zeny; no SP, no items) and after-cast delay. No Lua hook runs while it does (in_lua_cast). A ground
-/// skill goes to (x, y) when given, else to where `target` stands.
+/// and zeny; no SP, no items) and after-cast delay. No hook that can act runs
+/// for it (in_lua_cast). A ground skill goes to (x, y) when given, else to
+/// where `target` stands.
 void cast_like_autospell(block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv, int16 x, int16 y) {
 	map_session_data* sd = BL_CAST(BL_PC, src);
 	t_tick tick = gettick();
@@ -4038,7 +4067,9 @@ int32 skill_lua_job_level(uint16 skill_id, const block_list* bl, int32 stock) {
 int32 skill_lua_heal(uint16 skill_id, uint16 skill_lv, const block_list* src, const block_list* target, int32 stock, int32 base) {
 	s_skill_hooks* hooks = hooks_for(skill_id);
 
-	if (hooks == nullptr || hooks->hooks[HOOK_HEAL].empty() || current_hit != nullptr)
+	// Not for a heal a hook's c:cast does: a heal hook may act, and one that
+	// casts a heal would set itself off again.
+	if (hooks == nullptr || hooks->hooks[HOOK_HEAL].empty() || current_hit != nullptr || in_lua_cast)
 		return stock;
 
 	int64 value = stock;
@@ -4300,8 +4331,13 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 					with_power power(action.power, *attacker, static_cast<uint16>(action.type));
 					bool was = in_lua_cast;
 
+					uint16 skill_id = static_cast<uint16>(action.type);
+					// A Splash Split skill divides its damage by the count of
+					// targets the flag carries: this hit is on one.
+					int32 flag = skill_get_nk(skill_id, NK_SPLASHSPLIT) ? 1 : 0;
+
 					in_lua_cast = true;  // no hook that can act runs for it: no hit triggers itself
-					skill_attack(skill_get_type(static_cast<uint16>(action.type)), attacker, attacker, bl, static_cast<uint16>(action.type), static_cast<uint16>(action.val1), gettick(), 0);
+					skill_attack(skill_get_type(skill_id), attacker, attacker, bl, skill_id, static_cast<uint16>(action.val1), gettick(), flag);
 					in_lua_cast = was;
 				}
 				break;
@@ -4588,8 +4624,16 @@ void skill_lua_bonus(map_session_data* sd) {
 namespace {
 
 /// The table a stats hook gets and changes, at the top of the stack.
-void push_stats(const status_data& st) {
-	lua_createtable(L, 0, 24);
+/// The fastest attack motion the server allows `bl`: what read_stats keeps a
+/// hook's amotion within.
+int32 amotion_floor(block_list& bl) {
+	if (map_session_data* sd = BL_CAST(BL_PC, &bl); sd != nullptr)
+		return pc_maxaspd(sd) / AMOTION_DIVIDER_PC;
+	return MAX_ASPD_NOPC / AMOTION_DIVIDER_NOPC;
+}
+
+void push_stats(block_list& bl, const status_data& st) {
+	lua_createtable(L, 0, 25);
 	set_int("def", st.def);
 	set_int("def2", st.def2);
 	set_int("mdef", st.mdef);
@@ -4610,7 +4654,8 @@ void push_stats(const status_data& st) {
 	set_int("amotion", st.amotion);
 	set_int("maxhp", st.max_hp);
 	set_int("maxsp", st.max_sp);
-	// To read: a stats hook runs after they count.
+	// To read: a stats hook runs after they count; and how far amotion goes.
+	set_int("amotion_min", amotion_floor(bl));
 	set_int("str", st.str);
 	set_int("agi", st.agi);
 	set_int("vit", st.vit);
@@ -4661,9 +4706,9 @@ void read_stats(block_list& bl, status_data& st, int32 stats, const std::bitset<
 	// Attack motion, kept within what the server allows the unit, with the
 	// attack delay that follows it.
 	if (map_session_data* sd = BL_CAST(BL_PC, &bl); sd != nullptr) {
-		if (field(SCB_ASPD, "amotion", pc_maxaspd(sd) / AMOTION_DIVIDER_PC, MIN_ASPD / AMOTION_DIVIDER_PC, st.amotion))
+		if (field(SCB_ASPD, "amotion", amotion_floor(bl), MIN_ASPD / AMOTION_DIVIDER_PC, st.amotion))
 			st.adelay = AMOTION_DIVIDER_PC * st.amotion;
-	} else if (field(SCB_ASPD, "amotion", MAX_ASPD_NOPC / AMOTION_DIVIDER_NOPC, MIN_ASPD / AMOTION_DIVIDER_NOPC, st.amotion)) {
+	} else if (field(SCB_ASPD, "amotion", amotion_floor(bl), MIN_ASPD / AMOTION_DIVIDER_NOPC, st.amotion)) {
 		st.adelay = bl.type == BL_HOM ? AMOTION_DIVIDER_NOPC * st.amotion : std::max<int32>(st.adelay, AMOTION_DIVIDER_NOPC * st.amotion);
 	}
 	if (field(SCB_MAXHP, "maxhp", 1, INT32_MAX, st.max_hp) && st.hp > st.max_hp)
@@ -4694,7 +4739,7 @@ void skill_lua_stats(block_list& bl, const std::bitset<N>& flag) {
 	// left.
 	if (learners) {
 		for_each_learned(HOOK_STATS, *sd, [&](uint16 skill_id, uint16 lv, s_hook& hook, const char* name) {
-			push_stats(*st);
+			push_stats(bl, *st);
 
 			int32 stats = lua_gettop(L);
 
@@ -4707,7 +4752,7 @@ void skill_lua_stats(block_list& bl, const std::bitset<N>& flag) {
 		});
 	}
 	for_each_status(SHOOK_STATS, bl, [&](s_lua_status& def, const s_lua_status_on& on, s_hook& hook) {
-		push_stats(*st);
+		push_stats(bl, *st);
 
 		int32 stats = lua_gettop(L);
 
@@ -4728,17 +4773,14 @@ void skill_lua_damage(int32 attack_type, block_list* src, block_list* target, ui
 	if (L == nullptr || src == nullptr || target == nullptr || d.damage + d.damage2 <= 0)
 		return;
 
-	// A c:cast or c:attack's power scales the damage as the hooks leave it.
-	struct apply_power {
-		Damage& d;
-		bool applies;
-		~apply_power() {
-			if (applies) {
-				d.damage = d.damage * lua_power.percent / 100;
-				d.damage2 = d.damage2 * lua_power.percent / 100;
-			}
-		}
-	} power{ d, lua_power.percent != 100 && src->id == lua_power.src_id && skill_id == lua_power.skill_id };
+	// A c:cast or c:attack's power scales the damage first: the hooks see
+	// what the hit deals.
+	if (lua_power.percent != 100 && src->id == lua_power.src_id && skill_id == lua_power.skill_id) {
+		d.damage = d.damage * lua_power.percent / 100;
+		d.damage2 = d.damage2 * lua_power.percent / 100;
+		if (d.damage + d.damage2 <= 0)
+			return;
+	}
 
 	map_session_data* ssd = BL_CAST(BL_PC, src);
 	map_session_data* tsd = BL_CAST(BL_PC, target);
@@ -5215,7 +5257,7 @@ void add_stock_status_fields(int32 type, const char* name, const block_list* src
 	uint16 by_skill = src != nullptr ? battle_getcurrentskill(src) : 0;
 
 	set_string("status_name", name);
-	set_bool("debuff", scdb != nullptr && scdb->flag[SCF_DEBUFF]);
+	set_bool("debuff", is_debuff(type, scdb.get()));
 	push_unit(&bl);
 	lua_setfield(L, -2, "unit");
 	set_string("by_skill", by_skill != 0 && skill_get_index(by_skill) != 0 ? skill_get_name(by_skill) : "");
@@ -5310,7 +5352,7 @@ bool skill_lua_status_start(block_list* src, block_list* bl, int32 type, int32 v
 	return !refused;
 }
 
-void skill_lua_status_end(block_list* bl, int32 type) {
+void skill_lua_status_end(block_list* bl, int32 type, int32 val1, int32 val2, int32 val3, int32 val4) {
 	if (L == nullptr || bl == nullptr || (stock_status_hooks.empty() && any_status_hooks == nullptr))
 		return;
 
@@ -5331,6 +5373,10 @@ void skill_lua_status_end(block_list* bl, int32 type) {
 				lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
 				push_context(0, 0, nullptr, bl, nullptr);
 				add_stock_status_fields(type, def->name.c_str()[0] == '*' ? status_name(type) : def->name.c_str(), nullptr, *bl);
+				set_int("val1", val1);  // what it held: it is gone by now
+				set_int("val2", val2);
+				set_int("val3", val3);
+				set_int("val4", val4);
 				call_owned(hook, status_name(type), bl);
 			}
 		}

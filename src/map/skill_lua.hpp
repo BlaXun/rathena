@@ -143,11 +143,15 @@
  * SplashArea that deals damage hits around the caster), a Ground skill places
  * its Unit, or hits the area when it has none. replace = true does the same
  * for a skill that has a class, dropping the stock behaviour (a reused ID).
+ * stock_checks = false skips the checks skill.cpp makes for that skill alone
+ * before it may be used (Spell Fist only while casting a bolt); its skill_db
+ * requirements still apply.
  * on_cast runs for any skill a unit uses (c.x, c.y: where); can_cast refuses
  * a player's use by returning false (and a message); cost changes sp, hp, ap,
  * zeny, spiritball, ammo_qty and items ({ item = "AEGIS", amount = n }) of
- * what the skill needs. cost must not change anything else: the server asks
- * several times per use.
+ * what the skill needs (ammo_qty: the check only; the server uses up the
+ * skill's own AmmoAmount). cost must not change anything else: the server
+ * asks several times per use.
  *
  * Hooks that fire for every player who has learned the skill, whatever the
  * player is doing (a passive's effect; c.skill_lv is the learned level):
@@ -387,6 +391,11 @@ void skill_lua_on_cast(block_list* src, block_list* target, int16 x, int16 y, ui
 /// the use; the player has been told why.
 bool skill_lua_can_cast(map_session_data& sd, uint16 skill_id, uint16 skill_lv);
 
+/// skill_check_condition_castbegin and _castend: false when a mod turns off
+/// the server's skill-specific checks for the skill (stock_checks = false),
+/// such as Spell Fist's "only while casting a bolt".
+bool skill_lua_stock_checks(uint16 skill_id);
+
 /// skill_get_requirement: mods' cost hooks.
 void skill_lua_requirement(map_session_data& sd, uint16 skill_id, uint16 skill_lv, s_skill_condition& req);
 
@@ -405,8 +414,8 @@ int32 skill_lua_status_rate(block_list* src, block_list* bl, int32 type, int32 r
 /// the character (SCSTART_LOADED in `flag`).
 bool skill_lua_status_start(block_list* src, block_list* bl, int32 type, int32 val1, int32 val2, int32 val3, int32 val4, int32& tick, uint8 flag);
 
-/// status_change_end: a stock status has ended.
-void skill_lua_status_end(block_list* bl, int32 type);
+/// status_change_end: a stock status has ended, with the values it had.
+void skill_lua_status_end(block_list* bl, int32 type, int32 val1, int32 val2, int32 val3, int32 val4);
 
 /// skill_produce_mix: the chance (out of 10000) that `sd` makes `nameid`
 /// with `skill_id`; mods' craft hooks may change it.
