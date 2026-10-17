@@ -1776,6 +1776,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
+  # 9524 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 9524
     AegisName: iRO_2018_Dec_S_Box
     Name: Overseas Care Package XXV
@@ -1783,10 +1784,18 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],5972,20949,22210,19426,19116,22058,19299,12991,6635,12208,12103;
-      setarray .@n[0],1,1,1,1,1,1,1,1,8,6,5;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10001);
+      if (.@r < 34) getitem 5972,1;    // Chatty_Parrot
+      else if (.@r < 135) getitem 20949,1;    // Skin_Of_Ladon_J
+      else if (.@r < 236) getitem 22210,1;    // Fluffy_FishShoes_J
+      else if (.@r < 509) getitem 19426,1;    // King_Of_Spirit_Circlet
+      else if (.@r < 782) getitem 19116,1;    // Red_Baby_Dragon
+      else if (.@r < 1465) getitem 22058,1;    // DragonTrainer_Shoes
+      else if (.@r < 2148) getitem 19299,1;    // Tree_Of_Sprout_JP
+      else if (.@r < 3104) getitem 12991,1;    // Pet_Egg_Scroll8
+      else if (.@r < 5403) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 7702) getitem 14545,6;    // Battle_Manual_X3
+      else getitem 12103,5;    // Bloody_Dead_Branch
   - Id: 9543
     AegisName: 201901_IRO_Costume_Box
     Name: January Costume Box
@@ -1798,6 +1807,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
+  # 9544 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 9544
     AegisName: 2019_Jan_USA_Oversea
     Name: Overseas Care Package XXVI
@@ -1805,10 +1815,21 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],15122,20863,20942,20952,22145,15352,15145,28903,28342,12991,7515,6635,12208,12103;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,2000,8,6,5;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10000);
+      if (.@r < 34) getitem 15122,1;    // Botany_Mail
+      else if (.@r < 135) getitem 20863,1;    // MenblattWing
+      else if (.@r < 236) getitem 20942,1;    // Manteau_Of_Guardsman
+      else if (.@r < 337) getitem 20952,1;    // Anony_As_Muffler
+      else if (.@r < 610) getitem 22145,1;    // TenguShoes
+      else if (.@r < 883) getitem 15352,1;    // Nature_Dress
+      else if (.@r < 1566) getitem 15145,1;    // EvilDragon_Armor
+      else if (.@r < 2249) getitem 28903,1;    // Scutum
+      else if (.@r < 2932) getitem 28342,1;    // Critical_Anklet
+      else if (.@r < 3888) getitem 12991,1;    // Pet_Egg_Scroll8
+      else if (.@r < 5416) getitem 7515,2000;    // Marvelous_Medal
+      else if (.@r < 6944) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 8472) getitem 14545,6;    // Battle_Manual_X3
+      else getitem 12103,5;    // Bloody_Dead_Branch
   - Id: 9563
     AegisName: 2019_Feb_Costume_Box
     Name: 2019 February Costume Box
@@ -1820,6 +1841,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
+  # 9565 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 9565
     AegisName: 2019_Feb_USA_Oversea
     Name: Overseas Care Package XXVII
@@ -1828,10 +1850,22 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],19342,19343,20941,20962,28918,32242,19024,28501,22050,28929,15143,12991,6635,12208,12103;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1,8,6,5;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10001);
+      if (.@r < 34) getitem 19342,1;    // Bull_Hat
+      else if (.@r < 135) getitem 19343,1;    // Circlet_Of_Phoenix
+      else if (.@r < 236) getitem 20941,1;    // Phoenix_Muffler
+      else if (.@r < 337) getitem 20962,1;    // Skin_Of_Typhon
+      else if (.@r < 438) getitem 28918,1;    // Shield_Of_Chaos
+      else if (.@r < 711) getitem 32242,1;    // Old_DetachmentsRing_J
+      else if (.@r < 984) getitem 19024,1;    // Protect_Feathers
+      else if (.@r < 1257) getitem 28501,1;    // Horn_Of_Kirin
+      else if (.@r < 1940) getitem 22050,1;    // Gardener_Shoes
+      else if (.@r < 2623) getitem 28929,1;    // HappyShield
+      else if (.@r < 3306) getitem 15143,1;    // Vermin_Cloth
+      else if (.@r < 4262) getitem 12991,1;    // Pet_Egg_Scroll8
+      else if (.@r < 6175) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 8088) getitem 14545,6;    // Battle_Manual_X3
+      else getitem 12103,5;    // Bloody_Dead_Branch
   - Id: 9600
     AegisName: 2019_Apr_USA_Oversee
     Name: April 2019 Yggdrasil Ticket
@@ -2037,7 +2071,7 @@ Body:
     Weight: 1500
     Script: |
       getitem 9956,150;    // Poring_Cake
-  # 10516 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch 5cnt
+  # 10516 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 10516
     AegisName: 2019_Mar_USA_Oversee
     Name: Overseas Care Package XXVIII
@@ -2045,10 +2079,20 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],28951,22032,5934,19163,5975,15417,19460,20969,32258,12991,6635,14545;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(4535);
+      if (.@r < 34) getitem 28951,1;    // Nero_Shield
+      else if (.@r < 135) getitem 22032,1;    // Shoes_Of_Exorcism
+      else if (.@r < 236) getitem 5934,1;    // Happy_Balloon_J
+      else if (.@r < 337) getitem 19163,1;    // CatharinaPawnBrad60
+      else if (.@r < 438) getitem 5975,1;    // Zherlthsh_Doll
+      else if (.@r < 711) getitem 15417,1;    // Armor_of_Purple_Thread
+      else if (.@r < 984) getitem 19460,1;    // Black_Veil_J
+      else if (.@r < 1257) getitem 20969,1;    // Rainbow_Muffler_Jp
+      else if (.@r < 1530) getitem 32258,1;    // RingofJupiter
+      else if (.@r < 2486) getitem 12991,1;    // Pet_Egg_Scroll8
+      else if (.@r < 3169) getitem 6635,1;    // Blacksmith_Blessing
+      else if (.@r < 3852) getitem 14545,1;    // Battle_Manual_X3
+      else getitem 12103,1;    // Bloody_Dead_Branch
   # 10517 untranslated: box contents not found in the item db (left out of the draw): Costume Survive Orb
   - Id: 10517
     AegisName: 2019_Mar_Costume_Box
@@ -2335,7 +2379,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],6484,6188,12991,13811,12993,13908,12208,6376,7515,20500,18582,2260,5690,5550,5549,5546,5545;
+      setarray .@i[0],6484,6188,12991,13811,12993,13908,14545,6376,7515,20500,18582,2260,5690,5550,5549,5546,5545;
       setarray .@n[0],1,1,1,1,1,1,2,30,1500,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -3046,6 +3090,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
+  # 14924 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 14924
     AegisName: 2018_Mar_Special_Box
     Name: Overseas Care Package XVI
@@ -3053,10 +3098,18 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],22172,28564,15249,28565,15204,6635,12208,14592,12991,2260;
-      setarray .@n[0],1,1,1,1,1,8,6,8,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10001);
+      if (.@r < 34) getitem 22172,1;    // Gray_Wing_Boots
+      else if (.@r < 135) getitem 28564,1;    // Valkyrie_Drop
+      else if (.@r < 236) getitem 15249,1;    // Antonio_Coat
+      else if (.@r < 509) getitem 28565,1;    // Perverse_Demon_Mask
+      else if (.@r < 1192) getitem 15204,1;    // Abyss_Dress
+      else if (.@r < 3582) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 5972) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 8362) getitem 14592,8;    // Job_Manual50
+      else if (.@r < 9318) getitem 12991,1;    // Pet_Egg_Scroll8
+      else getitem 2260,1;    // Mini_Glasses
+  # 14930 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 14930
     AegisName: Feb2018_Rag_Remix
     Name: Overseas Care Package Remix I
@@ -3066,10 +3119,17 @@ Body:
       NoStorage: true
       NoSell: true
     Script: |
-      setarray .@i[0],2576,18666,20800,22134,28502,12208,12103,22819,12673,6457;
-      setarray .@n[0],1,1,1,1,1,6,5,10,4,2;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(9999);
+      if (.@r < 34) getitem 2576,1;    // Bravery_Bag
+      else if (.@r < 135) getitem 18666,1;    // CD_In_Mouth
+      else if (.@r < 408) getitem 20800,1;    // Enforcer_cape
+      else if (.@r < 1091) getitem 22134,1;    // Enforcer_Shoes
+      else if (.@r < 1774) getitem 28502,1;    // Mob_Scarf
+      else if (.@r < 3419) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 5064) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 6709) getitem 22819,10;    // G_Almighty
+      else if (.@r < 8354) getitem 12673,4;    // Lucky_Egg_C10
+      else getitem 6457,2;    // Guarantee_Armor_5Up
   - Id: 14940
     AegisName: iRO_Apr_Costume_Box
     Name: Mystical Costume Box
@@ -3103,6 +3163,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
+  # 14948 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 14948
     AegisName: iRO201805_Special_Box
     Name: Overseas Care Package XVIII
@@ -3111,10 +3172,19 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],15144,20831,28575,19329,22050,28618,15112,15135,6635,12103,22819;
-      setarray .@n[0],1,1,1,1,1,1,1,1,8,5,10;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10001);
+      if (.@r < 34) getitem 15144,1;    // Agricul_Cloth
+      else if (.@r < 135) getitem 20831,1;    // Elder_Spirit
+      else if (.@r < 236) getitem 28575,1;    // Verus_Core
+      else if (.@r < 337) getitem 19329,1;    // Hand_Of_Devil
+      else if (.@r < 610) getitem 22050,1;    // Gardener_Shoes
+      else if (.@r < 883) getitem 28618,1;    // Time_Kamiji
+      else if (.@r < 1566) getitem 15112,1;    // Military_Mail
+      else if (.@r < 2249) getitem 15135,1;    // Dragon_Cloth
+      else if (.@r < 4833) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 7417) getitem 12103,5;    // Bloody_Dead_Branch
+      else getitem 22819,10;    // G_Almighty
+  # 14971 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 14971
     AegisName: iRO_2018_7m_Special_Box
     Name: Overseas Care Package XX
@@ -3122,10 +3192,17 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],32203,20860,22058,19387,32204,19114,19083,12103,22819,12412;
-      setarray .@n[0],1,1,1,1,1,1,1,5,10,8;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(9999);
+      if (.@r < 34) getitem 32203,1;    // Accelerator_Chip
+      else if (.@r < 135) getitem 20860,1;    // BattleSurcoat
+      else if (.@r < 236) getitem 22058,1;    // DragonTrainer_Shoes
+      else if (.@r < 509) getitem 19387,1;    // Exa_Goat_Cap
+      else if (.@r < 782) getitem 32204,1;    // Immortal_Dog_Tag
+      else if (.@r < 1465) getitem 19114,1;    // Sting_Silk_Ribbon
+      else if (.@r < 2148) getitem 19083,1;    // Mask_of_Hero
+      else if (.@r < 4765) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 7382) getitem 22819,10;    // G_Almighty
+      else getitem 12412,8;    // HE_Bubble_Gum
   - Id: 14977
     AegisName: iRO_2018_8m_Special_Box
     Name: Overseas Care Package XXI
@@ -3161,7 +3238,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 14992 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch
+  # 14992 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 14992
     AegisName: iRO_2018_9m_Special_Box
     Name: Overseas Care Package XXII
@@ -3171,10 +3248,19 @@ Body:
       NoDrop: true
       NoStorage: true
     Script: |
-      setarray .@i[0],28598,19407,19391,22198,2201,28951,22032,17289,6635,12208,22819;
-      setarray .@n[0],1,1,1,1,1,1,1,1,8,6,10;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10001);
+      if (.@r < 34) getitem 28598,1;    // Supplement_Part_Chip
+      else if (.@r < 135) getitem 19407,1;    // Work_Cap
+      else if (.@r < 236) getitem 19391,1;    // Eyes_Of_Illusion
+      else if (.@r < 337) getitem 22198,1;    // Traveler_Shoes
+      else if (.@r < 610) getitem 2201,1;    // Sunglasses
+      else if (.@r < 883) getitem 28951,1;    // Nero_Shield
+      else if (.@r < 1566) getitem 22032,1;    // Shoes_Of_Exorcism
+      else if (.@r < 2249) getitem 17289,1;    // Wing_Of_Baalzebub_Box
+      else if (.@r < 4187) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 6125) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 8063) getitem 22819,10;    // G_Almighty
+      else getitem 12103,5;    // Bloody_Dead_Branch
   # 15118 untranslated: More than 10 Refine LV resistance against human type monster by -2%.
   # 15118 untranslated: When equipped by Sword Man and Merchant classes, DEF +40, ATK +5%.
   # 15118 untranslated: When equipped by Thief and Archer classes, DEF +10, MDEF +10, ASPD +2.
@@ -4477,7 +4563,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],5040,12992,7515,6457,12208,12658,12663,18599,18667,18663,2589,5788,18641,18645,18661,18665,18670,2576,5658,5659,5660,5380,5574;
+      setarray .@i[0],5040,12992,7515,6457,14545,12658,12663,18599,18667,18663,2589,5788,18641,18645,18661,18665,18670,2576,5658,5659,5660,5380,5574;
       setarray .@n[0],1,1,3000,1,4,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -4790,7 +4876,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],5778,18630,12103,12208,7515;
+      setarray .@i[0],5778,18630,12103,14545,7515;
       setarray .@n[0],1,1,1,1,250;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -4803,7 +4889,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12103,12412,12673,5564,18666,18671,2201;
+      setarray .@i[0],14545,12103,12412,12673,5564,18666,18671,2201;
       setarray .@n[0],5,4,5,2,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -4815,7 +4901,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12411,5361,5254,5360,5401;
+      setarray .@i[0],14545,12411,5361,5254,5360,5401;
       setarray .@n[0],2,3,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -4849,7 +4935,7 @@ Body:
       setarray .@n[0],2,3,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17348 untranslated: box contents not found in the item db: Three X Battlemanual | Male GM Mercenary Scroll | Bloody Dead Branch | White King Tiger Hat
+  # 17348 untranslated: box contents not found in the item db: Three X Battlemanual | Male GM Mercenary Scroll | White King Tiger Hat
   - Id: 17348
     AegisName: S_Athena_Shield_Box
     Name: Bloody Valentine Lucky Box
@@ -4949,7 +5035,7 @@ Body:
       setarray .@n[0],2000,1,7,1,1,1,1,1,1,1,30,30;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17357 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch 4cnt | Sunglases [1]
+  # 17357 untranslated: box contents not found in the item db (left out of the draw): Sunglases [1]
   - Id: 17357
     AegisName: S_Power_Earring_Box
     Name: 2015 Black Friday Box
@@ -4957,8 +5043,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],14545,12412,12673,18656,18838,18671,19745,19815,19541;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1;
+      setarray .@i[0],14545,12103,12412,12673,18656,18838,18671,19745,19815,19541;
+      setarray .@n[0],1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   - Id: 17358
@@ -4983,7 +5069,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 17360 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch | lv 10 Fencer Mercenary Scroll
+  # 17360 untranslated: box contents not found in the item db (left out of the draw): lv 10 Fencer Mercenary Scroll
   - Id: 17360
     AegisName: S_Vital_Shoes_Box
     Name: Holly Joliday Lucky Box
@@ -4991,8 +5077,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],2576,18539,18599,18858,18909,19752,14593,12373;
-      setarray .@n[0],1,1,1,1,1,1,100,30;
+      setarray .@i[0],2576,18539,18599,18858,18909,19752,12103,14593,12373;
+      setarray .@n[0],1,1,1,1,1,1,4,100,30;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   - Id: 17361
@@ -5006,7 +5092,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17362 untranslated: box contents not found in the item db (left out of the draw): Silver Bunny Band | Magic Card Album
+  # 17362 untranslated: box contents not found in the item db (left out of the draw): Silver Bunny Band
   - Id: 17362
     AegisName: S_Lucky_Armor_Box
     Name: End Of Year Madness Box
@@ -5014,8 +5100,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],18987,18750,18749,18832,18587,18585,18586,6376,2576;
-      setarray .@n[0],1,1,1,1,1,1,1,800,1;
+      setarray .@i[0],18987,18750,18749,18832,18587,18585,18586,12246,6376,2576;
+      setarray .@n[0],1,1,1,1,1,1,1,2,800,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   - Id: 17363
@@ -5038,7 +5124,6 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 17365 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch
   - Id: 17365
     AegisName: S_Dexterous_Weapon_Box
     Name: April Adventure Box
@@ -5046,8 +5131,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],5564,18666,20034,2589,19787,7515,12412;
-      setarray .@n[0],1,1,1,1,1,2000,6;
+      setarray .@i[0],5564,18666,20034,2589,19787,7515,12412,12103;
+      setarray .@n[0],1,1,1,1,1,2000,6,5;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   # 17366 untranslated: box contents not found in the item db: Safe to 7 Weapon Armor Certificate | Safe to 7 Headgear Armor Certificate
@@ -5087,7 +5172,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12103,12412,20197,7515,19771,20100,5379,5788,18668;
+      setarray .@i[0],14545,12103,12412,20197,7515,19771,20100,5379,5788,18668;
       setarray .@n[0],6,6,7,1,2000,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -5121,7 +5206,6 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 17373 untranslated: box contents not found in the item db (left out of the draw): 4cnt Bloody Dead Branch | 100cnt Magic Power Scroll
   - Id: 17373
     AegisName: S_Athena_Earring_Box
     Name: August Lucky Box 2016
@@ -5129,11 +5213,10 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12412,14600,19528,20283,20113,20115,2576;
-      setarray .@n[0],3,1,1,1,1,1,1,1;
+      setarray .@i[0],12208,12412,12103,14593,14600,19528,20283,20113,20115,2576;
+      setarray .@n[0],3,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17374 untranslated: box contents not found in the item db (left out of the draw): 4cnt Bloody Dead Branch | 100cnt Magic Power Scroll
   - Id: 17374
     AegisName: S_Cranial_Shield_Box
     Name: August Lucky Crate 2016
@@ -5141,8 +5224,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12412,14600,19528,20283,20113,20115,2576;
-      setarray .@n[0],3,1,1,1,1,1,1,1;
+      setarray .@i[0],12208,12412,12103,14593,14600,19528,20283,20113,20115,2576;
+      setarray .@n[0],3,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   - Id: 17375
@@ -5179,7 +5262,7 @@ Body:
       setarray .@n[0],10,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17378 untranslated: box contents not found in the item db: Increase Agility 10 Scrolls, | Rachel Town Butterfly Wing, | Schwartzwalt Town Butterfly Wing, | Rune-Midgard Town Butterfly Wing, and
+  # 17378 untranslated: box contents not found in the item db: Increase Agility 10 Scrolls | Rachel Town Butterfly Wing | Schwartzwalt Town Butterfly Wing | Rune-Midgard Town Butterfly Wing, and
   - Id: 17378
     AegisName: S_Homers_Shield_Box
     Name: Paws N Claws Starter Pack
@@ -5218,7 +5301,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],2576,5949,5963,18575,5982,5361,18832,17289,7515,12208,12103;
+      setarray .@i[0],2576,5949,5963,18575,5982,5361,18832,17289,7515,14545,12103;
       setarray .@n[0],1,1,1,1,1,1,1,1,2000,6,5;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -5254,6 +5337,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
+  # 17385 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 17385
     AegisName: S_Liberation_Shoes_Box
     Name: OCP Remix IV
@@ -5261,46 +5345,53 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],14545,6292,6291,6457,20799,28717,28921,28513,28433;
-      setarray .@n[0],1,40,40,3,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17386 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch 5-8 cnt | HE Bubblegum 6-9 cnt
+      .@r = rand(9999);
+      if (.@r < 34) getitem 14545,1;    // Battle_Manual_X3
+      else if (.@r < 2742) getitem 6292,40;    // F_Enriched_Oridecon
+      else if (.@r < 5450) getitem 6291,40;    // F_Enriched_Elunium
+      else if (.@r < 8158) getitem 6457,3;    // Guarantee_Armor_5Up
+      else if (.@r < 8259) getitem 20799,1;    // Elemental_Towel
+      else if (.@r < 8360) getitem 28717,1;    // Valkyrie_Knife
+      else if (.@r < 8633) getitem 28921,1;    // Anemos_Shield
+      else if (.@r < 9316) getitem 28513,1;    // Celine_Brooch
+      else getitem 28433,1;    // Luminous_Blue_Stone
+  # 17386 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17386 untranslated: box contents not found in the item db: Bloody Dead Branch 5-8 cnt | HE Bubblegum 6-9 cnt
   - Id: 17386
     AegisName: S_Chemical_Shoes_Box
     Name: OCP Remix XII
     Type: Usable
     Trade:
       NoStorage: true
+    Flags:
+      NoConsume: true
     Script: |
-      setarray .@i[0],19125,28521,20860,19387,32204,19171,28594,22207,19326,7515,6635;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17387 untranslated: box contents not found in the item db (left out of the draw): Bloody Branch 5-8 cnt | HE Bubble Gum 6-9 cnt
+      dispbottom "This box's contents aren't available on this server yet.";
+  # 17387 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17387 untranslated: box contents not found in the item db: Bloody Branch 5-8 cnt | HE Bubble Gum 6-9 cnt
   - Id: 17387
     AegisName: S_Clamorous_Shoes_Box
     Name: Overseas Care Package Remix XI
     Type: Usable
     Trade:
       NoStorage: true
+    Flags:
+      NoConsume: true
     Script: |
-      setarray .@i[0],15205,28921,5933,28433,15139,20814,28491,28492,6635;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17388 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch 5-8cnt | HE Bubble Gum 6-9cnt
+      dispbottom "This box's contents aren't available on this server yet.";
+  # 17388 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17388 untranslated: box contents not found in the item db: Bloody Dead Branch 5-8cnt | HE Bubble Gum 6-9cnt
   - Id: 17388
     AegisName: S_Insecticide_Shoes_Box
     Name: OCP Remix X
     Type: Usable
     Trade:
       NoStorage: true
+    Flags:
+      NoConsume: true
     Script: |
-      setarray .@i[0],4991,28429,28502,18657,18656,18666,20800,20707,18599;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      dispbottom "This box's contents aren't available on this server yet.";
+  # 17389 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   # 17389 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch 5-8 cnt | HE Bubble Gum 6-9 cnt
   - Id: 17389
     AegisName: S_Fisher_Shoes_Box
@@ -5309,10 +5400,16 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],2589,19139,19266,22170,2535,28910,15204,7515;
-      setarray .@n[0],1,1,1,1,1,1,1,2000;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(8634);
+      if (.@r < 34) getitem 2589,1;    // Fallen_Angel_Wing
+      else if (.@r < 135) getitem 19139,1;    // SurviveOrb
+      else if (.@r < 236) getitem 19266,1;    // Survive_Circlet_K
+      else if (.@r < 337) getitem 22170,1;    // Shoes_Of_Servival
+      else if (.@r < 610) getitem 2535,1;    // Cloak_Of_Survival_C
+      else if (.@r < 883) getitem 28910,1;    // Imuke_Upper_Shield
+      else if (.@r < 1566) getitem 15204,1;    // Abyss_Dress
+      else getitem 7515,2000;    // Marvelous_Medal
+  # 17390 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 17390
     AegisName: S_Seraphim_Shoes_Box
     Name: OCP Remix VII
@@ -5321,21 +5418,38 @@ Body:
       NoDrop: true
       NoStorage: true
     Script: |
-      setarray .@i[0],19306,19125,28521,19156,5564,5361,28377,28379,12991,14545,12103,12412;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17391 untranslated: box contents not found in the item db: Wing Of Beelzebub | Bloody Dead Branch | Assassin Accessory | Hero Cape
+      .@r = rand(4262);
+      if (.@r < 34) getitem 19306,1;    // Heart_Card_In_Mouth
+      else if (.@r < 135) getitem 19125,1;    // Cylinder_Hairband
+      else if (.@r < 236) getitem 28521,1;    // Giant_Protection
+      else if (.@r < 337) getitem 19156,1;    // Lunar_Rainbow
+      else if (.@r < 438) getitem 5564,1;    // Crown_Of_Deceit
+      else if (.@r < 711) getitem 5361,1;    // Gang_Scarf
+      else if (.@r < 984) getitem 28377,1;    // Magical_Ring
+      else if (.@r < 1257) getitem 28379,1;    // Shadow_Ring
+      else if (.@r < 2213) getitem 12991,1;    // Pet_Egg_Scroll8
+      else if (.@r < 2896) getitem 14545,1;    // Battle_Manual_X3
+      else if (.@r < 3579) getitem 12103,1;    // Bloody_Dead_Branch
+      else getitem 12412,1;    // HE_Bubble_Gum
+  # 17391 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17391 untranslated: box contents not found in the item db (left out of the draw): Wing Of Beelzebub | Assassin Accessory
   - Id: 17391
     AegisName: S_Beholder_Shoes_Box
     Name: Overseas Care Package Remix VI
     Type: Usable
     Trade:
       NoStorage: true
-    Flags:
-      NoConsume: true
     Script: |
-      dispbottom "This box's contents aren't available on this server yet.";
+      .@r = rand(9692);
+      if (.@r < 3875) getitem 7515,2000;    // Marvelous_Medal
+      else if (.@r < 3976) getitem 14545,1;    // Battle_Manual_X3
+      else if (.@r < 7851) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 7952) getitem 20714,1;    // Assassin_Muffler
+      else if (.@r < 8053) getitem 22016,1;    // Assassin_Shoes
+      else if (.@r < 8326) getitem 28551,1;    // Imperial_Glove
+      else if (.@r < 9009) getitem 28372,1;    // Imperial_Ring
+      else getitem 20783,1;    // Hero_Cape
+  # 17392 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   # 17392 untranslated: box contents not found in the item db (left out of the draw): Malach's Skin [1]
   - Id: 17392
     AegisName: S_Divine_Shoes_Box
@@ -5344,10 +5458,17 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],28437,5963,19112,18968,20814,28531,12673,6457,6635,12208;
-      setarray .@n[0],1,1,1,1,1,1,4,2,6,6;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(9966);
+      if (.@r < 101) getitem 28437,1;    // ArchPriest_Glove
+      else if (.@r < 202) getitem 5963,1;    // Wing_Headphone
+      else if (.@r < 475) getitem 19112,1;    // Tengu_Scroll
+      else if (.@r < 748) getitem 18968,1;    // Jinn_Marin_Balloon
+      else if (.@r < 1431) getitem 20814,1;    // Wakwak_Manteau
+      else if (.@r < 2114) getitem 28531,1;    // Glove_Of_Smith
+      else if (.@r < 4077) getitem 12673,4;    // Lucky_Egg_C10
+      else if (.@r < 6040) getitem 6457,2;    // Guarantee_Armor_5Up
+      else if (.@r < 8003) getitem 6635,6;    // Blacksmith_Blessing
+      else getitem 14545,6;    // Battle_Manual_X3
   - Id: 17393
     AegisName: S_Dragoon_Shoes_Box
     Name: Poring Con Swag Bag
@@ -5360,7 +5481,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 17434 untranslated: box contents not found in the item db: Whickebain Ears | Costume Triangular Roof Hat | Costume Fancy Phantom Mask | Costume Secret Hood | Costume Ghost
+  # 17434 untranslated: box contents not found in the item db (left out of the draw): Costume Triangular Roof Hat | Costume Fancy Phantom Mask | Costume Secret Hood | Costume Ghost
   - Id: 17434
     AegisName: Costama_Egg15
     Name: Pumpkin Spiced Lucky Box
@@ -5368,10 +5489,11 @@ Body:
     Weight: 10
     Trade:
       NoStorage: true
-    Flags:
-      NoConsume: true
     Script: |
-      dispbottom "This box's contents aren't available on this server yet.";
+      setarray .@i[0],12182,12172,12162,14593,6457,12673,2589,5360,19912,19865;
+      setarray .@n[0],30,30,30,100,1,4,1,1,1,1;
+      .@r = rand(getarraysize(.@i));
+      getitem .@i[.@r],.@n[.@r];
   - Id: 17436
     AegisName: iRO_17436
     Name: Gothic Egg
@@ -5417,7 +5539,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12103,12412,12673,6457,5361;
+      setarray .@i[0],14545,12103,12412,12673,6457,5361;
       setarray .@n[0],1,2,3,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -5495,6 +5617,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
+  # 17476 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 17476
     AegisName: Costama_Egg20
     Name: OCP Remix III
@@ -5502,10 +5625,18 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],28430,28507,20500,20846,20836,6457,5963,18916,12673,6635,12208;
-      setarray .@n[0],1,1,1,1,1,2,1,1,4,6,6;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10000);
+      if (.@r < 34) getitem 28430,1;    // Archpriest_Ring
+      else if (.@r < 135) getitem 28507,1;    // Glove_Of_Wizard
+      else if (.@r < 236) getitem 20500,1;    // T_Archangel_Wing
+      else if (.@r < 509) getitem 20846,1;    // Temporal_Manteau
+      else if (.@r < 782) getitem 20836,1;    // Skin_Of_Lindwurm
+      else if (.@r < 2745) getitem 6457,2;    // Guarantee_Armor_5Up
+      else if (.@r < 3428) getitem 5963,1;    // Wing_Headphone
+      else if (.@r < 4111) getitem 18916,1;    // Bear_Balloon
+      else if (.@r < 6074) getitem 12673,4;    // Lucky_Egg_C10
+      else if (.@r < 8037) getitem 6635,6;    // Blacksmith_Blessing
+      else getitem 14545,6;    // Battle_Manual_X3
   - Id: 17480
     AegisName: Mar2014_Groove_Pack
     Name: Saint Patrick Day Groove Box
@@ -5514,7 +5645,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12103,12412;
+      setarray .@i[0],14545,12103,12412;
       setarray .@n[0],2,2,3;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -5621,7 +5752,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12103,12412;
+      setarray .@i[0],14545,12103,12412;
       setarray .@n[0],1,1,2;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -5705,7 +5836,7 @@ Body:
       setarray .@n[0],10,10,10,1,1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17578 untranslated: box contents not found in the item db (left out of the draw): 5cnt Bloody Dead Branch | 2cnt Safe to 7 All Box | Antique Pipe
+  # 17578 untranslated: box contents not found in the item db (left out of the draw): 2cnt Safe to 7 All Box
   - Id: 17578
     AegisName: iRO_17578
     Name: April Lucky Basket
@@ -5714,11 +5845,10 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12412,5564,2576,2260,19787,20034,2589,12991;
-      setarray .@n[0],3,1,1,1,1,1,1,1,1;
+      setarray .@i[0],12208,12103,12412,5564,2576,2260,19787,20034,2589,12991,5377;
+      setarray .@n[0],3,1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17579 untranslated: box contents not found in the item db (left out of the draw): 5cnt Bloody Dead Branch | Antique Pipe
   - Id: 17579
     AegisName: iRO_17579
     Name: April Lucky Crate
@@ -5727,8 +5857,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12208,12412,12673,5564,2576,2260,19787,20034,2589,12991;
-      setarray .@n[0],3,1,1,1,1,1,1,1,1,1;
+      setarray .@i[0],12208,12103,12412,12673,5564,2576,2260,19787,20034,2589,12991,5377;
+      setarray .@n[0],3,1,1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   # 17580 untranslated: box contents not found in the item db (left out of the draw): Tomboy Fairy Ears
@@ -5773,7 +5903,6 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 17594 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch 6cnt
   - Id: 17594
     AegisName: icebergred
     Name: 12th Anniversary Celebraton Lucky Box
@@ -5782,11 +5911,10 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],14545,12412,12370,19537,20706,19710,18539,18727,18746,5982;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1;
+      setarray .@i[0],14545,12103,12412,12370,19537,20706,19710,18539,18727,18746,5982;
+      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17595 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch 6cnt
   - Id: 17595
     AegisName: icebergred_17595
     Name: 12th Anniversary Celebraton Lucky Crate
@@ -5795,8 +5923,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],14545,12412,12370,19537,20706,19710,18539,18727,18746,5982;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1;
+      setarray .@i[0],14545,12103,12412,12370,19537,20706,19710,18539,18727,18746,5982;
+      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   - Id: 17596
@@ -5831,7 +5959,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17604 untranslated: box contents not found in the item db: lv. 10 Lancer Merc Scroll | lv. 10 Fencer Merc Scroll | lv. 10 Archer Merc Scroll | Blood Dead Branch | Costume Paper Bag Hat | Geode Monocle
+  # 17604 untranslated: box contents not found in the item db: lv. 10 Lancer Merc Scroll | lv. 10 Fencer Merc Scroll | lv. 10 Archer Merc Scroll | Costume Paper Bag Hat | Geode Monocle
   - Id: 17604
     AegisName: icebergred_17604
     Name: End Of Summer Lucky Box
@@ -5842,7 +5970,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 17605 untranslated: box contents not found in the item db: lv. 10 Lancer Merc Scroll | lv. 10 Fencer Merc Scroll | lv. 10 Archer Merc Scroll | Blood Dead Branch | Costume Paper Bag Hat | Geode Monocle
+  # 17605 untranslated: box contents not found in the item db: lv. 10 Lancer Merc Scroll | lv. 10 Fencer Merc Scroll | lv. 10 Archer Merc Scroll | Costume Paper Bag Hat | Geode Monocle
   - Id: 17605
     AegisName: icebergred_17605
     Name: End Of Summer Lucky Crate
@@ -6406,7 +6534,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 17752 untranslated: box contents not found in the item db (left out of the draw): Common: | Bloody Dead Branch | Uncommon: | Rare: | Special (extra rare):
+  # 17752 untranslated: box contents not found in the item db (left out of the draw): Common: | Uncommon: | Rare: | Special (extra rare):
   - Id: 17752
     AegisName: Nov2016_Costume_Pack2
     Name: Winter Wonder Time Lucky Box
@@ -6414,8 +6542,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],14545,12412,5564,5654,18666,5361,5254,2260,2576,2589,20500,20706,7515,6376,4991;
-      setarray .@n[0],6,6,1,1,1,1,1,1,1,1,1,1,2000,200,1;
+      setarray .@i[0],12103,14545,12412,5564,5654,18666,5361,5254,2260,2576,2589,2573,20706,7515,6376,4991;
+      setarray .@n[0],5,6,6,1,1,1,1,1,1,1,1,1,1,2000,200,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   - Id: 17762
@@ -6442,7 +6570,8 @@ Body:
     Name: Costama Gothic III
     Type: Etc
     Weight: 10
-  # 17768 untranslated: box contents not found in the item db (left out of the draw): Black Shiba Bundle A | 30 Enriched Oridecon | 30 Enriched Elunium | 8 HE Bubble Gum | 8 HE Battle Manual | 8 Job Battle Manual
+  # 17768 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17768 untranslated: box contents not found in the item db: 30 Enriched Oridecon | 30 Enriched Elunium | 8 HE Bubble Gum | 8 HE Battle Manual | 8 Job Battle Manual
   - Id: 17768
     AegisName: iRO_2016_Dec_Special
     Name: Overseas Care Package
@@ -6450,12 +6579,12 @@ Body:
     Weight: 10
     Trade:
       NoStorage: true
+    Flags:
+      NoConsume: true
     Script: |
-      setarray .@i[0],23251,23252,23254,23255,28910,18877,5978,19083,15072,18799,28386,28394,19102,20799,19114,22052,13088,18564,18670,18543,18746,18616,1746,1837,13412;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17772 untranslated: box contents not found in the item db (left out of the draw): Gyges Ring | 50 HD Oridecon | 50 HD Elunium | 10 Job Battle Manual | 6 Battle Manual
+      dispbottom "This box's contents aren't available on this server yet.";
+  # 17772 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17772 untranslated: box contents not found in the item db (left out of the draw): 50 HD Oridecon | 50 HD Elunium | 10 Job Battle Manual | 6 Battle Manual
   - Id: 17772
     AegisName: iRO_2017_Jan_Special
     Name: Overseas Care Package II
@@ -6464,11 +6593,37 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],5531,5933,19048,28411,18787,15103,13088,1541,18813,1626,1672,28410,1835,19112,20712,2196,22058,5878,18564,18543,5500,1746,13412,23266,23265,18746,18616;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17778 untranslated: box contents not found in the item db: Mask of Heroes | Melee Vesper Gear 4 | Magic Vesper Gear | Light of Cute | Hero Cape | 30 Enriched Elunium | 30 Enriched Oridecon | 8 HE Bubble Gum | 8 HE Battle Manuals | Wing of Beezlebub Box | Hunter Boots | 8 Job Battle Manuals
+      .@r = rand(7152);
+      if (.@r < 34) getitem 5531,1;    // B_Dragon_Hat
+      else if (.@r < 68) getitem 5933,1;    // Crow_Tengu_Mask
+      else if (.@r < 169) getitem 19048,1;    // Elemental_Clothe
+      else if (.@r < 270) getitem 28411,1;    // Emerald_Earring
+      else if (.@r < 371) getitem 18787,1;    // Goal_Tender_Mask
+      else if (.@r < 472) getitem 15103,1;    // Kirin_Armor
+      else if (.@r < 573) getitem 13088,1;    // Krishnagar
+      else if (.@r < 674) getitem 1541,1;    // Nemesis
+      else if (.@r < 775) getitem 18813,1;    // New_Wave_Sunglasses
+      else if (.@r < 876) getitem 1626,1;    // Piercing_Staff
+      else if (.@r < 977) getitem 1672,1;    // Safety_Rod
+      else if (.@r < 1078) getitem 28410,1;    // Sapphire_Wrist
+      else if (.@r < 1179) getitem 1835,1;    // Spartacus
+      else if (.@r < 1280) getitem 19112,1;    // Tengu_Scroll
+      else if (.@r < 1553) getitem 20712,1;    // Valkyrie_Cape
+      else if (.@r < 1826) getitem 2196,1;    // White_Gold_Shield
+      else if (.@r < 2099) getitem 22058,1;    // DragonTrainer_Shoes
+      else if (.@r < 2372) getitem 2985,1;    // Gyges_Ring
+      else if (.@r < 2645) getitem 5878,1;    // Miracle_Blue_Rose
+      else if (.@r < 2918) getitem 18564,1;    // Love_Piece
+      else if (.@r < 3191) getitem 18543,1;    // Witchs_Hat
+      else if (.@r < 3464) getitem 5500,1;    // Icecream_Hat
+      else if (.@r < 3737) getitem 1746,1;    // Elven_Bow
+      else if (.@r < 4420) getitem 13412,1;    // Twin_Edge_B
+      else if (.@r < 5103) getitem 23266,1;    // Etran_Bundle_A
+      else if (.@r < 5786) getitem 23265,1;    // Sprint_Bundle_A
+      else if (.@r < 6469) getitem 18746,1;    // Chilly_Breath
+      else getitem 18616,1;    // Long_Tongue
+  # 17778 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17778 untranslated: box contents not found in the item db: Mask of Heroes | Melee Vesper Gear 4 | Magic Vesper Gear | Light of Cute | 30 Enriched Elunium | 30 Enriched Oridecon | 8 HE Bubble Gum | 8 HE Battle Manuals | Wing of Beezlebub Box | Hunter Boots | 8 Job Battle Manuals
   - Id: 17778
     AegisName: iRO_2017_Feb_Special
     Name: Overseas Care Package III
@@ -6545,7 +6700,8 @@ Body:
     Name: Costama Animals IV
     Type: Etc
     Weight: 10
-  # 17790 untranslated: box contents not found in the item db (left out of the draw): Matagi Swordaxe | Tips of Thieves Vol. 1
+  # 17790 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17790 untranslated: box contents not found in the item db (left out of the draw): Tips of Thieves Vol. 1
   - Id: 17790
     AegisName: iRO_2017_Apr_Special
     Name: Overseas Care Package V
@@ -6554,10 +6710,23 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],2596,15108,15125,5937,20714,22016,22055,28320,28717,2260,2576,2589,12103,12208,12412;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1,5,6,6;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(9727);
+      if (.@r < 34) getitem 2596,1;    // Sharel_Manteau
+      else if (.@r < 135) getitem 15108,1;    // VenomInsect_Armor
+      else if (.@r < 236) getitem 15125,1;    // FemaleDiver_Clothe
+      else if (.@r < 337) getitem 5937,1;    // Flying_Helmet
+      else if (.@r < 438) getitem 20714,1;    // Assassin_Muffler
+      else if (.@r < 539) getitem 22016,1;    // Assassin_Shoes
+      else if (.@r < 812) getitem 22055,1;    // Sharel_Shoes
+      else if (.@r < 1085) getitem 28320,1;    // Assassin_Acc
+      else if (.@r < 1358) getitem 28491,1;    // Matagi_Swordaxe
+      else if (.@r < 2041) getitem 28717,1;    // Valkyrie_Knife
+      else if (.@r < 2724) getitem 2260,1;    // Mini_Glasses
+      else if (.@r < 3407) getitem 2576,1;    // Bravery_Bag
+      else if (.@r < 4090) getitem 2589,1;    // Fallen_Angel_Wing
+      else if (.@r < 5969) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 7848) getitem 14545,6;    // Battle_Manual_X3
+      else getitem 12412,6;    // HE_Bubble_Gum
   - Id: 17796
     AegisName: Costama_EggV02
     Name: Costama Variatons II (Blue, Red, Yellow, Green)
@@ -6579,6 +6748,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
+  # 17802 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   # 17802 untranslated: box contents not found in the item db (left out of the draw): Syringe Toy
   - Id: 17802
     AegisName: iRO_2017_MaySpecial
@@ -6588,10 +6758,19 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],15124,22032,28429,20800,20726,18862,28358,12208,12103,22819,6457,12673;
-      setarray .@n[0],1,1,1,1,1,1,1,6,5,10,2,4;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(9316);
+      if (.@r < 34) getitem 15124,1;    // Father_Mail
+      else if (.@r < 135) getitem 22032,1;    // Shoes_Of_Exorcism
+      else if (.@r < 236) getitem 28429,1;    // Arquien's_Necklace
+      else if (.@r < 337) getitem 20800,1;    // Enforcer_cape
+      else if (.@r < 610) getitem 20726,1;    // Fire_Dragon_Coat
+      else if (.@r < 883) getitem 18862,1;    // Armor_Chiu_J
+      else if (.@r < 1566) getitem 28358,1;    // Cursed_Lucky_Clover
+      else if (.@r < 3116) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 4666) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 6216) getitem 22819,10;    // G_Almighty
+      else if (.@r < 7766) getitem 6457,2;    // Guarantee_Armor_5Up
+      else getitem 12673,4;    // Lucky_Egg_C10
   - Id: 17803
     AegisName: jRO_17803
     Name: Costama Girls Selection V
@@ -7164,6 +7343,7 @@ Body:
     Name: Costama Halloween III
     Type: Etc
     Weight: 10
+  # 17892 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   # 17892 untranslated: box contents not found in the item db (left out of the draw): Wing of Beezlebub Box
   - Id: 17892
     AegisName: iRO_2017_SeptSpecial
@@ -7173,11 +7353,18 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],20814,18716,28433,28379,28903,19081,12208,14592,6457;
-      setarray .@n[0],1,1,1,1,1,1,6,8,2;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17893 untranslated: box contents not found in the item db (left out of the draw): Shepherd's Cloth | Malach's Skin | Bloody Dead Branch
+      .@r = rand(9316);
+      if (.@r < 34) getitem 20814,1;    // Wakwak_Manteau
+      else if (.@r < 135) getitem 18716,1;    // Strawberry_In_Mouth
+      else if (.@r < 236) getitem 28433,1;    // Luminous_Blue_Stone
+      else if (.@r < 509) getitem 28379,1;    // Shadow_Ring
+      else if (.@r < 782) getitem 28903,1;    // Scutum
+      else if (.@r < 1465) getitem 19081,1;    // Faceworm_Egg_Shell
+      else if (.@r < 4082) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 6699) getitem 14592,8;    // Job_Manual50
+      else getitem 6457,2;    // Guarantee_Armor_5Up
+  # 17893 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17893 untranslated: box contents not found in the item db (left out of the draw): Malach's Skin
   - Id: 17893
     AegisName: iRO_2017_OctSpecial
     Name: Overseas Care Package XI
@@ -7185,15 +7372,27 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],28513,28921,15102,28438,15166,22050,28437,5968,19141,12208,12673,12412;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,6,4,8;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(9897);
+      if (.@r < 34) getitem 15139,1;    // Shepherd_Cloth
+      else if (.@r < 135) getitem 28513,1;    // Celine_Brooch
+      else if (.@r < 236) getitem 28921,1;    // Anemos_Shield
+      else if (.@r < 337) getitem 15102,1;    // Hunter_Mail
+      else if (.@r < 610) getitem 28438,1;    // Fairy_Leaf_Powder
+      else if (.@r < 883) getitem 15166,1;    // Necklace_Rosary
+      else if (.@r < 1156) getitem 22050,1;    // Gardener_Shoes
+      else if (.@r < 1839) getitem 28437,1;    // ArchPriest_Glove
+      else if (.@r < 2522) getitem 5968,1;    // DVAngelNurseCap
+      else if (.@r < 3205) getitem 19141,1;    // Tha_Maero_Mask_J
+      else if (.@r < 4878) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 6551) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 8224) getitem 12673,4;    // Lucky_Egg_C10
+      else getitem 12412,8;    // HE_Bubble_Gum
   - Id: 17899
     AegisName: jRO_17899
     Name: Costama Mystic II
     Type: Etc
     Weight: 10
+  # 17900 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 17900
     AegisName: iRO_2017_NovSpecial_Box
     Name: Overseas Care Package XII
@@ -7201,11 +7400,28 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],28520,28521,5554,2165,28916,22049,15130,2913,5924,15135,28342,20837,20701,28372,19269,17289,6635,12208,14592;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,8,6,8;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
-  # 17903 untranslated: box contents not found in the item db (left out of the draw): Red Well Chewed Pencil | Malach's Skin | Wing of Beezlebub Box | Job Manual 50
+      .@r = rand(9999);
+      if (.@r < 34) getitem 28520,1;    // EgirRing
+      else if (.@r < 135) getitem 28521,1;    // Giant_Protection
+      else if (.@r < 236) getitem 5554,1;    // Octopus_Hat
+      else if (.@r < 337) getitem 2165,1;    // Sol_Shield
+      else if (.@r < 438) getitem 28916,1;    // Gaia_Shield
+      else if (.@r < 539) getitem 22049,1;    // Sol_Shoes
+      else if (.@r < 640) getitem 15130,1;    // Dragon_Mail
+      else if (.@r < 913) getitem 2913,1;    // Thief_Handcuff
+      else if (.@r < 1186) getitem 5924,1;    // DragonKnight_Eyepatch
+      else if (.@r < 1459) getitem 15135,1;    // Dragon_Cloth
+      else if (.@r < 1732) getitem 28342,1;    // Critical_Anklet
+      else if (.@r < 2005) getitem 20837,1;    // Skin_Of_Gwiber
+      else if (.@r < 2688) getitem 20701,1;    // Sol_Manteau
+      else if (.@r < 3371) getitem 28372,1;    // Imperial_Ring
+      else if (.@r < 4054) getitem 19269,1;    // Angel_Of_Happiness_J
+      else if (.@r < 4737) getitem 17289,1;    // Wing_Of_Baalzebub_Box
+      else if (.@r < 6491) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 8245) getitem 14545,6;    // Battle_Manual_X3
+      else getitem 14592,8;    // Job_Manual50
+  # 17903 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17903 untranslated: box contents not found in the item db (left out of the draw): Red Well Chewed Pencil | Malach's Skin | Wing of Beezlebub Box
   - Id: 17903
     AegisName: iRO_17_Dec_Special_Box
     Name: Overseas Care Package XIII
@@ -7215,10 +7431,18 @@ Body:
       NoDrop: true
       NoStorage: true
     Script: |
-      setarray .@i[0],19082,19285,20859,28531,18933,5978,19081,28491,6635,14545;
-      setarray .@n[0],1,1,1,1,1,1,1,1,8,6;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(8942);
+      if (.@r < 34) getitem 19082,1;    // Bio_Protector
+      else if (.@r < 135) getitem 19285,1;    // Helmet_Of_Siegfried_J
+      else if (.@r < 236) getitem 20859,1;    // Phreeoni_Wing
+      else if (.@r < 337) getitem 28531,1;    // Glove_Of_Smith
+      else if (.@r < 610) getitem 18933,1;    // Mechanical_Plant_Hat
+      else if (.@r < 883) getitem 5978,1;    // Toy_Syringe
+      else if (.@r < 1566) getitem 19081,1;    // Faceworm_Egg_Shell
+      else if (.@r < 2249) getitem 28491,1;    // Matagi_Swordaxe
+      else if (.@r < 4480) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 6711) getitem 14545,6;    // Battle_Manual_X3
+      else getitem 14592,8;    // Job_Manual50
   - Id: 17904
     AegisName: jRO_17904
     Name: "[2018] Reprinted Egg Stickers"
@@ -7283,7 +7507,7 @@ Body:
     AegisName: Chocolate_Egg_17934
     Name: Costama Gothic & Lolita
     Type: Etc
-  # 17938 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch
+  # 17938 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 17938
     AegisName: iRO_2018_02_Special_Box
     Name: Overseas Care Package XV
@@ -7292,10 +7516,21 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],2535,18720,22170,28506,19266,19139,15143,28484,28929,1414,12208,12673,12412;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,3,6,8;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10001);
+      if (.@r < 34) getitem 2535,1;    // Cloak_Of_Survival_C
+      else if (.@r < 135) getitem 18720,1;    // Magical_Booster
+      else if (.@r < 236) getitem 22170,1;    // Shoes_Of_Servival
+      else if (.@r < 337) getitem 28506,1;    // StormStone
+      else if (.@r < 438) getitem 19266,1;    // Survive_Circlet_K
+      else if (.@r < 711) getitem 19139,1;    // SurviveOrb
+      else if (.@r < 984) getitem 15143,1;    // Vermin_Cloth
+      else if (.@r < 1667) getitem 28484,1;    // Scarf_Of_Rebellion
+      else if (.@r < 2350) getitem 28929,1;    // HappyShield
+      else if (.@r < 3033) getitem 1414,1;    // Gelerdria
+      else if (.@r < 4775) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 6517) getitem 12208,3;    // Battle_Manual
+      else if (.@r < 8259) getitem 12673,6;    // Lucky_Egg_C10
+      else getitem 12412,8;    // HE_Bubble_Gum
   - Id: 17939
     AegisName: iRO_2018_02_Costume_Box
     Name: Spooky January Costume Box
@@ -7312,7 +7547,8 @@ Body:
     AegisName: Costama_Egg65
     Name: Costama Spring Party II
     Type: Etc
-  # 17946 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch | Oda's Miracle Elixir
+  # 17946 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
+  # 17946 untranslated: box contents not found in the item db (left out of the draw): Oda's Miracle Elixir
   - Id: 17946
     AegisName: 2018_Apr_Special_Box
     Name: Overseas Care Package XVII
@@ -7320,10 +7556,21 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],19326,19327,28573,28505,19138,12412,5978,5933,12208,2203,2201,2260,5401;
-      setarray .@n[0],1,1,1,1,1,8,1,1,6,1,1,1,1;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(8325);
+      if (.@r < 34) getitem 19326,1;    // Book_of_Soyga
+      else if (.@r < 135) getitem 19327,1;    // Feather_Of_Seraphim
+      else if (.@r < 236) getitem 28573,1;    // Emerald_Ring
+      else if (.@r < 337) getitem 28505,1;    // RingOfDevil
+      else if (.@r < 438) getitem 19138,1;    // SeraphimCoronet
+      else if (.@r < 2111) getitem 12103,5;    // Bloody_Dead_Branch
+      else if (.@r < 3784) getitem 12412,8;    // HE_Bubble_Gum
+      else if (.@r < 4057) getitem 5978,1;    // Toy_Syringe
+      else if (.@r < 4330) getitem 5933,1;    // Crow_Tengu_Mask
+      else if (.@r < 6003) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 6276) getitem 2203,1;    // Glasses
+      else if (.@r < 6959) getitem 2201,1;    // Sunglasses
+      else if (.@r < 7642) getitem 2260,1;    // Mini_Glasses
+      else getitem 5401,1;    // Black_Glasses
   - Id: 17952
     AegisName: Doram_Scroll
     Name: Costama Animals V
@@ -10598,7 +10845,7 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],6484,12991,7515,12246,2589,20500,12103,18648,18662,18657,18615,16588,12208,18646,12993,14037,13811;
+      setarray .@i[0],6484,12991,7515,12246,2589,2573,12103,18648,18662,18657,18615,16588,14545,18646,12993,14037,13811;
       setarray .@n[0],1,1,2200,1,1,1,3,1,1,1,1,1,3,1,1,2,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
@@ -10734,7 +10981,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 22606 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch | Sloting Coupon
+  # 22606 untranslated: box contents not found in the item db (left out of the draw): Sloting Coupon
   - Id: 22606
     AegisName: May2013_Groove_Pack
     Name: May Groove Pack
@@ -10743,8 +10990,8 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],12411,6376,5564,5550,5549;
-      setarray .@n[0],2,100,1,1,1;
+      setarray .@i[0],12103,12411,6376,5564,5550,5549;
+      setarray .@n[0],2,2,100,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
   - Id: 22607
@@ -10782,17 +11029,18 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 22651 untranslated: box contents not found in the item db: Bloody Deadbranch | Deviruchi Transformation Scroll | Poring Transformation Scroll | Male GM Mercenary | Female GM Mercenary
+  # 22651 untranslated: box contents not found in the item db (left out of the draw): Deviruchi Transformation Scroll | Poring Transformation Scroll | Male GM Mercenary | Female GM Mercenary
   - Id: 22651
     AegisName: Aug2013_Lucky_Set
     Name: Lucy's August Lucky Box Crate
     Type: Usable
     Trade:
       NoStorage: true
-    Flags:
-      NoConsume: true
     Script: |
-      dispbottom "This box's contents aren't available on this server yet.";
+      setarray .@i[0],5766,5040,18611,12103,14545,5589,5588,5414,18599,2589;
+      setarray .@n[0],1,1,1,5,5,1,1,1,1,1;
+      .@r = rand(getarraysize(.@i));
+      getitem .@i[.@r],.@n[.@r];
   - Id: 22655
     AegisName: bRO_22655
     Name: Kanda Fun Gift Box
@@ -11306,6 +11554,7 @@ Body:
     AegisName: phRO_23407
     Name: "(null)"
     Type: Etc
+  # 23414 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   # 23414 untranslated: box contents not found in the item db (left out of the draw): Tips of Thieves Vol. 1
   - Id: 23414
     AegisName: iRO_2017_July_Ragcan
@@ -11315,10 +11564,18 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],28507,28430,28717,15145,28377,28491,19125,17289,6292,6291,12103;
-      setarray .@n[0],1,1,1,1,1,1,1,1,30,30,5;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(9727);
+      if (.@r < 34) getitem 28507,1;    // Glove_Of_Wizard
+      else if (.@r < 135) getitem 28430,1;    // Archpriest_Ring
+      else if (.@r < 236) getitem 28717,1;    // Valkyrie_Knife
+      else if (.@r < 337) getitem 15145,1;    // EvilDragon_Armor
+      else if (.@r < 610) getitem 28377,1;    // Magical_Ring
+      else if (.@r < 1293) getitem 28491,1;    // Matagi_Swordaxe
+      else if (.@r < 1976) getitem 19125,1;    // Cylinder_Hairband
+      else if (.@r < 2659) getitem 17289,1;    // Wing_Of_Baalzebub_Box
+      else if (.@r < 5015) getitem 6292,30;    // F_Enriched_Oridecon
+      else if (.@r < 7371) getitem 6291,30;    // F_Enriched_Elunium
+      else getitem 12103,5;    // Bloody_Dead_Branch
   - Id: 23415
     AegisName: iRO_23415
     Name: Orleans Bundle C
@@ -11521,7 +11778,7 @@ Body:
     Trade:
       NoStorage: true
       NoSell: true
-  # 23799 untranslated: box contents not found in the item db (left out of the draw): Tree of Sprout
+  # 23799 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 23799
     AegisName: iRO_2018_6m_Special_Box
     Name: Overseas Care Package XIX
@@ -11529,10 +11786,19 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],28594,2201,2654,19171,15283,22189,12991,19337,6635,12208,12412;
-      setarray .@n[0],1,1,1,1,1,1,1,1,8,3,5;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10000);
+      if (.@r < 34) getitem 28594,1;    // Temporal_Ring
+      else if (.@r < 135) getitem 2201,1;    // Sunglasses
+      else if (.@r < 236) getitem 2654,1;    // Shinobi's_Sash
+      else if (.@r < 337) getitem 19299,1;    // Tree_Of_Sprout_JP
+      else if (.@r < 610) getitem 19171,1;    // Magician_Knithat
+      else if (.@r < 883) getitem 15283,1;    // Armor_of_Rosary
+      else if (.@r < 1566) getitem 22189,1;    // Shoes_Of_Pilgrim
+      else if (.@r < 2522) getitem 12991,1;    // Pet_Egg_Scroll8
+      else if (.@r < 3205) getitem 19337,1;    // Hat_of_Goggle
+      else if (.@r < 5470) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 7735) getitem 12208,3;    // Battle_Manual
+      else getitem 12412,5;    // HE_Bubble_Gum
   - Id: 23800
     AegisName: iRO_July_Costume_Box
     Name: July Costume Box
@@ -11544,17 +11810,26 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 23987 untranslated: box contents not found in the item db: Zherlthsh Dool | Bloody Dead Branch
   - Id: 23987
     AegisName: iRO_2018_Oct_S_Box
     Name: Overseas Care Package XXIII
     Type: Usable
     Trade:
       NoStorage: true
-    Flags:
-      NoConsume: true
     Script: |
-      dispbottom "This box's contents aren't available on this server yet.";
+      getitem 15384,1;    // Rite_Robe
+      getitem 32222,1;    // Brooch_Of_Hero
+      getitem 28560,1;    // YinYang_Talisman
+      getitem 5967,1;    // FlyingGalapago
+      getitem 22017,1;    // Fisherman_Shoes
+      getitem 5934,1;    // Happy_Balloon_J
+      getitem 19163,1;    // CatharinaPawnBrad60
+      getitem 5975,1;    // Zherlthsh_Doll
+      getitem 18959,1;    // Old_Pink_Poo_Hat
+      getitem 2984,1;    // Limnil_Glove
+      getitem 6635,8;    // Blacksmith_Blessing
+      getitem 14545,6;    // Battle_Manual_X3
+      getitem 12103,5;    // Bloody_Dead_Branch
   - Id: 23988
     AegisName: iRO_2018_Oct_C_Box
     Name: October Costume Treat Box
@@ -11566,7 +11841,7 @@ Body:
       setarray .@n[0],1,1,1,1,1,1,1,1;
       .@r = rand(getarraysize(.@i));
       getitem .@i[.@r],.@n[.@r];
-  # 23996 untranslated: box contents not found in the item db (left out of the draw): Bloody Dead Branch
+  # 23996 untranslated: odds: the box lists none; using the layout of the OCPs that do (0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)
   - Id: 23996
     AegisName: iRO_2018_Nov_S_Box
     Name: Overseas Care Package XXIV
@@ -11574,10 +11849,21 @@ Body:
     Trade:
       NoStorage: true
     Script: |
-      setarray .@i[0],15134,20922,22056,22120,22207,22134,23266,5968,19141,17289,6635,12208,22819;
-      setarray .@n[0],1,1,1,1,1,1,1,1,1,1,8,6,10;
-      .@r = rand(getarraysize(.@i));
-      getitem .@i[.@r],.@n[.@r];
+      .@r = rand(10001);
+      if (.@r < 34) getitem 15134,1;    // Vicious_Cloth
+      else if (.@r < 135) getitem 20922,1;    // Leviathan_muffler
+      else if (.@r < 236) getitem 22056,1;    // Fallen_Angel_Shoes
+      else if (.@r < 337) getitem 22120,1;    // Shoes_Of_Punishment
+      else if (.@r < 438) getitem 22207,1;    // Imperial_Boots
+      else if (.@r < 711) getitem 22134,1;    // Enforcer_Shoes
+      else if (.@r < 984) getitem 23266,1;    // Etran_Bundle_A
+      else if (.@r < 1667) getitem 5968,1;    // DVAngelNurseCap
+      else if (.@r < 2350) getitem 19141,1;    // Tha_Maero_Mask_J
+      else if (.@r < 3033) getitem 17289,1;    // Wing_Of_Baalzebub_Box
+      else if (.@r < 4775) getitem 6635,8;    // Blacksmith_Blessing
+      else if (.@r < 6517) getitem 14545,6;    // Battle_Manual_X3
+      else if (.@r < 8259) getitem 22819,10;    // G_Almighty
+      else getitem 12103,5;    // Bloody_Dead_Branch
   - Id: 23997
     AegisName: iRO_2018_Nov_C_Box
     Name: November Harvest Costume Box
@@ -18916,7 +19202,7 @@ Body:
       NoStorage: true
     Script: |
       getitem 480581,1;    // C_I_Samurai_Sword
-  # 104919 untranslated: box contents not found in the item db: 1pc Costume Beginner Mark, | 1pc USA Flag Hat [1],
+  # 104919 untranslated: box contents not found in the item db: 1pc Costume Beginner Mark | 1pc USA Flag Hat [1]
   - Id: 104919
     AegisName: Beginner_Freebie_US
     Name: "[Event] Beginner Freebie"
@@ -21024,7 +21310,6 @@ Body:
     Script: |
       getitem 23919,4;    // K_Secret_Key
       getitem 6240,100;    // HD_Oridecon
-  # 200371 untranslated: box contents not found in the item db: Costume Cinnamoroll Backpack x 1,
   - Id: 200371
     AegisName: Cinnamon_Pack1_US
     Name: RO x Cinnamoroll Pack 1
@@ -21032,11 +21317,8 @@ Body:
     Weight: 200
     Trade:
       NoStorage: true
-    Flags:
-      NoConsume: true
     Script: |
-      dispbottom "This box's contents aren't available on this server yet.";
-  # 200372 untranslated: box contents not found in the item db: C. Crown Cinnamoroll Backpack x 1,
+      getitem 480243,1;    // C_JP_EV16
   - Id: 200372
     AegisName: Cinnamon_Pack2_US
     Name: RO x Cinnamoroll Pack 2
@@ -21044,10 +21326,8 @@ Body:
     Weight: 200
     Trade:
       NoStorage: true
-    Flags:
-      NoConsume: true
     Script: |
-      dispbottom "This box's contents aren't available on this server yet.";
+      getitem 480244,1;    // C_JP_EV17
   - Id: 200382
     AegisName: Sonic_Premium_Pack1_US
     Name: Premium Super Sonic Package
@@ -21588,7 +21868,7 @@ Body:
       NoConsume: true
     Script: |
       dispbottom "This box's contents aren't available on this server yet.";
-  # 200834 untranslated: box contents not found in the item db: Almighty 100x | Limit Power Booster 100x | Infinity Drink 100x | Kachua's Secret Key 35x
+  # 200834 untranslated: box contents not found in the item db: Infinity Drink 100x | Kachua's Secret Key 35x
   - Id: 200834
     AegisName: C_CLB_GAT_Pac4
     Name: Gatchaman Collab Package IV
@@ -21739,7 +22019,7 @@ Body:
       getitem 100863,1;    // Booster_Pack_100_US
       getitem 100913,10;    // EXP_Drop_Up_7days
       getitem 23216,10;    // Premium_Box_10d
-      getitem 12208,100;    // Battle_Manual
+      getitem 14545,100;    // Battle_Manual_X3
       getitem 12412,100;    // HE_Bubble_Gum
   - Id: 200947
     AegisName: CLB_Kuma_Pack3_US
@@ -21849,7 +22129,7 @@ Body:
       getitem 100863,1;    // Booster_Pack_100_US
       getitem 100913,10;    // EXP_Drop_Up_7days
       getitem 23216,10;    // Premium_Box_10d
-      getitem 12208,100;    // Battle_Manual
+      getitem 14545,100;    // Battle_Manual_X3
       getitem 12412,100;    // HE_Bubble_Gum
   - Id: 200994
     AegisName: CCLB_GAT_Pack3_US
@@ -21936,7 +22216,7 @@ Body:
       getitem 100863,1;    // Booster_Pack_100_US
       getitem 100913,10;    // EXP_Drop_Up_7days
       getitem 23216,10;    // Premium_Box_10d
-      getitem 12208,100;    // Battle_Manual
+      getitem 14545,100;    // Battle_Manual_X3
       getitem 12412,100;    // HE_Bubble_Gum
   - Id: 201125
     AegisName: CLB_BS_Pack3_US

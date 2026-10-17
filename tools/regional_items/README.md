@@ -37,9 +37,12 @@ EXP / drop rates, HP gain on kill, indestructibility, all under refine, grade,
 base level and stat conditions, in English and Korean. Set bonuses become
 combos when their members can be found by name. Boxes become `getitem`
 scripts: fixed contents, random picks, and weighted draws at the listed odds,
-with a 100% line given on top of the draw (iRO's OCP tokens). Contents are
-matched by name, tolerating spacing, slot suffixes and small typos (numbers
-must match). A weighted or random box missing a few rare entries leaves them
+with a 100% line given on top of the draw (iRO's OCP tokens). An Overseas
+Care Package that lists no odds gets the layout every later OCP prints (0.34%,
+4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumable stacks share
+the rest) instead of an even draw, noted above the item. Contents are
+matched by name or AegisName, tolerating spacing, slot suffixes and small
+typos (numbers must match). A weighted or random box missing a few rare entries leaves them
 out of the draw if at least 70% of it is found; this is noted above the item.
 
 Nothing is guessed. A line it can't read is written as a

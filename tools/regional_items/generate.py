@@ -496,7 +496,7 @@ def parse_box(lines):
                 break
             if re.search(r'account|bound|trade|event|expire|cannot|can not|limited|거래|귀속|기간', l2, re.I) and got:
                 break
-            s = re.sub(r'^[-•*·]\s*', '', l2).strip(' .')
+            s = re.sub(r'^[-•*·]\s*', '', l2).strip(' .,;')
             wm = re.search(r'\s*[:\-–(]?\s*(\d+(?:[.,]\d+)?)\s*%\s*\)?$', s)
             weight = None
             if wm:
@@ -516,6 +516,29 @@ def parse_box(lines):
         if got:
             return rnd, got
     return None
+
+
+OCP_TIERS = [0.34, 1.01, 1.01, 1.01, 1.01, 2.73, 2.73, 2.73, 6.83, 6.83, 6.83]
+
+
+def ocp_odds(pool):
+    """Odds for an Overseas Care Package that lists none, from the layout every
+    later OCP prints: equipment from rarest to commonest, Party Hard Pack at
+    9.56%, and the consumable stacks sharing what is left."""
+    stacks = [r for r in pool if r[1] > 1 or re.search(r'party hard pack', r[2], re.I)]
+    gear = [r for r in pool if r not in stacks]
+    out = {}
+    for k, r in enumerate(gear):
+        tier = OCP_TIERS[round(k * (len(OCP_TIERS) - 1) / max(len(gear) - 1, 1))]
+        out[id(r)] = tier
+    php = [r for r in stacks if re.search(r'party hard pack', r[2], re.I)]
+    for r in php:
+        out[id(r)] = 9.56
+    rest = [r for r in stacks if r not in php]
+    left = max(100 - sum(out.values()), 0)
+    for r in rest:
+        out[id(r)] = round(left / len(rest), 2)
+    return [(r[0], r[1], r[2], out[id(r)]) for r in pool]
 
 
 # --- main --------------------------------------------------------------------------
@@ -638,6 +661,9 @@ def main():
     by_loose = collections.defaultdict(list)
     for key, ids in by_name.items():
         by_loose[loose(key)].extend(ids)
+    for x, it in existing.items():          # AegisNames too: Bloody_Dead_Branch
+        if it.get('AegisName'):
+            by_loose[loose(it['AegisName'].lower())].append(x)
     loose_keys = [k for k in by_loose if len(k) >= 8]
 
     def pick(ids):
@@ -646,8 +672,11 @@ def main():
         return ids[0] if ids else None
 
     def resolve(nm):
-        k = name_key(nm)
-        k = re.sub(r'^(?:\d+\s*(?:x|ea|cnt|pcs)\s+)|(?:\s+x\s*\d+|\s+\d+\s*(?:cnt|ea|pcs))$', '', k).strip()
+        k0 = name_key(nm)
+        x = pick(by_name.get(k0, [])) or pick(by_loose.get(loose(k0), []))
+        if x:
+            return x
+        k = re.sub(r'^(?:\d+\s*(?:x|ea|cnt|pcs)\s+)|(?:\s+x\s*\d+|\s+\d+\s*(?:cnt|ea|pcs))$', '', k0).strip()
         k2 = re.sub(r'\s*\(\s*\d+\s*(?:days?|hours?|일)\s*\)\s*', '', k)
         for key in (k, k2, re.sub(r'^\[event\]\s*', '', k), re.sub(r's$', '', k)):
             x = pick(by_name.get(key, [])) or pick(by_loose.get(loose(key), []))
@@ -813,6 +842,12 @@ def main():
                 pool = [r for r in rows if r not in sure]
                 missing = [r[2] for r in rows if not r[0]]
                 weighted = len(pool) > 1 and all(r[3] for r in pool)
+                if not weighted and rnd and len(pool) > 4 and not any(r[3] for r in pool) \
+                        and re.search(r'overseas care|\bocp\b', name, re.I):
+                    pool = ocp_odds(pool)
+                    weighted = True
+                    unknown.append('odds: the box lists none; using the layout of the OCPs that do '
+                                   '(0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)')
                 if weighted:
                     have = sum(r[3] for r in pool if r[0])
                     ok = have >= 0.7 * sum(r[3] for r in pool) and all(r[0] for r in sure)
