@@ -303,7 +303,7 @@ def load_skills(d, enc):
     out = {}
     for k, v in (G.get('SKILL_INFO_LIST') or {}).items():
         if isinstance(v, dict) and v.get('SkillName') and k in inv:
-            out[v['SkillName'].strip()] = inv[k]
+            out.setdefault(v['SkillName'].strip(), inv[k])
     return out
 
 
@@ -342,8 +342,10 @@ def load_rathena(root):
         m = re.match(r'    Description: "?(.*?)"?\s*$', line)
         if m and cur:
             prev = skill_desc.get(m.group(1))
-            if not prev or prev.startswith('NPC_') or not cur.startswith('NPC_'):
-                skill_desc[m.group(1)] = cur if not (prev and not prev.startswith('NPC_') and cur.startswith('NPC_')) else prev
+            # the first skill with a name is the base one (SM_MAGNUM before
+            # MS_MAGNUM, NW_THE_VIGILANTE_AT_NIGHT before its _GUN_ variants)
+            if not prev or (prev.startswith(('NPC_', 'ALL_')) and not cur.startswith(('NPC_', 'ALL_'))):
+                skill_desc[m.group(1)] = cur
     return items, by_name, skills, skill_desc
 
 
@@ -390,7 +392,8 @@ def infer(item_id, entry, f, name, defaults):
     if re.search(r'pet (?:equipment|accessory|armor)|펫 장비|펫 액세서리', tl + ' ' + unl):
         return {'Type': 'PetArmor', 'Locations': None}
     # boxes that describe the equipment they hold
-    if not cls and re.search(r'\b(?:box|package|crate|chest|pack|bundle|eggs?|coupon|ticket|voucher)(?:\s*\(\d+\))?(?:\s+[ivx]+)?$', nl) \
+    if not cls and re.search(r'\b(?:box|package|crate|chest|pack|bundle|eggs?|balloon|bag|pouch|capsule)(?:\s*\(\d+\))?(?:\s+[ivx]+)?$', nl) \
+            and not re.search(r'pet egg|monster egg', nl) \
             or re.search(r'(?:상자|패키지|꾸러미|교환권|알)(?:\s*\(\d+\))?(?:\s*[ivxⅠ-Ⅹ]+)?$', name):
         return {'Type': 'Usable', 'Locations': None}
     # cards and enchants
@@ -465,57 +468,132 @@ def infer(item_id, entry, f, name, defaults):
 # --- boxes -------------------------------------------------------------------------
 
 BOX_HEAD = re.compile(r'(?:contains?(?: the following| one of the following|:)|when opened,? (?:gives|obtains?|you (?:can )?(?:get|receive|obtain))|'
-                      r'obtains? (?:all )?(?:of )?the following|open(?:ing)? (?:it|this|the box)[^,]* (?:gives|grants|obtains?)|'
-                      r'(?:gives?|grants?|obtain|get) (?:you )?(?:randomly )?(?:one|1) of the following|randomly gives?|one of the following items|'
+                      r'obtains? (?:all )?(?:of )?the following|(?:open|opening)(?: it| this)? to (?:receive|get|obtain)|'
+                      r'(?:receive|get|obtain)s? (?:all )?(?:of )?the following|the following items?\s*:|open(?:ing)? (?:it|this|the box)[^,]* (?:gives|grants|obtains?)|'
+                      r'(?:gives?|grants?|obtain|get) (?:you )?(?:randomly )?(?:one|1) of the following|randomly gives?|(?:one|1) of the following|'
                       r'you can (?:get|obtain|receive) (?:one of )?the following|following items? (?:can be|will be) obtained|'
                       r'다음 (?:아이템|중)|아래 (?:아이템|중)|중 하나를? (?:획득|얻)|획득할 수 있(?:다|는))', re.I)
+NOTE = re.compile(r'^(?:\^?[0-9a-f]{0,6})?(?:account[- ]?bound|character[- ]?bound|cannot be|can not be|can\'t be|'
+                  r'this (?:item|box)|item will be|items? (?:can|will)|.*will be (?:removed|deleted)|.*expires?\b|'
+                  r'.*(?:event|promotion) (?:ends|is over|period)|duration|rental|note\b|\(.*\)$|'
+                  r'.*거래|.*귀속|.*삭제|.*기간)', re.I)
 RANDOM = re.compile(r'one of|random|chance|중 하나|랜덤|확률', re.I)
 
 
+def _box_row(l2):
+    """One line of a box's list -> (name, qty, weight). qty may be 'rand(a,b)'."""
+    s = re.sub(r'^(?:[-•*·]|\d{1,3}[.)])\s*', '', l2).strip(' .,;')
+    wm = re.search(r'\s*[:\-–(]?\s*(\d+(?:[.,]\d+)?)\s*%\s*\)?$', s)
+    weight = None
+    if wm:
+        weight = float(wm.group(1).replace(',', '.'))
+        s = s[:wm.start()].strip(' :-–')
+    s = re.sub(r'\s*\((?:enchantable|random[^)]*|account[- ]bound|tradable)\)\s*$', '', s, flags=re.I)
+    rm = re.search(r'\s+(\d+)\s*[-~]\s*(\d+)\s*(?:cnt|ea|pcs|x)?$', s)
+    if rm:
+        return s[:rm.start()].strip(), 'rand(%s,%s)' % (rm.group(1), rm.group(2)), weight
+    pm = re.fullmatch(r'\((\d+)\)\s*(.+)', s)
+    if pm:
+        s = '%s x %s' % (pm.group(2), pm.group(1))
+    m = re.fullmatch(r'(\d+)\s*(?:[xX×]|cnt|ea\b|pcs)\s*(.+)', s) or re.fullmatch(r'(\d+)\s+([A-Za-z\[].+)', s) \
+        or re.fullmatch(r'(.+?)\s*[xX×]\s*(\d+)', s) or re.fullmatch(r'(.+?)\s+(\d+)\s*(?:ea|pcs|cnt|개)', s) \
+        or re.fullmatch(r'(.+?)\s*\((\d+)\)', s)
+    if m:
+        a, b = m.groups()
+        name, qty = (b, int(a)) if a.isdigit() else (a, int(b))
+    else:
+        name, qty = s, 1
+    return name.strip(), qty, weight
+
+
 def parse_box(lines):
-    """-> (random?, [(name, qty)]) or None."""
-    for i, l in enumerate(lines):
+    """-> [(random?, [(name, qty, weight)])], one per list in the description, or None."""
+    for l in lines:
         if l is None:
             continue
-        m = re.search(r'(?:box|package|crate|chest|pack)(?: that)? (?:contains?|containing|with)(?: with)? (\d+)\s*(?:x\s*)?(?:boxes|units|pieces|pcs|ea)?\s*(?:of )?(.+?)\.?$', l, re.I)
-        if m and not BOX_HEAD.search(l.split(m.group(0))[0] if m.group(0) in l else ''):
-            return False, [(re.sub(r'^(?:the )?', '', m.group(2)), int(m.group(1)), None)]
+        m = re.search(r'(?:box|package|crate|chest|pack)(?: that)? (?:contains?|containing|with)(?: with)? (\d+)\s*(?:x\s*)?(?:(?:boxes|units|pieces|pcs|ea)\b)?\s*(?:of )?(.+?)\.?$', l, re.I)
+        if m and not re.search(r'\band\b|&|,', m.group(2)):
+            return [(False, [(re.sub(r'^(?:the )?', '', m.group(2)), int(m.group(1)), None)])]
         m = re.search(r'(?:when opened,? )?gives? (?:you )?(?:one|1|an?) (.+?)\.?$', l, re.I)
         if m and not BOX_HEAD.search(l) and re.match(r'when opened', l, re.I):
-            return False, [(m.group(1), 1, None)]
-        if not BOX_HEAD.search(l):
+            return [(False, [(m.group(1), 1, None)])]
+    sections, cur = [], None
+    for l in lines + [None]:
+        if l is not None and BOX_HEAD.search(l):
+            if cur and cur[1]:
+                sections.append(cur)
+            cur = (bool(RANDOM.search(l)), [])
             continue
-        rnd = bool(RANDOM.search(l))
-        got = []
-        for l2 in lines[i + 1:]:
-            if l2 is None:
-                if got:
-                    break
-                continue
-            if re.match(r'(?:weight|type|class|무게|계열)\s*:', l2, re.I) or BOX_HEAD.search(l2):
-                break
-            if re.search(r'account|bound|trade|event|expire|cannot|can not|limited|거래|귀속|기간', l2, re.I) and got:
-                break
-            s = re.sub(r'^[-•*·]\s*', '', l2).strip(' .,;')
-            wm = re.search(r'\s*[:\-–(]?\s*(\d+(?:[.,]\d+)?)\s*%\s*\)?$', s)
-            weight = None
-            if wm:
-                weight = float(wm.group(1).replace(',', '.'))
-                s = s[:wm.start()].strip(' :-–')
-            pm = re.fullmatch(r'\((\d+)\)\s*(.+)', s)
-            if pm:
-                s = '%s x %s' % (pm.group(2), pm.group(1))
-            m = re.fullmatch(r'(\d+)\s*[xX×]\s*(.+)', s) or re.fullmatch(r'(.+?)\s*[xX×]\s*(\d+)', s) \
-                or re.fullmatch(r'(.+?)\s+(\d+)\s*(?:ea|pcs|개)', s) or re.fullmatch(r'(.+?)\s*\((\d+)\)', s)
-            if m:
-                a, b = m.groups()
-                name, qty = (b, int(a)) if a.isdigit() else (a, int(b))
+        if cur is None:
+            continue
+        if l is None:
+            if cur[1]:
+                sections.append(cur)
+                cur = None
+            continue
+        if re.match(r'(?:weight|type|class|무게|계열)\s*:', l, re.I) or (cur[1] and NOTE.search(l)):
+            if cur[1]:
+                sections.append(cur)
+            cur = None
+            continue
+        if NOTE.search(l) or re.fullmatch(r'\[[^\]]*\]:?|[^:]{0,40}:', l.strip()):
+            continue    # a note or a sub-heading before the list starts
+        cur[1].append(_box_row(l))
+    return sections or None
+
+
+def box_section(i, name, rnd, got, resolve, aegis_of, unknown):
+    """Script for one list of a box: everything, one at random, or a weighted
+    draw. None when too much of it can't be found."""
+    rows = [(resolve(nm), q, nm, wt) for nm, q, wt in got]
+    rows = [r for r in rows if r[0] != i]
+    if not rows:
+        return None
+    # a 100% row next to odds is a bonus every opening gives
+    sure = [r for r in rows if r[3] and r[3] >= 99.5 and len(rows) > 1]
+    pool = [r for r in rows if r not in sure]
+    missing = [r[2] for r in rows if not r[0]]
+    weighted = len(pool) > 1 and all(r[3] for r in pool)
+    if not weighted and rnd and len(pool) > 4 and not any(r[3] for r in pool) \
+            and re.search(r'overseas care|\bocp\b', name, re.I):
+        pool = ocp_odds(pool)
+        weighted = True
+        unknown.append('odds: the box lists none; using the layout of the OCPs that do '
+                       '(0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)')
+    if weighted:
+        have = sum(r[3] for r in pool if r[0])
+        ok = have >= 0.7 * sum(r[3] for r in pool) and all(r[0] for r in sure)
+    else:
+        ok = sum(1 for r in rows if r[0]) >= 0.7 * len(rows) and (rnd or not missing)
+    if missing:
+        unknown.append('box contents not found in the item db%s: %s' % (
+            ' (left out of the draw)' if ok else '', ' | '.join(missing)))
+    if not ok:
+        return None
+    out = []
+    get = lambda x, q, nm: 'getitem %d,%s;    // %s' % (x, q, aegis_of.get(x, nm))
+    for x, q, nm, wt in sure:
+        out.append(get(x, q, nm))
+    pool = [r for r in pool if r[0]]
+    if weighted and len(pool) > 1:
+        total = sum(r[3] for r in pool)
+        out.append('.@r = rand(%d);' % int(round(total * 100)))
+        acc = 0
+        for k, (x, q, nm, wt) in enumerate(pool):
+            acc += int(round(wt * 100))
+            if k == len(pool) - 1:
+                out.append('else ' + get(x, q, nm))
             else:
-                name, qty = s, 1
-            got.append((name.strip(), qty, weight))
-        if got:
-            return rnd, got
-    return None
+                out.append('%s (.@r < %d) %s' % ('if' if k == 0 else 'else if', acc, get(x, q, nm)))
+    elif rnd and len(pool) > 1:
+        out.append('switch (rand(%d)) {' % len(pool))
+        for k, (x, q, nm, wt) in enumerate(pool):
+            out.append('case %d: %s break;' % (k, get(x, q, nm)))
+        out.append('}')
+    else:
+        for x, q, nm, wt in pool:
+            out.append(get(x, q, nm))
+    return out
 
 
 OCP_TIERS = [0.34, 1.01, 1.01, 1.01, 1.01, 2.73, 2.73, 2.73, 6.83, 6.83, 6.83]
@@ -525,7 +603,7 @@ def ocp_odds(pool):
     """Odds for an Overseas Care Package that lists none, from the layout every
     later OCP prints: equipment from rarest to commonest, Party Hard Pack at
     9.56%, and the consumable stacks sharing what is left."""
-    stacks = [r for r in pool if r[1] > 1 or re.search(r'party hard pack', r[2], re.I)]
+    stacks = [r for r in pool if not isinstance(r[1], int) or r[1] > 1 or re.search(r'party hard pack', r[2], re.I)]
     gear = [r for r in pool if r not in stacks]
     out = {}
     for k, r in enumerate(gear):
@@ -609,8 +687,8 @@ def main():
     for d, enc in ((a.kro_skills, 'cp949'), (a.iro_skills, 'latin-1')):
         for sname, const in load_skills(d, enc).items():
             if const in ra_skills and not const.startswith('NPC_'):
-                skills[sname.lower()] = const
-                skills[re.sub(r'\s*\(.*?\)\s*', '', sname).strip().lower()] = const
+                skills.setdefault(sname.lower(), const)
+                skills.setdefault(re.sub(r'\s*\(.*?\)\s*', '', sname).strip().lower(), const)
 
     names_en = {}
     if a.names and os.path.exists(a.names):
@@ -666,6 +744,14 @@ def main():
             by_loose[loose(it['AegisName'].lower())].append(x)
     loose_keys = [k for k in by_loose if len(k) >= 8]
 
+    def words(k):
+        k = re.sub(r'\s*\[\d\]|\bcostume\s*:?|[^a-z0-9 ]+', ' ', k)
+        return ' '.join(sorted(w for w in k.split() if w not in ('of', 'the', 's')))
+
+    by_words = collections.defaultdict(list)
+    for key, ids in by_name.items():
+        by_words[words(key)].extend(ids)
+
     def pick(ids):
         ids = [x for x in dict.fromkeys(ids) if x in known]
         ids.sort(key=lambda x: (x not in existing, x))
@@ -680,6 +766,11 @@ def main():
         k2 = re.sub(r'\s*\(\s*\d+\s*(?:days?|hours?|일)\s*\)\s*', '', k)
         for key in (k, k2, re.sub(r'^\[event\]\s*', '', k), re.sub(r's$', '', k)):
             x = pick(by_name.get(key, [])) or pick(by_loose.get(loose(key), []))
+            if x:
+                return x
+        wk = words(k)
+        if len(wk.split()) >= 2:
+            x = pick(by_words.get(wk, [])) or pick(by_words.get(words(re.sub(r'(?:e?s)\b', '', k)), []))
             if x:
                 return x
         lk = loose(k)
@@ -837,52 +928,19 @@ def main():
         script, combo_list = [], []
         is_box = False
         if typ in ('Usable', 'Etc') and not equip:
-            box = parse_box(rest)
-            if box:
-                rnd, got = box
+            sections = parse_box(rest)
+            if sections:
                 is_box = True
-                rows = [(resolve(nm), q, nm, wt) for nm, q, wt in got if resolve(nm) != i]
-                # a 100% row next to odds is a bonus every opening gives
-                sure = [r for r in rows if r[3] and r[3] >= 99.5 and len(rows) > 1]
-                pool = [r for r in rows if r not in sure]
-                missing = [r[2] for r in rows if not r[0]]
-                weighted = len(pool) > 1 and all(r[3] for r in pool)
-                if not weighted and rnd and len(pool) > 4 and not any(r[3] for r in pool) \
-                        and re.search(r'overseas care|\bocp\b', name, re.I):
-                    pool = ocp_odds(pool)
-                    weighted = True
-                    unknown.append('odds: the box lists none; using the layout of the OCPs that do '
-                                   '(0.34%, 4x 1.01%, 3x 2.73%, 3x 6.83%, Party Hard Pack 9.56%, consumables share the rest)')
-                if weighted:
-                    have = sum(r[3] for r in pool if r[0])
-                    ok = have >= 0.7 * sum(r[3] for r in pool) and all(r[0] for r in sure)
-                else:
-                    ok = sum(1 for r in rows if r[0]) >= 0.7 * len(rows) and (rnd or not missing)
-                if missing:
-                    unknown.append('box contents not found in the item db%s: %s' % (
-                        ' (left out of the draw)' if ok else '', ' | '.join(missing)))
-                if ok:
-                    for x, q, nm, wt in sure:
-                        script.append('getitem %d,%d;    // %s' % (x, q, aegis_of.get(x, nm)))
-                    pool = [r for r in pool if r[0]]
-                    if weighted:
-                        total = sum(r[3] for r in pool)
-                        script.append('.@r = rand(%d);' % int(round(total * 100)))
-                        acc = 0
-                        for k, (x, q, nm, wt) in enumerate(pool):
-                            acc += int(round(wt * 100))
-                            if k == len(pool) - 1:
-                                script.append('else getitem %d,%d;    // %s' % (x, q, aegis_of.get(x, nm)))
-                            else:
-                                script.append('%s (.@r < %d) getitem %d,%d;    // %s' % ('if' if k == 0 else 'else if', acc, x, q, aegis_of.get(x, nm)))
-                    elif rnd and len(pool) > 1:
-                        script.append('setarray .@i[0],%s;' % ','.join(str(r[0]) for r in pool))
-                        script.append('setarray .@n[0],%s;' % ','.join(str(r[1]) for r in pool))
-                        script.append('.@r = rand(getarraysize(.@i));')
-                        script.append('getitem .@i[.@r],.@n[.@r];')
-                    else:
-                        for x, q, nm, wt in pool:
-                            script.append('getitem %d,%d;    // %s' % (x, q, aegis_of.get(x, nm)))
+                part_scripts, all_ok = [], True
+                for rnd, got in sections:
+                    part = box_section(i, name, rnd, got, resolve, aegis_of, unknown)
+                    if part is None:
+                        all_ok = False
+                        break
+                    part_scripts.append(part)
+                if all_ok:
+                    for part in part_scripts:
+                        script.extend(part)
         if typ in ('Armor', 'Weapon', 'ShadowGear', 'Card'):
             ele = first(f, 'Property', 'Element', '속성')
             if ele and typ == 'Weapon':

@@ -32,9 +32,13 @@ view, refineable / gradable, trade flags, and a script.
 
 The script comes from the description (`bonus.py`): stats, damage modifiers
 (size, race, class, property, ranged/melee, critical), cast time and delays,
-skill damage, cooldowns and SP cost, enabled skills, autocasts on attack,
+skill damage, cooldowns and SP cost, enabled skills (per job too), autocasts
+on attack, when hit and on skill use, timed buffs on skill use or on a chance
+(`autobonus`, `autobonus2`, `autobonus3`), movement speed,
 EXP / drop rates, HP gain on kill, indestructibility, all under refine, grade,
-base level and stat conditions, in English and Korean. Set bonuses become
+base level, stat and learned-skill conditions, in English and Korean. Where a
+description says "a certain chance" without a number, 3% is used and the
+script says so in a comment. Set bonuses become
 combos when their members can be found by name. Boxes become `getitem`
 scripts: fixed contents, random picks, and weighted draws at the listed odds,
 with a 100% line given on top of the draw (iRO's OCP tokens). An Overseas

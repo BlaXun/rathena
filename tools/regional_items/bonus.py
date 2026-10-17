@@ -171,6 +171,22 @@ def parse_conditions(text, ctx):
         if m:
             conds.append('readparam(%s) %s %s' % (STATS[m.group(1)], _cmp(m.group(3)), m.group(2)))
             t = t[m.end():]
+        low = t.lower()
+        m = re.match(r'(?:when|if)\s+(?:you\s+have\s+|the\s+user\s+has\s+)?(?:learned|mastered)\s+\[?(.+?)\]?\s+(?:skill\s+)?(?:at\s+)?(?:level\s+|lv\.?\s*)(\d+)(?:\s+or\s+(?:higher|above|more))?\s*[,:]', low)
+        if m:
+            sk = _skills(m.group(1), ctx)
+            conds.append('getskilllv("%s") >= %s' % (sk[0], m.group(2)) if sk and len(sk) == 1 else UNSUPPORTED)
+            t = t[m.end():]
+        low = t.lower()
+        m = re.match(r'(?:for\s+)?every\s+(?:(\d+)\s+)?(?:skill\s+)?levels?\s+of\s+(?:learned\s+)?\[?(.+?)\]?(?:\s+learned)?\s*[,:]', low)
+        if m:
+            sk = _skills(m.group(2), ctx)
+            if sk and len(sk) == 1:
+                n = int(m.group(1) or 1)
+                mults.append('getskilllv("%s")' % sk[0] if n == 1 else '(getskilllv("%s")/%d)' % (sk[0], n))
+            else:
+                conds.append(UNSUPPORTED)
+            t = t[m.end():]
         # Korean
         m = re.match(r'([DCBA])등급\s*이상(?:인 경우|일 경우|\s*시)?', t)
         if m:
@@ -234,7 +250,8 @@ def parse_conditions(text, ctx):
         # a condition we can't express: keep the effects out
         low = t.lower()
         m = re.match(r'(?:when|if|while)\s+[^,:]*?(?:,|:)\s*', low)
-        if m and t is t0 and not conds and not mults:
+        ability = re.match(r'(?:when|upon|while)\s+(?:using|casting|receiving|dealing|performing|doing|equipped by|a physical|wearer|after using)', low)
+        if m and t is t0 and not conds and not mults and not ability:
             conds.append(UNSUPPORTED)
             t = t[m.end():]
         t = re.sub(r'^[\s,:;]+', '', t)
@@ -286,6 +303,9 @@ def _norm_en(s):
                  (r'\bcritical damage\b', 'critical damage'), (r'\s+', ' ')):
         low = re.sub(a, b, low)
     low = re.sub(r'(physical|magic) damage given to', r'\1 damage to', low).strip()
+    low = re.sub(r'\s+(?:is |are )?increase (?=by \d)', ' ', low)
+    low = re.sub(r'^(?:(?:increase|gain|grant)s? )?(%s|atk|matk|flee|hit|def|mdef|cri|aspd|perfect dodge|p\.atk|s\.matk|mhp|msp) by (\d+)(%%?)$' % STAT_RE,
+                 r'\1 + \2\3', low)
     low = re.sub(r'\s*\+\s*', ' + ', low)
     low = re.sub(r'\s*-\s*(?=\d)', ' - ', low)
     low = re.sub(r'(\d)\s*%', r'\1%', low)
@@ -325,7 +345,41 @@ def _target(t):
     return None
 
 
+def _loose_key(n):
+    n = re.sub(r'^(?:use\s*)?\[|^the\s+', '', n.lower().strip())
+    n = re.sub(r'[^a-z0-9]+', '', n)
+    return re.sub(r'(?:s|es)$', '', n)
+
+
+def _skill_loose(n, ctx):
+    """'Musical Lesson' -> BA_MUSICALLESSON ('Music Lessons'); 'Backstab' -> 'Back Stab'."""
+    if not hasattr(ctx, '_loose'):
+        ctx._loose = {}
+        for k, v in ctx.skills.items():
+            if not v.startswith(('NPC_', 'ALL_')):
+                ctx._loose.setdefault(_loose_key(k), v)
+    k = _loose_key(n)
+    if len(k) < 4:
+        return None
+    if k in ctx._loose:
+        return ctx._loose[k]
+    if len(k) >= 7:
+        import difflib
+        close = difflib.get_close_matches(k, list(ctx._loose), n=1, cutoff=0.86)
+        if close and re.findall(r'\d+', close[0]) == re.findall(r'\d+', k):
+            return ctx._loose[close[0]]
+    return None
+
+
 def _skills(names, ctx):
+    whole = names.strip(' []"\'').strip()
+    whole = re.sub(r'^(?:the|skill|skills)\s+', '', whole)
+    whole = re.sub(r'\s+(?:skill|skills)$', '', whole)
+    if whole.lower() in ctx.skills:
+        return [ctx.skills[whole.lower()]]
+    a = _skill_loose(whole, ctx) if not re.search(r',|\band\b|&|/', whole) else None
+    if a:
+        return [a]
     out = []
     for n in re.split(r'\s*(?:,|/|&|\band\b|\bor\b)\s*', names):
         n = n.strip(' []"\'').strip()
@@ -333,7 +387,7 @@ def _skills(names, ctx):
         n = re.sub(r'\s+(?:skill|skills)$', '', n)
         if not n:
             continue
-        a = ctx.skills.get(n.lower())
+        a = ctx.skills.get(n.lower()) or _skill_loose(n, ctx)
         if not a:
             return None
         out.append(a)
@@ -444,7 +498,8 @@ def effect_en(s, mults, ctx):
         or re.fullmatch(r'(?:increase )?(?:the )?(?:item )?drop (?:chance|rate) (?:of|from) monster (?:\+|by )?(\d+)%', low)
     if m:
         return ['bonus2 bDropAddRace,RC_All,%s;' % V(int(m.group(1)))]
-    if re.fullmatch(r'(?:increase )?(?:the )?(?:movement|move|walking) speed(?: increase)?|increase (?:movement|move) speed', low):
+    low = re.sub(r'\s*\((?:permanent|does not stack|doesn\'t stack|same as|not stack)[^)]*\)', '', low).strip()
+    if re.fullmatch(r'(?:increase |increased )?(?:the )?(?:movement|move|moving|walking|walk) speed(?: (?:increase|is increase|increased))?|increase (?:movement|move) speed', low):
         return ['bonus bSpeedRate,25;'] if not mults else None
     m = re.fullmatch(r'(?:increase )?(?:natural )?(hp|sp) (?:recovery|regen(?:eration)?)(?: rate)?\s*(?:\+|by)\s*(\d+)%?', low)
     if m:
@@ -688,7 +743,18 @@ def is_korean(s):
 
 def translate_clauses(text, mults, ctx):
     """A line of effects, split on commas. Returns (statements, ok)."""
-    eff = effect_ko if is_korean(text) else effect_en
+    base = effect_ko if is_korean(text) else effect_en
+
+    def eff(t, mults, ctx):
+        r = base(t, mults, ctx)
+        if r is None and not mults and base is effect_en:
+            r = ability_en(t, ctx)
+        if r is None and ' and ' in t:
+            parts = [p for p in re.split(r'\s+and\s+', t) if p.strip()]
+            got = [base(p, mults, ctx) or (None if mults else ability_en(p, ctx)) for p in parts]
+            if len(parts) > 1 and all(g is not None for g in got):
+                r = [x for g in got for x in g]
+        return r
     whole = eff(text, mults, ctx)
     if whole is not None:
         return whole, True
@@ -706,7 +772,7 @@ def translate_clauses(text, mults, ctx):
             continue
         cur += ch
     pieces.append(cur)
-    pieces = [p.strip() for p in pieces if p.strip()]
+    pieces = [re.sub(r'^(?:and|also)\s+', '', p.strip(), flags=re.I) for p in pieces if p.strip()]
     if len(pieces) < 2:
         return [], False
     out = []
@@ -738,11 +804,50 @@ def translate_line(line, ctx, pending):
         allc, allm = list(pending[0]), list(pending[1])
     if UNSUPPORTED in allc:
         return [], pending, 'unknown'
-    stmts, ok = translate_clauses(rest, allm, ctx)
+    stmts, ok = None, False
+    if not allm and not is_korean(rest):
+        jobs = re.split(r'(?:(?<=[.,])\s+|^)(?=when equipped by )', rest, flags=re.I)
+        if len(jobs) > 1 or re.match(r'when equipped by ', rest, re.I):
+            out = []
+            for part in [p for p in jobs if p.strip()]:
+                m = re.match(r'when equipped by (.+?)\s*[:,]\s*(.+?)[.,]?\s*$', part, re.I)
+                cond = m and job_condition(m.group(1))
+                inner = m and (ability_en(m.group(2), ctx) or translate_clauses(m.group(2), [], ctx)[0])
+                if not (cond and inner):
+                    out = None
+                    break
+                out.append('if %s {\n%s\n}' % (cond, '\n'.join('  ' + x for x in inner)))
+            if out:
+                stmts, ok = out, True
+        if not ok:
+            m = re.fullmatch(r'(.+?),? when equipped by ([A-Za-z &]+?)[.,]?(?:\s*,\s*(.+?) when equipped by ([A-Za-z &]+?)[.]?)?', rest, re.I)
+            if m:
+                out = []
+                for eff, job in ((m.group(1), m.group(2)), (m.group(3), m.group(4))):
+                    if not eff:
+                        continue
+                    cond = job_condition(job)
+                    inner = ability_en(eff, ctx) or translate_clauses(eff, [], ctx)[0]
+                    if not (cond and inner):
+                        out = None
+                        break
+                    out.append('if %s {\n%s\n}' % (cond, '\n'.join('  ' + x for x in inner)))
+                if out:
+                    stmts, ok = out, True
+        if not ok:
+            a = ability_en(rest, ctx)
+            if a:
+                stmts, ok = a, True
+    if not ok and not allm and is_korean(rest):
+        a = ability_ko(rest, ctx)
+        if a:
+            stmts, ok = a, True
+    if not ok:
+        stmts, ok = translate_clauses(rest, allm, ctx)
     if not ok:
         return [], pending, 'unknown'
     if allc and stmts:
-        body = '\n'.join('  ' + s for s in stmts)
+        body = '\n'.join('  ' + line for st in stmts for line in st.split('\n'))
         stmts = ['if (%s) {\n%s\n}' % (' && '.join(allc), body)]
     return stmts, pending, 'ok'
 
@@ -752,3 +857,228 @@ EFFECTISH = re.compile(r'[+%]|-\s*\d|\b(?:atk|matk|def|mdef|hit|flee|aspd|cri|st
 
 def looks_like_effect(line):
     return bool(EFFECTISH.search(line))
+
+
+# ---------------------------------------------------------------- abilities
+# Effects that are more than a stat: timed buffs on skill use or on a chance,
+# autocasts, enabled skills, per-job abilities.
+
+JOB_CONSTS = [
+    'NOVICE', 'SWORDMAN', 'MAGE', 'ARCHER', 'ACOLYTE', 'MERCHANT', 'THIEF', 'KNIGHT', 'PRIEST', 'WIZARD',
+    'BLACKSMITH', 'HUNTER', 'ASSASSIN', 'CRUSADER', 'MONK', 'SAGE', 'ROGUE', 'ALCHEMIST', 'BARD', 'DANCER',
+    'SUPER_NOVICE', 'GUNSLINGER', 'NINJA', 'LORD_KNIGHT', 'HIGH_PRIEST', 'HIGH_WIZARD', 'WHITESMITH', 'SNIPER',
+    'ASSASSIN_CROSS', 'PALADIN', 'CHAMPION', 'PROFESSOR', 'STALKER', 'CREATOR', 'CLOWN', 'GYPSY', 'TAEKWON',
+    'STAR_GLADIATOR', 'SOUL_LINKER', 'RUNE_KNIGHT', 'WARLOCK', 'RANGER', 'ARCH_BISHOP', 'MECHANIC',
+    'GUILLOTINE_CROSS', 'ROYAL_GUARD', 'SORCERER', 'MINSTREL', 'WANDERER', 'SURA', 'GENETIC', 'SHADOW_CHASER',
+    'KAGEROU', 'OBORO', 'REBELLION', 'SUMMONER', 'STAR_EMPEROR', 'SOUL_REAPER', 'DRAGON_KNIGHT', 'MEISTER',
+    'SHADOW_CROSS', 'ARCH_MAGE', 'CARDINAL', 'WINDHAWK', 'IMPERIAL_GUARD', 'BIOLO', 'ABYSS_CHASER',
+    'ELEMENTAL_MASTER', 'INQUISITOR', 'TROUBADOUR', 'TROUVERE', 'SKY_EMPEROR', 'SOUL_ASCETIC', 'SHINKIRO',
+    'SHIRANUI', 'NIGHT_WATCH', 'HYPER_NOVICE', 'SPIRIT_HANDLER', 'DRUID', 'KARNOS', 'ALITEA']
+JOB_VARIANTS = {'KNIGHT': ['2'], 'CRUSADER': ['2'], 'LORD_KNIGHT': ['2'], 'PALADIN': ['2'], 'STAR_GLADIATOR': ['2'],
+                'RUNE_KNIGHT': ['_T', '2', '_T2', '_2ND'], 'ROYAL_GUARD': ['_T', '2', '_T2', '_2ND'],
+                'RANGER': ['_T', '2', '_T2', '_2ND'], 'MECHANIC': ['_T', '2', '_T2', '_2ND'],
+                'WARLOCK': ['_T', '_2ND'], 'ARCH_BISHOP': ['_T'], 'GUILLOTINE_CROSS': ['_T', '_2ND'],
+                'SORCERER': ['_T', '_2ND'], 'MINSTREL': ['_T', '_2ND'], 'WANDERER': ['_T', '_2ND'],
+                'SURA': ['_T', '_2ND'], 'GENETIC': ['_T', '_2ND'], 'SHADOW_CHASER': ['_T', '_2ND'],
+                'STAR_EMPEROR': ['2'], 'DRAGON_KNIGHT': ['2'], 'MEISTER': ['2'], 'WINDHAWK': ['2'],
+                'IMPERIAL_GUARD': ['2'], 'SKY_EMPEROR': ['2']}
+JOB_ALIAS = {'wind hawk': 'WINDHAWK', 'archbishop': 'ARCH_BISHOP', 'geneticist': 'GENETIC',
+             'troubadour & trouvere': 'TROUBADOUR|TROUVERE', 'troubadour&trouvere': 'TROUBADOUR|TROUVERE',
+             'shinkiro & shiranui': 'SHINKIRO|SHIRANUI', 'kagerou & oboro': 'KAGEROU|OBORO',
+             'minstrel & wanderer': 'MINSTREL|WANDERER', 'expanded super novice': 'SUPER_NOVICE_E'}
+
+
+def job_condition(name):
+    """'Imperial Guard' -> 'Class == JOB_IMPERIAL_GUARD || Class == JOB_IMPERIAL_GUARD2'."""
+    n = re.sub(r'\b(?:class(?:es)?|jobs?)\b', '', name.lower()).strip(' .,:')
+    keys = JOB_ALIAS.get(n) or re.sub(r'[^a-z]+', '_', n).strip('_').upper()
+    out = []
+    for k in keys.split('|'):
+        if k not in JOB_CONSTS and k != 'SUPER_NOVICE_E':
+            return None
+        out += ['JOB_' + k] + ['JOB_' + k + v for v in JOB_VARIANTS.get(k, [])]
+    return '(' + ' || '.join('Class == %s' % c for c in out) + ')'
+
+
+def _flags(kind):
+    kind = (kind or '').lower()
+    bf = []
+    if 'melee' in kind:
+        bf.append('BF_SHORT')
+    elif 'ranged' in kind or 'long' in kind:
+        bf.append('BF_LONG')
+    if 'magic' in kind and 'physical' in kind:
+        bf.append('BF_WEAPON|BF_MAGIC')
+    elif 'magic' in kind:
+        bf.append('BF_MAGIC')
+    else:
+        bf.append('BF_WEAPON')
+    return '|'.join(bf)
+
+
+def _inner(text, ctx):
+    """Effects inside a timed bonus, as one line of script for autobonus."""
+    stmts, ok = translate_clauses(text, [], ctx)
+    if not ok or not stmts:
+        return None
+    return ' '.join(stmts).replace('"', '\\"')
+
+
+def _casts(text, ctx):
+    """'Lv.1 Cart Tornado and Lv.1 Spore Explosion' -> [(aegis, lv)] or None."""
+    one = re.sub(r'\(.*?\)', '', text).strip(' .[]')
+    m = re.fullmatch(r'(?:level |lv\.? ?)(\d+) \[?(.+?)\]?', one, re.I) or re.fullmatch(r'\[?(.+?)\]? (?:level |lv\.? ?)(\d+)()', one, re.I)
+    if m:
+        lv, nm = (m.group(1), m.group(2)) if m.group(1).isdigit() else (m.group(2), m.group(1))
+        if nm.lower().strip() in ctx.skills:
+            return [(ctx.skills[nm.lower().strip()], lv)]
+    out = []
+    for part in re.split(r'\s*(?:,|\band\b|&)\s*', text):
+        part = re.sub(r'\(.*?\)', '', part).strip(' .[]')
+        part = re.sub(r'\s+(?:on (?:the )?(?:enemy|target|self|yourself))$', '', part)
+        m = re.fullmatch(r'(?:level |lv\.? ?)(\d+) \[?(.+?)\]?', part, re.I) or \
+            re.fullmatch(r'\[?(.+?)\]? (?:level |lv\.? ?)(\d+)()', part, re.I)
+        if not m:
+            return None
+        lv, nm = (m.group(1), m.group(2)) if m.group(1).isdigit() else (m.group(2), m.group(1))
+        sk = _skills(nm, ctx)
+        if not sk or len(sk) != 1:
+            return None
+        out.append((sk[0], lv))
+    return out or None
+
+
+DEFAULT_CHANCE = 3   # percent, for "a certain chance" with no number
+
+
+def ability_en(text, ctx):
+    """A whole English line that is an ability, or None."""
+    t = re.sub(r'\s+', ' ', text.strip()).rstrip('.,; ')
+    t2 = re.sub(r'(?<![\w%])(?:a |an )?(?:(?:certain|random|low|small|slight) )?chance\b(?! \d)', 'a %d%% chance' % DEFAULT_CHANCE, t, flags=re.I)
+    t2 = re.sub(r'\badds? (?:a )?(\d+% chance)', r'a \1', t2, flags=re.I)
+    t2 = re.sub(r'^(?:a )?(\d+% chance)', r'\1', t2, flags=re.I)
+    if t2 != t and not re.search(r'\d+(?:[.,]\d+)?\s*%\s*(?:of )?chance|chance\s*(?:of\s*)?\d', t, re.I):
+        r = _ability_en(t2, ctx)
+        if r:
+            return r + ['// chance not stated in the description; %d%% assumed' % DEFAULT_CHANCE]
+        return None
+    return _ability_en(t, ctx)
+
+
+def _ability_en(t, ctx):
+    t = re.sub(r'^random (\d+% chance)', r'\1', t, flags=re.I)
+    t = re.sub(r'\s*\((?:if (?:the )?user|if you have|status is removed|buff is|the buff|this effect|not applied)[^)]*\)', '', t, flags=re.I)
+    low = t.lower()
+    # timed bonus on skill use
+    m = re.fullmatch(r'(?:when|upon|after) (?:using|casting) (?:the )?(?:skill )?\[?(.+?)\]?(?: skill)?[,:] (?:there\'?s? |has )?(?:a )?(?:(\d+)% chance to )?(?:gain |grants? |grant you )?(.+?) for (\d+) sec(?:onds?|s)?', low)
+    if m and not re.search(r'auto[- ]?cast|\bcast\b|activate', m.group(3)):
+        sk = _skills(m.group(1), ctx)
+        inner = _inner(re.sub(r'\b(?:increase[sd]?|increasing)\s+(movement speed)', r'increase \1', m.group(3)), ctx)
+        if sk and len(sk) == 1 and inner:
+            rate = int(m.group(2)) * 10 if m.group(2) else 1000
+            return ['autobonus3 "{ %s }",%d,%d,"%s";' % (inner, rate, int(m.group(4)) * 1000, sk[0])]
+    # autocast on skill use
+    m = re.fullmatch(r'(?:when|upon) (?:using|casting) (?:the )?(?:skill )?\[?(.+?)\]?(?: skill)?[,:] (?:there\'?s? |has |there is )?(?:a )?(?:chance (\d+)%|(\d+)% chance)? ?(?:to )?(?:auto[- ]?cast|cast|activate|trigger)s?(?: additional)? (.+)', low) \
+        or re.fullmatch(r'(\d+)()% (?:chance to )?auto[- ]?casts? (.+?) when using (.+)', low)
+    if m:
+        if m.re.pattern.startswith('(\\d+)'):
+            rate, dst, src = m.group(1), m.group(3), m.group(4)
+        else:
+            src, rate, dst = m.group(1), m.group(2) or m.group(3) or '100', m.group(4)
+        s1 = _skills(src.strip('[] '), ctx)
+        casts = _casts(dst, ctx)
+        if s1 and len(s1) == 1 and casts:
+            return ['bonus4 bAutoSpellOnSkill,"%s","%s",%s,%d;' % (s1[0], a, lv, int(rate) * 10) for a, lv in casts]
+    m = re.fullmatch(r'(physical|magic(?:al)?|physical (?:and|or) magic(?:al)?|melee physical|ranged physical|long range physical) attacks? (?:have|has) (?:a )?(\d+)% chance to (.+)', low) or re.fullmatch(r'when (?:dealing|performing|doing) (physical|magic(?:al)?|physical (?:and|or) magic(?:al)?|melee physical|ranged physical) (?:attacks?|damages?),? (?:there\'?s? |has |there is )?(?:a )?(\d+)% chance to (.+)', low)
+    if m:
+        low = 'when dealing %s damage, %s%% chance to %s' % (m.group(1), m.group(2), m.group(3))
+    m = re.fullmatch(r'(?:when )?(?:wearer )?receiv(?:ing|es?) (.+?) (?:attacks?|damages?),? (?:has |have |there is )?(?:a )?(\d+)% chance to (.+)', low) \
+        or re.fullmatch(r'(\d+)()% chance to (.+?) when receiving (.+?) (?:attacks?|damage)', low)
+    if m:
+        if m.group(1).isdigit():
+            low = 'when receiving %s damage, %s%% chance to %s' % (m.group(4), m.group(1), m.group(3))
+        else:
+            low = 'when receiving %s damage, %s%% chance to %s' % (m.group(1), m.group(2), m.group(3))
+    m = re.fullmatch(r'(\d+)% chance to (.+?) when (?:dealing|performing|doing) (.+?) (?:attacks?|damage)', low)
+    if m and not re.search(r'auto[- ]?cast|\bcast\b', m.group(2)):
+        low = 'when dealing %s damage, %s%% chance to %s' % (m.group(3), m.group(1), m.group(2))
+    # chance of a timed bonus on attack / when hit
+    m = re.fullmatch(r'(?:when (?:dealing|performing|doing) (.+?) (?:attacks?|damage),? )?(?:there\'?s? |has |adds )?(?:a )?(\d+)% chance to (?:gain |grant |get |increase |decrease |reduce )?(.+?) for (\d+) sec(?:onds?|s)?(?: when (?:dealing|performing|doing) (.+?) (?:attacks?|damage))?', low)
+    if m:
+        inner = _inner(m.group(3), ctx)
+        if inner:
+            return ['autobonus "{ %s }",%d,%d,%s;' % (inner, int(m.group(2)) * 10, int(m.group(4)) * 1000, _flags(m.group(1) or m.group(5) or 'physical'))]
+    m = re.fullmatch(r'when receiving (.+?) (?:attacks?|damage),? (?:there\'?s? |has )?(?:a )?(\d+)% chance to (?:gain |grant |get |increase |decrease |reduce )?(.+?) for (\d+) sec(?:onds?|s)?', low)
+    if m:
+        inner = _inner(m.group(3), ctx)
+        if inner:
+            return ['autobonus2 "{ %s }",%d,%d,%s;' % (inner, int(m.group(2)) * 10, int(m.group(4)) * 1000, _flags(m.group(1)))]
+    # autocast on attack / when hit, several skills
+    m = re.fullmatch(r'(?:there\'?s? |has |adds )?(?:a )?(\d+)% chance to (?:auto[- ]?cast|cast) (.+?) when (?:dealing|performing|doing) (.+?) (?:attacks?|damage)', low) \
+        or re.fullmatch(r'when (?:dealing|performing|doing) (.+?) (?:attacks?|damage),? (?:there\'?s? |has )?(?:a )?(\d+)% chance to (?:auto[- ]?cast|cast) (.+)', low)
+    if m:
+        if m.group(1).isdigit():
+            rate, dst, kind = m.group(1), m.group(2), m.group(3)
+        else:
+            kind, rate, dst = m.group(1), m.group(2), m.group(3)
+        casts = _casts(dst, ctx)
+        if casts:
+            if _flags(kind) == 'BF_WEAPON':     # bonus3 targets self for self/support skills
+                return ['bonus3 bAutoSpell,"%s",%s,%d;' % (a, lv, int(rate) * 10) for a, lv in casts]
+            return ['bonus5 bAutoSpell,"%s",%s,%d,%s,1;' % (a, lv, int(rate) * 10, _flags(kind)) for a, lv in casts]
+    m = re.fullmatch(r'when receiving (.+?) (?:attacks?|damage),? (?:there\'?s? |has )?(?:a )?(\d+)% chance to (?:auto[- ]?cast|cast) (.+?)(?: on (self|yourself))?', low)
+    if m:
+        casts = _casts(m.group(3), ctx)
+        if casts:
+            if _flags(m.group(1)) == 'BF_WEAPON' and not m.group(4):
+                return ['bonus3 bAutoSpellWhenHit,"%s",%s,%d;' % (a, lv, int(m.group(2)) * 10) for a, lv in casts]
+            target = 0 if m.group(4) else 1
+            return ['bonus5 bAutoSpellWhenHit,"%s",%s,%d,%s,%d;' % (a, lv, int(m.group(2)) * 10, _flags(m.group(1)), target) for a, lv in casts]
+    m = re.fullmatch(r'(?:enables?|allows?)(?: the)?(?: use of| to use)? (.+?) with (?:skill )?level equal to (?:the )?refine(?:ment)? level', low)
+    if m:
+        sk = _skills(m.group(1), ctx)
+        if sk and len(sk) == 1:
+            return ['if (getrefine()) skill "%s",getrefine();' % sk[0]]
+    m = re.fullmatch(r'(?:enables?|allows?)(?: the)?(?: use of| to use)? (.+?), skill level is based on (.+?)(?: when equipped with .*)?', low)
+    if m:
+        s1, s2 = _skills(m.group(1), ctx), _skills(m.group(2), ctx)
+        if s1 and s2 and len(s1) == 1 and len(s2) == 1:
+            return ['if (getskilllv("%s")) skill "%s",getskilllv("%s");' % (s2[0], s1[0], s2[0])]
+    # enabled skills, one or several
+    m = re.fullmatch(r'(?:enables?|enable to use|able to use|allows?|can use)(?: the)?(?: use of| to use| usage of| use)? ?(.+?)(?: skill)?', low)
+    if m:
+        body = m.group(1)
+        lvm = re.search(r'(?:level |lv\.? ?)(\d+)\s*$', body)
+        parts = re.split(r'\s*(?:,|\band\b|&)\s*', body)
+        if lvm and all(not re.search(r'\d', p) for p in parts[:-1]):
+            parts = ['%s lv %s' % (re.sub(r'\s*(?:level |lv\.? ?)\d+$', '', p), lvm.group(1)) for p in parts]
+        casts = _casts(', '.join(parts), ctx)
+        if casts:
+            return ['skill "%s",%s;' % (a, lv) for a, lv in casts]
+    m = re.fullmatch(r'increases? (?:the )?(.+?) cool ?(?:down|time) by (\d+) sec(?:onds?|s)?', low)
+    if m:
+        sk = _skills(m.group(1), ctx)
+        if sk:
+            return ['bonus2 bSkillCooldown,"%s",%d;' % (a, int(m.group(2)) * 1000) for a in sk]
+    return None
+
+
+def ability_ko(text, ctx):
+    t = _norm_ko(text)
+    m = re.fullmatch(r'(.+?) (?:시전|사용) 시,? (?:(\d+)% 확률로 )?(.+?) (\d+)레벨 (?:추가 )?(?:자동 )?발동', t)
+    if m:
+        s1, s2 = _skills(m.group(1), ctx), _skills(m.group(3), ctx)
+        if s1 and s2 and len(s1) == 1 and len(s2) == 1:
+            return ['bonus4 bAutoSpellOnSkill,"%s","%s",%s,%d;' % (s1[0], s2[0], m.group(4), int(m.group(2) or 100) * 10)]
+    m = re.fullmatch(r'(.+?) (?:시전|사용) 시,? (\d+)초(?:간| 동안) (.+)', t)
+    if m:
+        s1 = _skills(m.group(1), ctx)
+        stmts, ok = translate_clauses(m.group(3), [], ctx)
+        if s1 and len(s1) == 1 and ok and stmts:
+            return ['autobonus3 "{ %s }",1000,%d,"%s";' % (' '.join(stmts).replace('"', '\\"'), int(m.group(2)) * 1000, s1[0])]
+    m = re.fullmatch(r'(?:레벨 ?|Lv\.? ?)?(\d+)(?:레벨)? (.+?)(?:을|를)? 사용 가능', t)
+    if m:
+        sk = _skills(m.group(2), ctx)
+        if sk and len(sk) == 1:
+            return ['skill "%s",%s;' % (sk[0], m.group(1))]
+    return None
