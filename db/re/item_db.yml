@@ -94,3 +94,4 @@ Footer:
   - Path: db/re/item_db_usable.yml
   - Path: db/re/item_db_equip.yml
   - Path: db/re/item_db_etc.yml
+  - Path: db/re/item_db_iro_abilities.yml

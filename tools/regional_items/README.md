@@ -73,3 +73,14 @@ tools/regional_items/generate.py \
 
 The client files are Gravity's and aren't part of this repository; extract the
 GRF entries with any GRF tool.
+
+## iRO abilities on rAthena's own items
+
+`iro_abilities.py` writes `db/re/item_db_iro_abilities.yml`: 8 official items
+whose iRO descriptions give abilities their rAthena scripts leave out (Fifth
+Element's Lord of Vermilion and Electric Walk speed, Chewy Gelato's Frost Diver,
+the 2024 race reward costumes' movement speed, ...). Each entry is the current
+official script with the iRO lines added after it. The file loads after the
+official item db, so rerun the script after an upstream merge that touches one
+of these items.
+
