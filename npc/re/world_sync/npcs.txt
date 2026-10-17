@@ -1215,12 +1215,12 @@ comodo,108,136,4	script	Bounty Board 80-105#ws29870	837,{
 	mes "Hello there, adventurer.";
 	close;
 }
-dali,124,88,4	script	Princess of Sorrow#ws17142	20893,{
+dali,124,88,4	script	Princess of Sorrow#ws17142	4_M_01,{
 	mes "[Princess of Sorrow]";
 	mes "Hello there, adventurer.";
 	close;
 }
-dali,79,112,4	script	Princess of Sorrow#ws17143	20893,{
+dali,79,112,4	script	Princess of Sorrow#ws17143	4_M_01,{
 	mes "[Princess of Sorrow]";
 	mes "Hello there, adventurer.";
 	close;
@@ -1230,12 +1230,12 @@ dali,98,141,4	script	Emmitt White#ws30153	903,{
 	mes "Hello there, adventurer.";
 	close;
 }
-dali02,78,116,4	script	Princess of Sorrow#ws17144	20893,{
+dali02,78,116,4	script	Princess of Sorrow#ws17144	4_M_01,{
 	mes "[Princess of Sorrow]";
 	mes "Hello there, adventurer.";
 	close;
 }
-dali02,78,112,4	script	Marquis of Repentance#ws17145	20899,{
+dali02,78,112,4	script	Marquis of Repentance#ws17145	4_M_01,{
 	mes "[Marquis of Repentance]";
 	mes "Hello there, adventurer.";
 	close;
@@ -2302,47 +2302,47 @@ hugel,65,151,4	script	Bounty Board 120-140#ws29890	837,{
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,242,45,4	script	Copo#ws14342	21995,{
+icas_in,242,45,4	script	Copo#ws14342	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,243,45,4	script	Copo#ws14343	21995,{
+icas_in,243,45,4	script	Copo#ws14343	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,241,44,4	script	Copo#ws14344	21995,{
+icas_in,241,44,4	script	Copo#ws14344	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,242,42,4	script	Copo#ws14345	21995,{
+icas_in,242,42,4	script	Copo#ws14345	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,243,42,4	script	Copo#ws14346	21995,{
+icas_in,243,42,4	script	Copo#ws14346	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,244,43,4	script	Copo#ws14347	21995,{
+icas_in,244,43,4	script	Copo#ws14347	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,244,44,4	script	Copo#ws14348	21995,{
+icas_in,244,44,4	script	Copo#ws14348	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,241,58,4	script	Copo#ws14350	21995,{
+icas_in,241,58,4	script	Copo#ws14350	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,240,58,4	script	Copo#ws14351	21995,{
+icas_in,240,58,4	script	Copo#ws14351	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
@@ -2417,12 +2417,12 @@ icas_in,170,65,4	script	Pipiring#ws14767	10461,{
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,32,116,4	script	Copo#ws14812	21995,{
+icas_in,32,116,4	script	Copo#ws14812	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icas_in,36,117,4	script	Copo#ws14814	21995,{
+icas_in,36,117,4	script	Copo#ws14814	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
@@ -2702,27 +2702,27 @@ icecastle,143,203,4	script	Lazy#ws14620	10454,{
 	mes "Hello there, adventurer.";
 	close;
 }
-icecastle,106,130,4	script	Cocopo#ws14686	21995,{
+icecastle,106,130,4	script	Cocopo#ws14686	4_M_01,{
 	mes "[Cocopo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icecastle,102,126,4	script	Cocopo#ws14687	21995,{
+icecastle,102,126,4	script	Cocopo#ws14687	4_M_01,{
 	mes "[Cocopo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icecastle,98,123,4	script	Cocopo#ws14688	21995,{
+icecastle,98,123,4	script	Cocopo#ws14688	4_M_01,{
 	mes "[Cocopo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icecastle,98,115,4	script	Cocopo#ws14690	21995,{
+icecastle,98,115,4	script	Cocopo#ws14690	4_M_01,{
 	mes "[Cocopo]";
 	mes "Hello there, adventurer.";
 	close;
 }
-icecastle,99,115,4	script	Cocopo#ws14691	21995,{
+icecastle,99,115,4	script	Cocopo#ws14691	4_M_01,{
 	mes "[Cocopo]";
 	mes "Hello there, adventurer.";
 	close;
@@ -2737,7 +2737,7 @@ icecastle,109,241,4	script	Iwin Delivery#ws14811	10461,{
 	mes "Hello there, adventurer.";
 	close;
 }
-icecastle,63,158,4	script	Chachako#ws14818	21995,{
+icecastle,63,158,4	script	Chachako#ws14818	4_M_01,{
 	mes "[Chachako]";
 	mes "Hello there, adventurer.";
 	close;
@@ -2747,7 +2747,7 @@ icecastle,65,159,4	script	Chacharo#ws14819	10461,{
 	mes "Hello there, adventurer.";
 	close;
 }
-icecastle,69,217,4	script	Rorohyu#ws14832	21995,{
+icecastle,69,217,4	script	Rorohyu#ws14832	4_M_01,{
 	mes "[Rorohyu]";
 	mes "Hello there, adventurer.";
 	close;
@@ -2767,7 +2767,7 @@ in_moc_16,14,21,4	script	Valhyrie's Whisper#ws13843	802,{
 	mes "Hello there, adventurer.";
 	close;
 }
-in_orcs01,106,177,4	script	Orc Lord#ws14266	20194,{
+in_orcs01,106,177,4	script	Orc Lord#ws14266	4_M_01,{
 	mes "[Orc Lord]";
 	mes "Hello there, adventurer.";
 	close;
@@ -3382,12 +3382,12 @@ jor_back1,368,222,4	script	Lazy#ws14693	10454,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_back1,310,245,4	script	Fluffy Fur#ws14826	21995,{
+jor_back1,310,245,4	script	Fluffy Fur#ws14826	4_M_01,{
 	mes "[Fluffy Fur]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_back1,222,392,4	script	Fluffy Fur#ws14827	21995,{
+jor_back1,222,392,4	script	Fluffy Fur#ws14827	4_M_01,{
 	mes "[Fluffy Fur]";
 	mes "Hello there, adventurer.";
 	close;
@@ -3397,12 +3397,12 @@ jor_back1,381,232,4	script	Lehar#ws15624	10469,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_back2,8,242,4	script	Fluffy Fur#ws14828	21995,{
+jor_back2,8,242,4	script	Fluffy Fur#ws14828	4_M_01,{
 	mes "[Fluffy Fur]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_back3,95,324,4	script	Fluffy Fur#ws14829	21995,{
+jor_back3,95,324,4	script	Fluffy Fur#ws14829	4_M_01,{
 	mes "[Fluffy Fur]";
 	mes "Hello there, adventurer.";
 	close;
@@ -3412,7 +3412,7 @@ jor_back4,103,264,4	script	Friederike#ws14830	10458,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_back4,101,265,4	script	Copo#ws14831	21995,{
+jor_back4,101,265,4	script	Copo#ws14831	4_M_01,{
 	mes "[Copo]";
 	mes "Hello there, adventurer.";
 	close;
@@ -3682,7 +3682,7 @@ jor_root1,39,93,4	script	Contact Point#ws14382	10429,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_root1,32,34,4	script	Rgan Shaman#ws14457	21985,{
+jor_root1,32,34,4	script	Rgan Shaman#ws14457	4_M_01,{
 	mes "[Rgan Shaman]";
 	mes "Hello there, adventurer.";
 	close;
@@ -3887,7 +3887,7 @@ jor_tail,223,50,4	script	Miriam#ws15620	10377,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twice,43,331,4	script	White Cat#ws14324	22006,{
+jor_twice,43,331,4	script	White Cat#ws14324	4_M_01,{
 	mes "[White Cat]";
 	mes "Hello there, adventurer.";
 	close;
@@ -3972,12 +3972,12 @@ jor_twig,192,211,4	script	Contact Point#ws14384	10429,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,187,198,4	script	White Cat#ws14735	22006,{
+jor_twig,187,198,4	script	White Cat#ws14735	4_M_01,{
 	mes "[White Cat]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,180,123,4	script	White Cat#ws14736	22006,{
+jor_twig,180,123,4	script	White Cat#ws14736	4_M_01,{
 	mes "[White Cat]";
 	mes "Hello there, adventurer.";
 	close;
@@ -4002,7 +4002,7 @@ jor_twig,176,129,4	script	Voglinde#ws14740	10467,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,142,153,4	script	White Cat#ws14741	22006,{
+jor_twig,142,153,4	script	White Cat#ws14741	4_M_01,{
 	mes "[White Cat]";
 	mes "Hello there, adventurer.";
 	close;
@@ -4022,62 +4022,62 @@ jor_twig,140,155,4	script	Rasgand#ws14745	10536,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,140,164,4	script	Nyar's Clone#ws14746	22006,{
+jor_twig,140,164,4	script	Nyar's Clone#ws14746	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,143,161,4	script	Nyar's Clone#ws14747	22006,{
+jor_twig,143,161,4	script	Nyar's Clone#ws14747	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,146,158,4	script	Nyar's Clone#ws14748	22006,{
+jor_twig,146,158,4	script	Nyar's Clone#ws14748	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,149,155,4	script	Nyar's Clone#ws14749	22006,{
+jor_twig,149,155,4	script	Nyar's Clone#ws14749	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,146,152,4	script	Nyar's Clone#ws14750	22006,{
+jor_twig,146,152,4	script	Nyar's Clone#ws14750	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,143,149,4	script	Nyar's Clone#ws14751	22006,{
+jor_twig,143,149,4	script	Nyar's Clone#ws14751	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,140,146,4	script	Nyar's Clone#ws14752	22006,{
+jor_twig,140,146,4	script	Nyar's Clone#ws14752	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,137,149,4	script	Nyar's Clone#ws14753	22006,{
+jor_twig,137,149,4	script	Nyar's Clone#ws14753	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,134,152,4	script	Nyar's Clone#ws14754	22006,{
+jor_twig,134,152,4	script	Nyar's Clone#ws14754	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,130,155,4	script	Nyar's Clone#ws14755	22006,{
+jor_twig,130,155,4	script	Nyar's Clone#ws14755	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,134,158,4	script	Nyar's Clone#ws14756	22006,{
+jor_twig,134,158,4	script	Nyar's Clone#ws14756	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_twig,137,161,4	script	Nyar's Clone#ws14757	22006,{
+jor_twig,137,161,4	script	Nyar's Clone#ws14757	4_M_01,{
 	mes "[Nyar's Clone]";
 	mes "Hello there, adventurer.";
 	close;
@@ -5462,12 +5462,12 @@ prontera,170,304,4	script	Lumin#ws16370	638,{
 	mes "Hello there, adventurer.";
 	close;
 }
-prontera,58,364,4	script	Knight of Devotion#ws17273	20825,{
+prontera,58,364,4	script	Knight of Devotion#ws17273	4_M_01,{
 	mes "[Knight of Devotion]";
 	mes "Hello there, adventurer.";
 	close;
 }
-prontera,276,355,4	script	Knight of Armament#ws17274	20826,{
+prontera,276,355,4	script	Knight of Armament#ws17274	4_M_01,{
 	mes "[Knight of Armament]";
 	mes "Hello there, adventurer.";
 	close;
@@ -5842,7 +5842,7 @@ prt_elib,50,62,4	script	Ink#ws14845	10509,{
 	mes "Hello there, adventurer.";
 	close;
 }
-prt_elib,54,59,4	script	Agnes#ws14846	21633,{
+prt_elib,54,59,4	script	Agnes#ws14846	4_M_01,{
 	mes "[Agnes]";
 	mes "Hello there, adventurer.";
 	close;
@@ -7807,17 +7807,17 @@ ch1_dw,210,90,4	script	Mechanism#ws19556	10432,{
 	mes "Hello there, adventurer.";
 	close;
 }
-ch1_dw,338,85,4	script	Immortal Legion#ws19557	22461,{
+ch1_dw,338,85,4	script	Immortal Legion#ws19557	4_M_01,{
 	mes "[Immortal Legion]";
 	mes "Hello there, adventurer.";
 	close;
 }
-ch1_dw,338,82,4	script	Immortal Legion#ws19558	22460,{
+ch1_dw,338,82,4	script	Immortal Legion#ws19558	4_M_01,{
 	mes "[Immortal Legion]";
 	mes "Hello there, adventurer.";
 	close;
 }
-ch1_dw,338,78,4	script	Immortal Legion#ws19559	22462,{
+ch1_dw,338,78,4	script	Immortal Legion#ws19559	4_M_01,{
 	mes "[Immortal Legion]";
 	mes "Hello there, adventurer.";
 	close;
@@ -8402,7 +8402,7 @@ hem_fild,180,263,4	script	Designated Spot#ws19766	10429,{
 	mes "Hello there, adventurer.";
 	close;
 }
-hem_fild,334,188,4	script	Shaking Crossroads#ws19770	21813,{
+hem_fild,334,188,4	script	Shaking Crossroads#ws19770	4_M_01,{
 	mes "[Shaking Crossroads]";
 	mes "Hello there, adventurer.";
 	close;
@@ -8412,52 +8412,52 @@ hem_fild,329,191,4	script	Minuel#ws19773	447,{
 	mes "Hello there, adventurer.";
 	close;
 }
-hem_fild,133,337,4	script	Shaking Crossroads#ws19774	21813,{
+hem_fild,133,337,4	script	Shaking Crossroads#ws19774	4_M_01,{
 	mes "[Shaking Crossroads]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hem_fild,231,299,4	script	Shaking Crossroads#ws19778	21813,{
+hem_fild,231,299,4	script	Shaking Crossroads#ws19778	4_M_01,{
 	mes "[Shaking Crossroads]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,205,209,4	script	Challenger's Monument#ws30188	22169,{
+hero_lb,205,209,4	script	Challenger's Monument#ws30188	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,209,205,4	script	Challenger's Monument#ws30189	22168,{
+hero_lb,209,205,4	script	Challenger's Monument#ws30189	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,70,205,4	script	Challenger's Monument#ws30190	22169,{
+hero_lb,70,205,4	script	Challenger's Monument#ws30190	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,74,209,4	script	Challenger's Monument#ws30191	22168,{
+hero_lb,74,209,4	script	Challenger's Monument#ws30191	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,74,70,4	script	Challenger's Monument#ws30192	22169,{
+hero_lb,74,70,4	script	Challenger's Monument#ws30192	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,70,74,4	script	Challenger's Monument#ws30193	22168,{
+hero_lb,70,74,4	script	Challenger's Monument#ws30193	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,209,74,4	script	Challenger's Monument#ws30194	22169,{
+hero_lb,209,74,4	script	Challenger's Monument#ws30194	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
 }
-hero_lb,205,70,4	script	Challenger's Monument#ws30195	22168,{
+hero_lb,205,70,4	script	Challenger's Monument#ws30195	4_M_01,{
 	mes "[Challenger's Monument]";
 	mes "Hello there, adventurer.";
 	close;
@@ -9885,7 +9885,7 @@ niflheim,262,275,4	script	Self-proclaimed Genius Alchemist#ws28471	750,{
 	mes "Hello there, adventurer.";
 	close;
 }
-niflheim,257,280,4	script	Farmer Deilots#ws28668	22321,{
+niflheim,257,280,4	script	Farmer Deilots#ws28668	4_M_01,{
 	mes "[Farmer Deilots]";
 	mes "Hello there, adventurer.";
 	close;
@@ -10793,27 +10793,27 @@ uknw_ruin,244,239,4	script	Alf#ws19395	10384,{
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,187,157,4	script	Curled-up Nyaiz#ws19811	22463,{
+uknw_ruin,187,157,4	script	Curled-up Nyaiz#ws19811	4_M_01,{
 	mes "[Curled-up Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,115,223,4	script	Rolling Nyaiz#ws19812	22463,{
+uknw_ruin,115,223,4	script	Rolling Nyaiz#ws19812	4_M_01,{
 	mes "[Rolling Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,71,152,4	script	Grooming Nyaiz#ws19813	22463,{
+uknw_ruin,71,152,4	script	Grooming Nyaiz#ws19813	4_M_01,{
 	mes "[Grooming Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,70,46,4	script	Dozing Nyaiz#ws19815	22463,{
+uknw_ruin,70,46,4	script	Dozing Nyaiz#ws19815	4_M_01,{
 	mes "[Dozing Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,224,34,4	script	Frowning Nyaiz#ws19816	22463,{
+uknw_ruin,224,34,4	script	Frowning Nyaiz#ws19816	4_M_01,{
 	mes "[Frowning Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;

@@ -288,7 +288,7 @@ def main():
             if (mp, mid) in boss:
                 spawns.append('%s,0,0\tboss_monster\t--ja--\t%d,%d,3600000,600000,0' % (mp, mid, cnt))
             else:
-                spawns.append('%s,0,0\tmonster\t--ja--\t%d,%d,0,0,0' % (mp, mid, cnt))
+                spawns.append('%s,0,0\tmonster\t--ja--\t%d,%d,5000,0,0' % (mp, mid, cnt))
 
     # --- warps and transports
     def has_warp(mp, x, y, dest):
@@ -314,7 +314,7 @@ def main():
             warps.append('%s,%d,%d,0\twarp\tws_%s_%d\t1,1,%s,%d,%d' % (src, x, y, src, r.get(2, 0), dst, dx, dy))
         elif typ == 201 and not has_npc(src, x, y) and not has_warp(src, x, y, dst):
             label = esc(str(r.get(5) or r.get(6) or dst))
-            transports.append('%s,%d,%d,4\tscript\tTravel to %s#ws%d\t4_M_SAILOR,{\n'
+            transports.append('%s,%d,%d,4\tscript\tTravel to %s#ws%d\t4W_SAILOR,{\n'
                               '\tmes "[Guide]";\n\tmes "Shall I take you to ^0000FF%s^000000?";\n'
                               '\tif (select("Yes, please.:No, thanks.") == 2) close;\n'
                               '\tclose2;\n\twarp "%s",%d,%d;\n\tend;\n}' % (src, x, y, dst[:14], r.get(2, 0), dst, dst, dx, dy))
@@ -336,12 +336,16 @@ def main():
         seen.add((mp, x, y))
         if has_npc(mp, x, y, name):
             continue
+        if (20000 <= sprite < 30000 or 1001 <= sprite < 4000) and sprite not in mobdb:
+            # a monster's look for a monster the db doesn't have yet
+            report['NPCs drawn as a townsperson (their monster sprite is not in the db)'].append('%s %s %d' % (mp, name, sprite))
+            sprite = 'FALLBACK'
         n = npc_name(names_en.get(name.strip(), name))
         if re.search(r'[\uac00-\ud7a3]', n):
             report['NPC names only in Korean (kRO-only NPCs)'].append('%s %s' % (mp, n))
         role = npc_role(n)
         if role == 'tools':
-            npcs.append('%s,%d,%d,4\tshop\t%s#ws%d\t%d,%s' % (mp, x, y, n, r.get(2, 0), sprite,
+            npcs.append('%s,%d,%d,4\tshop\t%s#ws%d\t%s,%s' % (mp, x, y, n, r.get(2, 0), '4_M_01' if sprite == 'FALLBACK' else sprite,
                                                             ','.join('%d:-1' % t for t in TOOLS)))
             report['working NPCs (tool shops)'].append('%s %s' % (mp, n))
             continue
@@ -350,7 +354,7 @@ def main():
             report['working NPCs (%s)' % role].append('%s %s' % (mp, n))
         else:
             body = '\tmes "[%s]";\n\tmes "Hello there, adventurer.";\n\tclose;\n' % esc(n)
-        npcs.append('%s,%d,%d,4\tscript\t%s#ws%d\t%d,{\n%s}' % (mp, x, y, n, r.get(2, 0), sprite, body))
+        npcs.append('%s,%d,%d,4\tscript\t%s#ws%d\t%s,{\n%s}' % (mp, x, y, n, r.get(2, 0), '4_M_01' if sprite == 'FALLBACK' else sprite, body))
 
     # --- write
     out = os.path.join(root, 'npc', 're', 'world_sync')
