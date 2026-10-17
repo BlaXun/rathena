@@ -33,7 +33,7 @@ obj:
 	@mkdir -p obj/src/c4/yml
 	@mkdir -p obj/ext/c4core/src/c4
 
-obj/%.o: %.cpp $(RAPIDYAML_H)
+obj/%.o: %.cpp $(RAPIDYAML_H) | obj
 	@echo "	CXX	$<"
 	@@CXX@ $(CXXFLAG) @CFLAGS_AR@ @CPPFLAGS@ -g $(INC) -c $(OUTPUT_OPTION) $<
 
