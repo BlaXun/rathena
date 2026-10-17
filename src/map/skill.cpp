@@ -13511,6 +13511,7 @@ bool skill_produce_mix(map_session_data *sd, uint16 skill_id, t_itemid nameid, i
 			make_per = (make_per * 70) / 100;
 	}
 
+	make_per = skill_lua_craft_rate(sd, skill_id, nameid, make_per);
 	if (make_per < 1) make_per = 1;
 
 	if (qty > 1 || rnd()%10000 < make_per){ //Success, or crafting multiple items.
@@ -13667,6 +13668,7 @@ bool skill_produce_mix(map_session_data *sd, uint16 skill_id, t_itemid nameid, i
 				return true;
 			}
 		} else if (tmp_item.amount) { //Success
+			skill_lua_crafted(sd, skill_id, tmp_item);
 			if ((flag = pc_additem(sd,&tmp_item,tmp_item.amount,LOG_TYPE_PRODUCE))) {
 				clif_additem(sd,0,0,flag);
 				if( battle_config.skill_drop_items_full ){

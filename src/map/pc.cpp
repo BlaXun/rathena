@@ -58,7 +58,7 @@
 #include "pet.hpp" // pet_unlocktarget()
 #include "quest.hpp"
 #include "skill.hpp" // skill_isCopyable()
-#include "skill_lua.hpp" // skill_lua_on_steal()
+#include "skill_lua.hpp" // skill_lua_on_steal(), skill_lua_use_item()
 #include "script.hpp" // struct script_reg, struct script_regstr
 #include "searchstore.hpp"  // struct s_search_store_info
 #include "status.hpp" // OPTION_*, struct weapon_atk
@@ -6590,6 +6590,7 @@ int32 pc_useitem(map_session_data *sd,int32 n)
 		script_detach_rid( previous_st );
 	}
 
+	skill_lua_use_item( sd, item );
 	run_script( script, 0, sd->id, fake_nd->id );
 
 	if( sd->st != nullptr ){

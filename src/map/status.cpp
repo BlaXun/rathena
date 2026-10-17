@@ -1682,7 +1682,7 @@ int32 status_damage(block_list *src,block_list *target,int64 dhp, int64 dsp, int
 		return (int32)(hp+sp+ap);
 	}
 
-	if (skill_lua_on_kill(src, target, skill_id)) // A mod's on_death kept it alive
+	if (skill_lua_on_kill(src, target, skill_id, dhp, hp)) // A mod's on_death kept it alive
 		return (int32)(hp+sp+ap);
 
 	status->hp = 0;
@@ -10328,6 +10328,8 @@ bool status_change_start(block_list* src, block_list* bl, sc_type type, int32 ra
 				return false;
 		}
 	}
+
+	rate = skill_lua_status_rate(src, bl, type, rate, flag);
 
 	// Adjust tick according to status resistances
 	if( !(flag&(SCSTART_NOAVOID|SCSTART_LOADED)) ) {
