@@ -176,6 +176,20 @@ def convert(mid, d, nv, items, report, pool=()):
         return None, []
     if not name:
         name = aegis_name(aegis)
+    if len(name) > 23:                        # rAthena's NAME_LENGTH - 1
+        small = ('of', 'in', 'the', 'a', 'an', 'and', 'on', 'at', 'to')
+        # drop leading words first (they're usually adjectives: "Awakened Yordos Executor"), so
+        # variants stay apart; else cut the end at a word
+        short = name
+        while len(short) > 23 and ' ' in short and short.split(' ', 2)[1].lower() not in small:
+            short = short.split(' ', 1)[1]
+        if len(short) > 23:
+            short = name[:24].rsplit(' ', 1)[0] if ' ' in name[:24] else name[:23]
+            while short.rsplit(' ', 1)[-1].lower() in small and ' ' in short:
+                short = short.rsplit(' ', 1)[0]
+        short = short[:1].upper() + short[1:]
+        report['names shortened to 23 characters'].append('%d %s -> %s' % (mid, name, short))
+        name = short
         report['no English name (AegisName used)'].append('%d %s' % (mid, aegis))
     lv = int(d.get('level') or (n and n[2]) or 1)
     st = {k: int(d.get(k) or 1) for k in ('str', 'agi', 'vit', 'int', 'dex', 'luk')}
@@ -262,6 +276,9 @@ def skills(mid, aegis, d, report):
     rows, seen = [], set()
     for s in d.get('skills') or []:
         s = dict(s, skillName=SKILL_NAMES.get(int(s.get('skillId') or 0)) or s.get('skillName'))
+        if int(s.get('skillId') or 0) not in SKILL_NAMES:
+            report['skill rows whose skill the skill db lacks (left out)'].append('%d %s' % (mid, s.get('skillId')))
+            continue
         state = STATES.get(key(s.get('state')))
         if not state or not s.get('skillId'):
             report['skill rows with a state rAthena lacks (left out)'].append('%d %s %s' % (mid, s.get('skillName'), s.get('state')))
@@ -368,6 +385,8 @@ def main():
     report = {k: [] for k in ('no record', 'already in the monster db', 'no AegisName (skipped)',
                               'AegisName already used (skipped)', 'no English name (AegisName used)',
                               'monsters with values copied from a similar monster',
+                              'names shortened to 23 characters',
+                              'skill rows whose skill the skill db lacks (left out)',
                               'drops whose item the item db lacks (left out)',
                               'skill rows with a state rAthena lacks (left out)',
                               'skill rows with an unread condition (left out)')}
@@ -396,6 +415,7 @@ def main():
         skill_rows += sk
 
     head = open(os.path.join(root, 'db', 're', 'mob_db.yml'), encoding='utf-8').read()
+    version = re.search(r'Header:\n  Type: MOB_DB\n  Version: (\d+)', head).group(1)
     head = head[:head.index('Header:')]
     with open(ours, 'w', encoding='utf-8', newline='\n') as o:
         o.write(head.split('###########################################################################\n')[0])
@@ -409,7 +429,7 @@ def main():
                 '# lacked, from Divine Pride\'s iRO records and the clients\' names.\n'
                 '#\n'
                 '###########################################################################\n'
-                '\nHeader:\n  Type: MOB_DB\n  Version: 4\n\nBody:\n')
+                '\nHeader:\n  Type: MOB_DB\n  Version: %s\n\nBody:\n' % version)
         o.write('\n'.join(entries) + '\n')
 
     sk_path = os.path.join(root, 'db', 're', 'mob_skill_db.txt')

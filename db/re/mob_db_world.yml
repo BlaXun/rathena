@@ -28,7 +28,7 @@
 
 Header:
   Type: MOB_DB
-  Version: 4
+  Version: 5
 
 Body:
   - Id: 2053
@@ -2373,7 +2373,7 @@ Body:
         Rate: 180
   - Id: 21568
     AegisName: ECO_AQUA_ELEMENTAL
-    Name: Aqua Elemental of Iceberg
+    Name: Elemental of Iceberg
     Level: 253
     Hp: 25223418
     BaseExp: 1338947
@@ -2802,7 +2802,7 @@ Body:
         Rate: 180
   - Id: 21578
     AegisName: ECO_KNIGHT_OF_ABYSS
-    Name: Knight of Abyss in Death
+    Name: Knight of Abyss
     Level: 255
     Hp: 26602843
     BaseExp: 1407874
@@ -3257,7 +3257,7 @@ Body:
         Rate: 500
   - Id: 21897
     AegisName: HEROS_B_PLANT
-    Name: Blue grass in the garden
+    Name: Grass in the garden
     # Divine Pride shows no str, agi, vit, int, dex, luk, baseExperience, jobExperience; copied from HEROS_GINSENG
     Level: 250
     Hp: 10
@@ -3878,7 +3878,7 @@ Body:
         Rate: 100
   - Id: 21927
     AegisName: ECO_RANDGRIS
-    Name: Temple Valkyrie Randgris
+    Name: Valkyrie Randgris
     Level: 260
     Hp: 291553526
     BaseExp: 1853337
@@ -4225,7 +4225,7 @@ Body:
         Rate: 100
   - Id: 21935
     AegisName: ECO_VENOM_KIMERA
-    Name: Enhanced Venomous Chimera
+    Name: Venomous Chimera
     Level: 260
     Hp: 318378443
     BaseExp: 1853337
@@ -6757,7 +6757,7 @@ Body:
         Rate: 2500
   - Id: 22151
     AegisName: BIO_SKEL_SOLDIER
-    Name: Abyssal Soldier Skeleton
+    Name: Soldier Skeleton
     Level: 264
     Hp: 100400600
     BaseExp: 5526869
@@ -9125,7 +9125,7 @@ Body:
         Rate: 1
   - Id: 22414
     AegisName: EP21_YORDOS_C_H
-    Name: Awakened Yordos Executor
+    Name: Yordos Executor
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; copied from ECO_COMODO
     Level: 253
     Hp: 21424383
@@ -9199,7 +9199,7 @@ Body:
         Rate: 1
   - Id: 22416
     AegisName: EP21_YORDOS_A_H
-    Name: Awakened Yordos Interrogator
+    Name: Yordos Interrogator
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; copied from ECO_COMODO
     Level: 253
     Hp: 18679789
@@ -9276,7 +9276,7 @@ Body:
         Rate: 1
   - Id: 22418
     AegisName: EP21_YORMI_B_H
-    Name: Awakened Yormi Evangelist
+    Name: Yormi Evangelist
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, baseExperience, jobExperience; copied from CH1_SKOGL
     Level: 246
     Hp: 15574933
@@ -9314,7 +9314,7 @@ Body:
         Rate: 1
   - Id: 22419
     AegisName: EP21_YOSCOPUS_A_H
-    Name: Awakened Yoscopus Guardian
+    Name: Yoscopus Guardian
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; copied from BIO_PINGUICULA_D
     Level: 264
     Hp: 42369774
@@ -9349,7 +9349,7 @@ Body:
         Rate: 1
   - Id: 22420
     AegisName: EP21_YOSCOPUS_B_H
-    Name: Awakened Yoscopus Shaman
+    Name: Yoscopus Shaman
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; copied from BIO_PINGUICULA_D
     Level: 264
     Hp: 36578292
@@ -9419,7 +9419,7 @@ Body:
     Class: Boss
   - Id: 22422
     AegisName: EP21_B_YORTUS_B_H
-    Name: Awakened Yortus Executor
+    Name: Yortus Executor
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, health, baseExperience, jobExperience, speed, attackSpeed; copied from CH1_SUCCUBUS
     Level: 275
     Hp: 593797482
@@ -10287,7 +10287,7 @@ Body:
         StealProtected: true
   - Id: 22454
     AegisName: CH1_EX_ROBOT
-    Name: Encroached Exploration Robot
+    Name: Exploration Robot
     Level: 215
     Hp: 12582870
     BaseExp: 721076
@@ -10517,7 +10517,7 @@ Body:
         StealProtected: true
   - Id: 22460
     AegisName: CH1_IMMORTAL_CORPS1
-    Name: Immortal Meat Cleaver Soldier
+    Name: Meat Cleaver Soldier
     Level: 214
     Hp: 13505500
     BaseExp: 698664
@@ -10548,7 +10548,7 @@ Body:
         Rate: 1
   - Id: 22461
     AegisName: CH1_IMMORTAL_CORPS2
-    Name: Immortal Hatred Scythe Soldier
+    Name: Hatred Scythe Soldier
     Level: 214
     Hp: 13826790
     BaseExp: 696312
@@ -11499,7 +11499,7 @@ Body:
         StealProtected: true
   - Id: 22489
     AegisName: CP_CH1_ABYSS_KNIGHT
-    Name: Strong Abyss Knight Commander
+    Name: Abyss Knight Commander
     # Divine Pride shows no speed, attackSpeed; copied from CP_ABI_FLAMEBULL
     Level: 278
     Hp: 1175825502
