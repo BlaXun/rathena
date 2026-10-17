@@ -27,6 +27,7 @@ Example:
 """
 import argparse
 import collections
+import difflib
 import itertools
 import os
 import re
@@ -476,6 +477,9 @@ def parse_box(lines):
     for i, l in enumerate(lines):
         if l is None:
             continue
+        m = re.search(r'(?:box|package|crate|chest|pack)(?: that)? (?:contains?|containing|with)(?: with)? (\d+)\s*(?:x\s*)?(?:boxes|units|pieces|pcs|ea)?\s*(?:of )?(.+?)\.?$', l, re.I)
+        if m and not BOX_HEAD.search(l.split(m.group(0))[0] if m.group(0) in l else ''):
+            return False, [(re.sub(r'^(?:the )?', '', m.group(2)), int(m.group(1)), None)]
         m = re.search(r'(?:when opened,? )?gives? (?:you )?(?:one|1|an?) (.+?)\.?$', l, re.I)
         if m and not BOX_HEAD.search(l) and re.match(r'when opened', l, re.I):
             return False, [(m.group(1), 1, None)]
@@ -528,6 +532,9 @@ def main():
     ap.add_argument('--rathena', default=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
     ap.add_argument('--iro', action='append', default=[], help='iRO itemInfo .lub, most authoritative first')
     ap.add_argument('--kro', action='append', default=[], help='kRO itemInfo .lub, most authoritative first')
+    ap.add_argument('--en', action='append', default=[],
+                    help='an English item table covering several servers (ROenglishRE itemInfo.lua, text or bytecode); '
+                         'its entries\' Server field names the region. Read after --iro and before --kro')
     ap.add_argument('--iro-moveinfo')
     ap.add_argument('--kro-moveinfo')
     ap.add_argument('--iro-skills', help='folder with iRO skillid.lub and skillinfolist.lub')
@@ -545,15 +552,20 @@ def main():
     aegis_used = {it['AegisName'].lower() for it in existing.values() if it.get('AegisName')}
 
     region_tables = []
-    for region, paths, enc in (('iRO', a.iro, 'latin-1'), ('kRO', a.kro, 'cp949')):
+    for region, paths, enc in (('iRO', a.iro, 'latin-1'), ('EN', a.en, 'latin-1'), ('kRO', a.kro, 'cp949')):
         for p in paths:
-            G = luadata.run([p], enc)
+            G = luadata.load_any(p, enc)
             region_tables.append((region, G.get('tbl') or {}))
     entries = {}         # id -> (region, entry)
     for region, tbl in region_tables:
         for k, v in tbl.items():
-            if isinstance(k, int) and isinstance(v, dict) and k not in entries:
-                entries[k] = (region, v)
+            if isinstance(k, int) and isinstance(v, dict) and k not in entries \
+                    and clean(v.get('identifiedDisplayName') or '').strip():
+                r = region
+                if region == 'EN':
+                    r = re.sub(r'[^A-Za-z]', '', str(v.get('Server') or '')) or 'EN'
+                    r = 'EN' if r.lower() == 'unknown' else r
+                entries[k] = (r, v)
     iro_ids = {k for region, tbl in region_tables if region == 'iRO' for k in tbl}
 
     moves = {}
@@ -599,9 +611,10 @@ def main():
     # item names -> ids, for set members and box contents
     def display_name(i):
         region, v = entries[i]
-        if region == 'kRO':
+        nm = clean(v['identifiedDisplayName']).strip()
+        if re.search(r'[\uac00-\ud7a3]', nm) or region == 'kRO' and i in names_en:
             return names_en.get(i)
-        return clean(v['identifiedDisplayName']).strip()
+        return nm
 
     by_name = collections.defaultdict(list)
     wanted = set(existing) | set(candidates)
@@ -616,14 +629,36 @@ def main():
     for k, ids in ra_by_name.items():
         by_name[k].extend(ids)
 
+    def loose(k):
+        k = re.sub(r'^costume\s*:\s*', 'costume ', k)
+        k = re.sub(r'\s*\[\d\]', '', k)
+        return re.sub(r'[^a-z0-9가-힣]+', '', k)
+
+    known = set(existing) | set(candidates)
+    by_loose = collections.defaultdict(list)
+    for key, ids in by_name.items():
+        by_loose[loose(key)].extend(ids)
+    loose_keys = [k for k in by_loose if len(k) >= 8]
+
+    def pick(ids):
+        ids = [x for x in dict.fromkeys(ids) if x in known]
+        ids.sort(key=lambda x: (x not in existing, x))
+        return ids[0] if ids else None
+
     def resolve(nm):
         k = name_key(nm)
+        k = re.sub(r'^(?:\d+\s*(?:x|ea|cnt|pcs)\s+)|(?:\s+x\s*\d+|\s+\d+\s*(?:cnt|ea|pcs))$', '', k).strip()
         k2 = re.sub(r'\s*\(\s*\d+\s*(?:days?|hours?|일)\s*\)\s*', '', k)
-        for key in (k, k2, re.sub(r'^\[event\]\s*', '', k)):
-            ids = [x for x in dict.fromkeys(by_name.get(key, [])) if x in existing or x in candidates]
-            if ids:
-                ids.sort(key=lambda x: (x not in existing, x))
-                return ids[0]
+        for key in (k, k2, re.sub(r'^\[event\]\s*', '', k), re.sub(r's$', '', k)):
+            x = pick(by_name.get(key, [])) or pick(by_loose.get(loose(key), []))
+            if x:
+                return x
+        lk = loose(k)
+        if len(lk) >= 10:      # a typo in the box text ("Miracle Elixr")
+            digits = re.findall(r'\d+', lk)
+            for c in difflib.get_close_matches(lk, loose_keys, n=3, cutoff=0.92):
+                if re.findall(r'\d+', c) == digits:
+                    return pick(by_loose[c])
         return None
 
     # weapon defaults from rAthena's own entries
@@ -766,33 +801,48 @@ def main():
 
         # script
         script, combo_list = [], []
+        is_box = False
         if typ in ('Usable', 'Etc') and not equip:
             box = parse_box(rest)
             if box:
                 rnd, got = box
-                ids = [(resolve(nm), q, nm) for nm, q, wt in got]
-                weights = [wt for nm, q, wt in got]
-                missing = [nm for x, q, nm in ids if not x]
-                if missing:
-                    unknown.append('box contents not found in the item db: %s' % ' | '.join(missing))
-                elif len(ids) > 1 and all(weights) and abs(sum(weights) - 100) < 1.5:
-                    script.append('.@r = rand(10000);')
-                    acc = 0
-                    for k, ((x, q, nm), wt) in enumerate(zip(ids, weights)):
-                        acc += int(round(wt * 100))
-                        kw = 'if' if k == 0 else 'else if'
-                        if k == len(ids) - 1:
-                            script.append('else getitem %d,%d;    // %s' % (x, q, aegis_of.get(x, nm)))
-                        else:
-                            script.append('%s (.@r < %d) getitem %d,%d;    // %s' % (kw, acc, x, q, aegis_of.get(x, nm)))
-                elif rnd and len(ids) > 1:
-                    script.append('setarray .@i[0],%s;' % ','.join(str(x) for x, q, nm in ids))
-                    script.append('setarray .@n[0],%s;' % ','.join(str(q) for x, q, nm in ids))
-                    script.append('.@r = rand(getarraysize(.@i));')
-                    script.append('getitem .@i[.@r],.@n[.@r];')
+                is_box = True
+                rows = [(resolve(nm), q, nm, wt) for nm, q, wt in got if resolve(nm) != i]
+                # a 100% row next to odds is a bonus every opening gives
+                sure = [r for r in rows if r[3] and r[3] >= 99.5 and len(rows) > 1]
+                pool = [r for r in rows if r not in sure]
+                missing = [r[2] for r in rows if not r[0]]
+                weighted = len(pool) > 1 and all(r[3] for r in pool)
+                if weighted:
+                    have = sum(r[3] for r in pool if r[0])
+                    ok = have >= 0.7 * sum(r[3] for r in pool) and all(r[0] for r in sure)
                 else:
-                    for x, q, nm in ids:
+                    ok = sum(1 for r in rows if r[0]) >= 0.7 * len(rows) and (rnd or not missing)
+                if missing:
+                    unknown.append('box contents not found in the item db%s: %s' % (
+                        ' (left out of the draw)' if ok else '', ' | '.join(missing)))
+                if ok:
+                    for x, q, nm, wt in sure:
                         script.append('getitem %d,%d;    // %s' % (x, q, aegis_of.get(x, nm)))
+                    pool = [r for r in pool if r[0]]
+                    if weighted:
+                        total = sum(r[3] for r in pool)
+                        script.append('.@r = rand(%d);' % int(round(total * 100)))
+                        acc = 0
+                        for k, (x, q, nm, wt) in enumerate(pool):
+                            acc += int(round(wt * 100))
+                            if k == len(pool) - 1:
+                                script.append('else getitem %d,%d;    // %s' % (x, q, aegis_of.get(x, nm)))
+                            else:
+                                script.append('%s (.@r < %d) getitem %d,%d;    // %s' % ('if' if k == 0 else 'else if', acc, x, q, aegis_of.get(x, nm)))
+                    elif rnd and len(pool) > 1:
+                        script.append('setarray .@i[0],%s;' % ','.join(str(r[0]) for r in pool))
+                        script.append('setarray .@n[0],%s;' % ','.join(str(r[1]) for r in pool))
+                        script.append('.@r = rand(getarraysize(.@i));')
+                        script.append('getitem .@i[.@r],.@n[.@r];')
+                    else:
+                        for x, q, nm, wt in pool:
+                            script.append('getitem %d,%d;    // %s' % (x, q, aegis_of.get(x, nm)))
         if typ in ('Armor', 'Weapon', 'ShadowGear', 'Card'):
             ele = first(f, 'Property', 'Element', '속성')
             if ele and typ == 'Weapon':
@@ -887,14 +937,21 @@ def main():
                     if len(set(combo)) == len(combo):
                         combos.append((sorted(combo), eff, i))
 
-        if typ == 'Usable' and not script:
-            e['Type'] = 'Etc'
-            stats['usable without a translated effect, kept as Etc'] += 1
+        if is_box or typ == 'Usable':
+            e['Type'] = 'Usable'
+            if not script:
+                # consumable tab, but not used up until its effect is known
+                e['Flags'] = {'NoConsume': True}
+                script.append('dispbottom "%s";' % (
+                    "This box's contents aren't available on this server yet." if is_box or re.search(r'box|egg|package|crate|chest|pack\b', name, re.I)
+                    else "This item's effect isn't available on this server yet."))
+                stats['usable with no readable effect (NoConsume)'] += 1
         if script:
             e['Script'] = script
         e['_unknown'] = unknown
         out.append(e)
         stats['entries'] += 1
+        stats['region ' + region] += 1
         stats['type ' + e['Type']] += 1
         if equip or typ == 'Card':
             stats['equip/card'] += 1
@@ -943,8 +1000,8 @@ HEADER = """# This file is a part of rAthena.
 # %s
 ###########################################################################
 #
-# GENERATED by tools/regional_items/generate.py from the official iRO and
-# kRO client item tables. Do not edit by hand: fix the generator (or its
+# GENERATED by tools/regional_items/generate.py from official client item
+# tables and ROenglishRE. Do not edit by hand: fix the generator (or its
 # name list) and run it again.
 #
 # Items the clients know but the main item_db doesn't. Lines of a

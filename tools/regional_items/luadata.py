@@ -5,6 +5,7 @@ so this runs the handful of opcodes that do that and skips the rest (function
 calls are not executed). Plain-text .lua tables are not supported: compile them
 with luac 5.1 first.
 """
+import re
 import struct
 
 
@@ -161,3 +162,89 @@ def ordered_lines(t):
     if not isinstance(t, dict):
         return []
     return [t[k] for k in sorted(k for k in t if isinstance(k, int))]
+
+
+def run_text(path, enc):
+    """Read the tables of a plain-text Lua item file (tbl = { [id] = { ... } })."""
+    with open(path, 'rb') as fh:
+        s = fh.read().decode(enc, 'replace')
+    G = {}
+    tok = re.compile(r'''\s+|--\[(=*)\[.*?\]\1\]|--[^\n]*|"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)'|(-?\d+(?:\.\d+)?)|([A-Za-z_][A-Za-z0-9_]*)|\[(=*)\[(.*?)\]\6\]|(\[|\]|\{|\}|=|,|;|\(|\))''', re.S)
+    toks = []
+    for m in tok.finditer(s):
+        if m.group(2) is not None or m.group(3) is not None:
+            raw = m.group(2) if m.group(2) is not None else m.group(3)
+            toks.append(('s', _unescape(raw)))
+        elif m.group(4):
+            v = float(m.group(4))
+            toks.append(('n', int(v) if v == int(v) else v))
+        elif m.group(5):
+            toks.append(('id', m.group(5)))
+        elif m.group(7) is not None:
+            toks.append(('s', m.group(7)))
+        elif m.group(8):
+            toks.append(('p', m.group(8)))
+    pos = [0]
+
+    def peek(k=0):
+        i = pos[0] + k
+        return toks[i] if i < len(toks) else (None, None)
+
+    def take():
+        if pos[0] >= len(toks):
+            return (None, None)
+        t = toks[pos[0]]
+        pos[0] += 1
+        return t
+
+    def value():
+        t = take()
+        if t == ('p', '{'):
+            return table()
+        if t[0] in ('s', 'n'):
+            return t[1]
+        if t[0] == 'id':
+            return {'true': True, 'false': False, 'nil': None}.get(t[1], t[1])
+        return None
+
+    def table():
+        out, n = {}, 1
+        while peek() != ('p', '}') and peek()[0] is not None:
+            if peek() == ('p', '['):
+                take()
+                k = value()
+                take()          # ]
+                take()          # =
+                out[k] = value()
+            elif peek()[0] == 'id' and peek(1) == ('p', '='):
+                k = take()[1]
+                take()
+                out[k] = value()
+            else:
+                out[n] = value()
+                n += 1
+            if peek() in (('p', ','), ('p', ';')):
+                take()
+        take()                  # }
+        return out
+
+    while pos[0] < len(toks):
+        t = take()
+        if t[0] == 'id' and peek() == ('p', '=') and peek(1) == ('p', '{'):
+            take(); take()
+            G[t[1]] = table()
+    return G
+
+
+def _unescape(s):
+    if '\\' not in s:
+        return s
+    return re.sub(r'\\(n|t|r|\\|"|\'|\d{1,3})',
+                  lambda m: {'n': '\n', 't': '\t', 'r': '\r', '\\': '\\', '"': '"', "'": "'"}.get(m.group(1)) or chr(int(m.group(1))), s)
+
+
+def load_any(path, enc):
+    """Bytecode or text, whichever the file is."""
+    with open(path, 'rb') as fh:
+        head = fh.read(4)
+    return run([path], enc) if head == b'\x1bLua' else run_text(path, enc)
