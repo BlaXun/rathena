@@ -921,6 +921,9 @@ def _inner(text, ctx):
     stmts, ok = translate_clauses(text, [], ctx)
     if not ok or not stmts:
         return None
+    # a timed speed buff is the strong one (rAthena's +50%, as a Berserk
+    # Potion); +25% is the permanent kind (Sleipnir, Increase AGI)
+    stmts = [x.replace('bonus bSpeedRate,25;', 'bonus bSpeedRate,50;') for x in stmts]
     return ' '.join(stmts).replace('"', '\\"')
 
 

@@ -77,10 +77,16 @@ GRF entries with any GRF tool.
 ## iRO abilities on rAthena's own items
 
 `iro_abilities.py` writes `db/re/item_db_iro_abilities.yml`: 8 official items
-whose iRO descriptions give abilities their rAthena scripts leave out (Fifth
-Element's Lord of Vermilion and Electric Walk speed, Chewy Gelato's Frost Diver,
-the 2024 race reward costumes' movement speed, ...). Each entry is the current
-official script with the iRO lines added after it. The file loads after the
+made to work the way iRO describes them (Fifth Element's Lord of Vermilion and
+Electric Walk speed, Chewy Gelato's Frost Diver, the 2024 race reward costumes'
+movement speed, ...). Most entries are the current official script with the
+iRO lines added after it; where iRO's numbers differ from rAthena's (Fifth
+Element, Ifrit Mask, Valkyrie Curse Blight, Potted Muka Hat) the script is
+iRO's version, written by hand from iRO's description.
+
+A timed movement-speed buff ("when using X, movement speed for N seconds") is
+`bSpeedRate,50`, the strong kind; a permanent one is `bSpeedRate,25`, like
+Sleipnir. The file loads after the
 official item db, so rerun the script after an upstream merge that touches one
 of these items.
 

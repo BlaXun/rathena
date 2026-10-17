@@ -4651,7 +4651,7 @@ Body:
         }
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_C) {
-        autobonus3 "{ bonus bSpeedRate,25; bonus bStr,100; bonus bInt,100; }",1000,10000,"MG_ENERGYCOAT";
+        autobonus3 "{ bonus bSpeedRate,50; bonus bStr,100; bonus bInt,100; }",1000,10000,"MG_ENERGYCOAT";
       }
   - Combos:
       - Combo:
@@ -4706,7 +4706,7 @@ Body:
         }
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_C) {
-        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,25; }",1000,10000,"MG_ENERGYCOAT";
+        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,50; }",1000,10000,"MG_ENERGYCOAT";
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_B) {
         bonus2 bAddRace,RC_All,25;
@@ -4763,7 +4763,7 @@ Body:
         }
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_C) {
-        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,25; }",1000,10000,"MG_ENERGYCOAT";
+        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,50; }",1000,10000,"MG_ENERGYCOAT";
       }
   - Combos:
       - Combo:
@@ -4818,7 +4818,7 @@ Body:
         }
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_C) {
-        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,25; }",1000,10000,"MG_ENERGYCOAT";
+        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,50; }",1000,10000,"MG_ENERGYCOAT";
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_B) {
         bonus2 bAddRace,RC_All,25;
@@ -4848,7 +4848,7 @@ Body:
         skill "AL_BLESSING",10;
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_C) {
-        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,25; }",1000,10000,"MG_ENERGYCOAT";
+        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,50; }",1000,10000,"MG_ENERGYCOAT";
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_B) {
         bonus2 bAddRace,RC_All,25;
@@ -4905,7 +4905,7 @@ Body:
         }
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_C) {
-        autobonus3 "{ bonus bInt,120; bonus bSpeedRate,25; }",1000,15000,"MG_ENERGYCOAT";
+        autobonus3 "{ bonus bInt,120; bonus bSpeedRate,50; }",1000,15000,"MG_ENERGYCOAT";
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_B) {
         bonus2 bMagicAddRace,RC_All,25;
@@ -4951,7 +4951,7 @@ Body:
         skill "WL_RECOGNIZEDSPELL",5;
       }
       if (getenchantgrade(EQI_SHOES) >= ENCHANTGRADE_C) {
-        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,25; }",1000,15000,"KO_IZAYOI";
+        autobonus3 "{ bonus bStr,100; bonus bInt,100; bonus bSpeedRate,50; }",1000,15000,"KO_IZAYOI";
       }
   - Combos:
       - Combo:
