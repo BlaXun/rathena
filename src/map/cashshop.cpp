@@ -332,19 +332,17 @@ bool sale_remove_item( t_itemid nameid ){
 
 	// Find the original pointer in the array
 	ARR_FIND( 0, sale_items.count, i, sale_items.item[i] == sale_item );
+	aFree(sale_item);
 
 	// Is there still any entry left?
 	if( --sale_items.count > 0 ){
-		// fill the hole by moving the rest
+		// Move pointer slots so surviving timers keep their original sale objects.
 		for( ; i < sale_items.count; i++ ){
-			memcpy( sale_items.item[i], sale_items.item[i + 1], sizeof(struct sale_item_data) );
+			sale_items.item[i] = sale_items.item[i + 1];
 		}
-
-		aFree(sale_items.item[i]);
 
 		RECREATE(sale_items.item, struct sale_item_data *, sale_items.count);
 	}else{
-		aFree(sale_items.item[0]);
 		aFree(sale_items.item);
 		sale_items.item = nullptr;
 	}
