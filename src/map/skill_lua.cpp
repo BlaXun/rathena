@@ -882,6 +882,33 @@ int32 lua_unit_master(lua_State* state) {
 	return 1;
 }
 
+// unit:cooldown_left("GC_CROSSIMPACT") -- the milliseconds left of the unit's
+// cooldown of that skill: a player's, a homunculus's or a mercenary's; 0 when
+// it has none.
+int32 lua_unit_cooldown_left(lua_State* state) {
+	luaL_checktype(state, 1, LUA_TTABLE);
+	uint16 skill_id = check_skill(state, 2, "unit:cooldown_left");
+	block_list* bl = map_id2bl(unit_id_at(state, 1));
+	int32 tid = INVALID_TIMER;
+
+	auto find = [&](const auto& scd) {
+		if (auto it = scd.find(skill_id); it != scd.end())
+			tid = it->second;
+	};
+
+	if (map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr; sd != nullptr)
+		find(sd->scd);
+	else if (homun_data* hd = bl != nullptr ? BL_CAST(BL_HOM, bl) : nullptr; hd != nullptr)
+		find(hd->scd);
+	else if (s_mercenary_data* mc = bl != nullptr ? BL_CAST(BL_MER, bl) : nullptr; mc != nullptr)
+		find(mc->scd);
+
+	const TimerData* timer = tid != INVALID_TIMER ? get_timer(tid) : nullptr;
+
+	lua_pushinteger(state, timer != nullptr ? std::max<t_tick>(0, DIFF_TICK(timer->tick, gettick())) : 0);
+	return 1;
+}
+
 /// The metatable every unit table shares: its methods.
 int32 unit_meta_ref = LUA_NOREF;
 
@@ -894,7 +921,8 @@ void register_unit_methods() {
 		{ "equipment", lua_unit_equipment },         { "count_item", lua_unit_count_item },
 		{ "find_item", lua_unit_find_item },         { "mob_skills", lua_unit_mob_skills },
 		{ "devotees", lua_unit_devotees },           { "homunculus", lua_unit_homunculus },
-		{ "master", lua_unit_master },               { nullptr, nullptr },
+		{ "master", lua_unit_master },               { "cooldown_left", lua_unit_cooldown_left },
+		{ nullptr, nullptr },
 	};
 
 	lua_createtable(L, 0, 1);
@@ -961,6 +989,7 @@ void push_unit(const block_list* bl) {
 	set_int("maxsp", st->max_sp);
 	set_int("race", st->race);
 	set_int("element", st->def_ele);
+	set_int("element_level", st->ele_lv);
 	set_int("size", st->size);
 	set_int("amotion", st->amotion);
 	set_int("aspd", (2000 - st->amotion) / 10);
@@ -1376,6 +1405,75 @@ int32 lua_ground_units_around(lua_State* state) {
 		lua_setfield(state, -2, "remaining");
 		lua_rawseti(state, -2, ++n);
 	}
+	return 1;
+}
+
+// battle_config("max_parameter") -- a value of the server's battle config
+// (conf/battle/*.conf, with a mod's conf/ changes), read as the script
+// command getbattleflag reads it: 0 for a name the server does not have.
+int32 lua_battle_config(lua_State* state) {
+	lua_pushinteger(state, battle_get_value(luaL_checkstring(state, 1)));
+	return 1;
+}
+
+// element_rate(attack_element, unit) or element_rate(attack_element,
+// defense_element, {defense_level}) -- the % of a blow of that element the
+// server's element table (db/attr_fix.yml) lets through against that
+// defender: 200 doubles it, 0 is immune, below 0 heals. The table alone:
+// what statuses add in a fight (Volcano, an endow) is not in it.
+int32 lua_element_rate(lua_State* state) {
+	lua_Integer atk = luaL_checkinteger(state, 1), def_ele, def_lv;
+
+	if (lua_istable(state, 2)) {
+		block_list* bl = map_id2bl(unit_id_at(state, 2));
+		status_data* st = bl != nullptr ? status_get_status_data(*bl) : nullptr;
+
+		if (st == nullptr) {
+			lua_pushnil(state);
+			return 1;
+		}
+		def_ele = st->def_ele;
+		def_lv = st->ele_lv;
+	} else {
+		def_ele = luaL_checkinteger(state, 2);
+		def_lv = luaL_optinteger(state, 3, 1);
+	}
+	if (!CHK_ELEMENT(atk) || !CHK_ELEMENT(def_ele) || !CHK_ELEMENT_LEVEL(def_lv))
+		return luaL_error(state, "element_rate: elements are const(\"ELE_FIRE\") and the like, defense levels 1 to %d", MAX_ELE_LEVEL);
+	lua_pushinteger(state, elemental_attribute_db.getAttribute(static_cast<uint16>(def_lv), static_cast<uint16>(atk), static_cast<uint16>(def_ele)));
+	return 1;
+}
+
+// size_rate(weapon_type, size) -- the % of a weapon's damage the server's size
+// table (db/size_fix.yml) lets through against that size: a weapon type such
+// as const("W_KNUCKLE") (as unit.weapon_type), and a size as unit.size (0
+// small, 1 medium, 2 large). 100 for a weapon type the table leaves out.
+int32 lua_size_rate(lua_State* state) {
+	lua_Integer type = luaL_checkinteger(state, 1), size = luaL_checkinteger(state, 2);
+
+	if (size < SZ_SMALL || size > SZ_BIG)
+		return luaL_error(state, "size_rate: a size is 0 (small), 1 (medium) or 2 (large), as unit.size");
+
+	std::shared_ptr<s_sizefix_db> fix = size_fix_db.find(static_cast<int32>(type));
+
+	lua_pushinteger(state, fix == nullptr ? 100 : size == SZ_SMALL ? fix->small : size == SZ_MEDIUM ? fix->medium : fix->large);
+	return 1;
+}
+
+// def_rate(def) -- the % of a weapon blow that this much hard DEF (unit.def)
+// lets through, by the formula the server uses in this era: renewal's
+// (4000 + DEF) / (4000 + 10 x DEF), a number with a fraction; pre-renewal's
+// 100 - DEF, never below 0. Soft DEF is taken off after it, as a number.
+int32 lua_def_rate(lua_State* state) {
+	lua_Integer def = luaL_checkinteger(state, 1);
+
+#ifdef RENEWAL
+	if (def == -400)  // as battle.cpp: -400 would divide by 0
+		def = -399;
+	lua_pushnumber(state, 100.0 * static_cast<double>(4000 + def) / static_cast<double>(4000 + 10 * def));
+#else
+	lua_pushinteger(state, 100 - std::min<lua_Integer>(def, 100));
+#endif
 	return 1;
 }
 
@@ -1964,6 +2062,22 @@ int32 lua_hit_cut_cooldown(lua_State* state) {
 	return 0;
 }
 
+// c:cooldown("GC_CROSSIMPACT", ms, {who}) -- start that skill's cooldown for
+// the caster (default), as a use of it would: `ms` from now, replacing one
+// that is running; 0 ends it. The player's hotkey bar shows it, and it is
+// saved over a logout like any cooldown. A player's, a homunculus's or a
+// mercenary's.
+int32 lua_hit_cooldown(lua_State* state) {
+	s_skill_lua_hit& hit = hit_or_error(state, "cooldown");
+	s_skill_lua_action action = { SKILL_LUA_COOLDOWN };
+
+	action.type = check_skill(state, 2, "c:cooldown");
+	action.duration = std::clamp<lua_Integer>(luaL_checkinteger(state, 3), 0, 86400000);
+	action.unit_id = unit_arg(state, 4, hit, "caster");
+	hit.actions.push_back(action);
+	return 0;
+}
+
 // c:hurt(hp, {who}) -- the target (default) loses that much HP, dealt by
 // the hook's caster: no defence, element or card applies. For damage over
 // time, from a status's tick. (Not c:damage: c.damage is the blow's damage.)
@@ -2069,6 +2183,7 @@ void register_context_methods() {
 		{ "cast", lua_hit_cast },                 { "attack", lua_hit_attack },
 		{ "apply_status", lua_hit_apply_status }, { "remove_status", lua_hit_remove_status },
 		{ "cut_delay", lua_hit_cut_delay },       { "cut_cooldown", lua_hit_cut_cooldown },
+		{ "cooldown", lua_hit_cooldown },
 		{ "give_item", lua_hit_give_item },       { "take_item", lua_hit_take_item },
 		{ "hurt", lua_hit_hurt },                 { "spend", lua_hit_spend },
 		{ "spheres", lua_hit_spheres },           { "slide", lua_hit_slide },
@@ -3393,6 +3508,38 @@ t_tick cooldown_left(int32 tid, int64 ms) {
 	return timer != nullptr ? DIFF_TICK(timer->tick, gettick()) - ms : 0;
 }
 
+/// A unit's cooldown of `skill_id` starts again, `ms` from now (0: ended):
+/// a player's, a homunculus's or a mercenary's. A running one is taken off
+/// first, as the server's start would leave its timer running.
+void set_cooldown(block_list& bl, uint16 skill_id, int64 ms) {
+	if (map_session_data* sd = BL_CAST(BL_PC, &bl); sd != nullptr) {
+		if (auto it = sd->scd.find(skill_id); it != sd->scd.end()) {
+			delete_timer(it->second, skill_blockpc_end);
+			sd->scd.erase(it);
+		}
+		if (ms > 0)
+			skill_blockpc_start(*sd, skill_id, ms);
+		else if (battle_config.display_status_timers)
+			clif_skill_cooldown(*sd, skill_id, 0);
+	} else if (homun_data* hd = BL_CAST(BL_HOM, &bl); hd != nullptr) {
+		if (auto it = hd->scd.find(skill_id); it != hd->scd.end()) {
+			delete_timer(it->second, skill_blockhomun_end);
+			hd->scd.erase(it);
+		}
+		if (ms > 0)
+			skill_blockhomun_start(*hd, skill_id, ms);
+		else if (battle_config.display_status_timers && hd->master != nullptr)
+			clif_skill_cooldown(*hd->master, skill_id, 0);
+	} else if (s_mercenary_data* mc = BL_CAST(BL_MER, &bl); mc != nullptr) {
+		if (auto it = mc->scd.find(skill_id); it != mc->scd.end()) {
+			delete_timer(it->second, skill_blockmerc_end);
+			mc->scd.erase(it);
+		}
+		if (ms > 0)
+			skill_blockmerc_start(*mc, skill_id, ms);
+	}
+}
+
 /// A unit's cooldown of `skill_id` ends `ms` sooner: a player's, a
 /// homunculus's or a mercenary's.
 void cut_cooldown(block_list& bl, uint16 skill_id, int64 ms) {
@@ -3616,6 +3763,10 @@ void do_init_skill_lua() {
 	lua_register(L, "units_around", lua_units_around);
 	lua_register(L, "units_in_line", lua_units_in_line);
 	lua_register(L, "ground_units_around", lua_ground_units_around);
+	lua_register(L, "battle_config", lua_battle_config);
+	lua_register(L, "element_rate", lua_element_rate);
+	lua_register(L, "size_rate", lua_size_rate);
+	lua_register(L, "def_rate", lua_def_rate);
 	register_store();
 	register_unit_methods();
 	register_context_methods();
@@ -4497,6 +4648,10 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 				if (bl != nullptr)
 					cut_cooldown(*bl, static_cast<uint16>(action.type), action.duration);
 				break;
+			case SKILL_LUA_COOLDOWN:
+				if (bl != nullptr)
+					set_cooldown(*bl, static_cast<uint16>(action.type), action.duration);
+				break;
 			case SKILL_LUA_GIVE_ITEM:
 				if (map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr; sd != nullptr)
 					give_item(*sd, static_cast<t_itemid>(action.type), action.val1, action.flag != 0);
@@ -5103,6 +5258,26 @@ void skill_lua_requirement(map_session_data& sd, uint16 skill_id, uint16 skill_l
 
 	acting_for none(nullptr);
 
+	// Where the use goes, once the server knows: while it charges for a use
+	// it has started (the cast's end), not when it first checks one. A unit,
+	// or a cell for a ground skill.
+	block_list* target = nullptr;
+	bool cell = false;
+
+	if (sd.ud.skill_id == skill_id) {
+		if (sd.ud.skilltarget != 0)
+			target = map_id2bl(sd.ud.skilltarget);
+		else
+			cell = sd.ud.skillx != 0 || sd.ud.skilly != 0;
+	}
+
+	auto where = [&]() {
+		if (cell) {
+			set_int("x", sd.ud.skillx);
+			set_int("y", sd.ud.skilly);
+		}
+	};
+
 	// The skill's own, then the player's statuses' (which see c.used_skill);
 	// each sees what the one before changed.
 	if (own) {
@@ -5117,7 +5292,8 @@ void skill_lua_requirement(map_session_data& sd, uint16 skill_id, uint16 skill_l
 			int32 cost = lua_gettop(L);
 
 			lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
-			push_context(skill_id, skill_lv, &sd, nullptr, nullptr);
+			push_context(skill_id, skill_lv, &sd, target, nullptr);
+			where();
 			lua_pushvalue(L, cost);
 			if (protected_call(hook, hooks->skill.c_str(), 2, 0))
 				read_cost(cost, req, pushed);
@@ -5132,7 +5308,8 @@ void skill_lua_requirement(map_session_data& sd, uint16 skill_id, uint16 skill_l
 		int32 cost = lua_gettop(L);
 
 		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
-		push_context(skill_id, skill_lv, &sd, nullptr, nullptr);
+		push_context(skill_id, skill_lv, &sd, target, nullptr);
+		where();
 		add_status_fields(def, on, sd);
 		add_used_skill(skill_id, skill_lv);
 		lua_pushvalue(L, cost);

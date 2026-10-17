@@ -151,7 +151,9 @@
  * zeny, spiritball, ammo_qty and items ({ item = "AEGIS", amount = n }) of
  * what the skill needs (ammo_qty: the check only; the server uses up the
  * skill's own AmmoAmount). cost must not change anything else: the server
- * asks several times per use.
+ * asks several times per use. When it asks at the end of a cast, the use's
+ * target is known (c.target, or c.x and c.y for a ground skill); its first
+ * check, before the cast, has neither.
  *
  * Hooks that fire for every player who has learned the skill, whatever the
  * player is doing (a passive's effect; c.skill_lv is the learned level):
@@ -224,16 +226,18 @@
  *  - item(name, { on_use = ... }) for a consumable.
  *  - Queries: now(), skill_info(skill, lv), units_around(where, radius,
  *    filter), units_in_line(from, to, width, filter), ground_units_around(
- *    where, radius, filter); unit fields (char_id, weapon_type, spheres,
- *    amotion, aspd, master_id, riding, copied_skill, ...) and methods
- *    status_info, statuses, ground_units, equipment, count_item, find_item,
- *    mob_skills, devotees, homunculus, master.
+ *    where, radius, filter), battle_config(name), and the server's tables:
+ *    element_rate(element, unit or element, level), size_rate(weapon_type,
+ *    size), def_rate(def); unit fields (char_id, weapon_type, spheres,
+ *    amotion, aspd, master_id, riding, copied_skill, element_level, ...) and
+ *    methods status_info, statuses, ground_units, equipment, count_item,
+ *    find_item, mob_skills, devotees, homunculus, master, cooldown_left.
  *  - Actions: status (now with vals and the chance out of 10000, as
  *    documented), end_status, status_val, cast (opts by, x, y, power),
  *    attack, spheres, slide, knockback, interrupt, summon (opts neutral),
  *    set_target, take_item, copy_skill, itemskill, spend, place_unit,
- *    end_unit, expire, produce_menu, mount, teleport; heal (opts force)
- *    defaults to the caster, as documented; give_item (opts floor).
+ *    end_unit, expire, produce_menu, mount, teleport, cooldown; heal (opts
+ *    force) defaults to the caster, as documented; give_item (opts floor).
  *  - Context: c.blocked and c.autocast on attacks; c.hits, c.damage_left
  *    (a damage hook's second result sets the left hand's part) and c.targets
  *    on damage; c.damage, c.overkill and c.element on on_kill and on_death.
@@ -277,6 +281,7 @@ enum e_skill_lua_action : uint8 {
 	SKILL_LUA_PRODUCE_MENU,   ///< the crafting window opens
 	SKILL_LUA_MOUNT,          ///< a mount, falcon or cart on or off
 	SKILL_LUA_TELEPORT,       ///< to a random cell of the map, as Teleport does
+	SKILL_LUA_COOLDOWN,       ///< a skill's cooldown started, as a use would
 };
 
 /// One thing an on_hit hook asked for. Units are kept by id, never by
@@ -284,10 +289,10 @@ enum e_skill_lua_action : uint8 {
 struct s_skill_lua_action {
 	e_skill_lua_action kind;
 	int32 unit_id = 0;  ///< who it happens to
-	int32 type = 0;     ///< STATUS, END_STATUS, STATUS_VAL: the sc_type; CAST, ATTACK, CUT_COOLDOWN, COPY_SKILL, ITEMSKILL, PLACE_UNIT: the skill id; *_STATUS: the mod status; GIVE_ITEM, TAKE_ITEM: the item id; SUMMON: the monster id; END_UNIT: the group id; MOUNT: what (e_skill_lua_mount)
+	int32 type = 0;     ///< STATUS, END_STATUS, STATUS_VAL: the sc_type; CAST, ATTACK, CUT_COOLDOWN, COOLDOWN, COPY_SKILL, ITEMSKILL, PLACE_UNIT: the skill id; *_STATUS: the mod status; GIVE_ITEM, TAKE_ITEM: the item id; SUMMON: the monster id; END_UNIT: the group id; MOUNT: what (e_skill_lua_mount)
 	int32 rate = 0;     ///< STATUS: chance out of 10000; STATUS_VAL: which value (1..4)
 	int32 val1 = 0;     ///< STATUS: val1; CAST, ATTACK, COPY_SKILL, ITEMSKILL, PLACE_UNIT: the skill level; *_STATUS: stacks (-1: all); GIVE_ITEM, TAKE_ITEM, SUMMON: amount; SPHERES: how many (negative: lost); KNOCKBACK: cells; STATUS_VAL: the value; PRODUCE_MENU: the recipes' item level
-	int64 duration = 0; ///< STATUS, APPLY_STATUS, CUT_DELAY, CUT_COOLDOWN, SUMMON, PLACE_UNIT, EXPIRE, SPHERES, in milliseconds
+	int64 duration = 0; ///< STATUS, APPLY_STATUS, CUT_DELAY, CUT_COOLDOWN, COOLDOWN, SUMMON, PLACE_UNIT, EXPIRE, SPHERES, in milliseconds
 	int64 hp = 0, sp = 0;  ///< HEAL, SPEND; DAMAGE: hp
 	int32 source_id = 0;  ///< APPLY_STATUS: who applied it; REMOVE_STATUS: only theirs, unless 0
 	int32 val2 = 0, val3 = 0, val4 = 0;  ///< STATUS
