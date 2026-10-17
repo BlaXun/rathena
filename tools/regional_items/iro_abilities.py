@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Build db/re/item_db_iro_abilities.yml: rAthena's own items made to work the
+way iRO describes them.
+
+For most, the entry is the item's current official script with the abilities
+iRO adds after it. Where iRO's numbers differ from rAthena's (REPLACE), the
+script is iRO's version, written by hand from iRO's description. The file loads after the official
+item db and replaces only Script. Run this again after an upstream merge that
+touches one of these items. The list was reviewed item by item against iRO's
+descriptions (October 2026); set bonuses are left to item_combos.yml.
+"""
+import os
+import re
+import sys
+
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+
+# Id -> (iRO wording, lines to add)
+ADDITIONS = {
+    470192: ('Fifth Element: "When learned Varetyr Spear Lv 10, enables Lord of Vermilion Lv 10"; '
+             '"When learned Call Ventus Lv 3, when using Electric Walk, increases movement speed for 30 sec."',
+             ['if (getskilllv("SO_VARETYR_SPEAR") >= 10)',
+              '   skill "WZ_VERMILION",10;',
+              'if (getskilllv("SO_SUMMON_VENTUS") >= 3)',
+              '   autobonus3 "{ bonus bSpeedRate,50; }",1000,30000,"SO_ELECTRICWALK";']),
+    5737: ('Potted Muka Hat: "Enables the use of Level 3 Provoke."',
+           ['skill "SM_PROVOKE",3;']),
+    18626: ('Chewy Gelato: "Max HP + 300. Enables Level 1 Frost Diver. If upgrade level is +7 or higher, enables Level 5 Frost Diver."',
+            ['bonus bMaxHP,300;',
+             'skill "MG_FROSTDIVER",(getrefine() >= 7) ? 5 : 1;']),
+    5420: ('Ifrit Mask: "Enables use of Lv.1 Sight."',
+           ['skill "MG_SIGHT",1;']),
+    480188: ('Valkyrie Curse Blight: "Enables to use Spell Breaker Lv 5."',
+             ['skill "SA_SPELLBREAKER",5;']),
+    31818: ('Costume Top Player [Event Limited Option]: "ATK + 30, MATK + 30. All Basic Status + 7. '
+            'All Talent Status + 7. Increase Movement Speed."',
+            ['bonus bBaseAtk,30;', 'bonus bMatk,30;', 'bonus bAllStats,7;', 'bonus bAllTraitStats,7;',
+             'bonus bSpeedRate,25;']),
+    420351: ('Costume Auspicious Clouds [Event Limited Option]: "ATK + 50, MATK + 50. Increase physical and magic '
+             'damage against all size enemies by 20%. All Basic Status + 15. All Talent Status + 15. Increase Movement Speed."',
+             ['bonus bBaseAtk,50;', 'bonus bMatk,50;', 'bonus2 bAddSize,Size_All,20;',
+              'bonus2 bMagicAddSize,Size_All,20;', 'bonus bAllStats,15;', 'bonus bAllTraitStats,15;',
+              'bonus bSpeedRate,25;']),
+    20103: ('Costume Clinging Panda [Event Limited Option]: "Enable to use Enchant Blade Lv.5."',
+            ['skill "RK_ENCHANTBLADE",5;']),
+}
+
+
+# Id -> iRO's whole script, where iRO's version differs from rAthena's
+REPLACE = {
+    470192: [   # Fifth Element (iRO)
+        'bonus bMdef,10;',
+        'bonus bMaxHPrate,3;',
+        'bonus bMaxSPrate,3;',
+        'bonus2 bSubRace,RC_Player_Human,10;',
+        'bonus2 bSubRace,RC_Player_Doram,10;',
+        '.@r = getrefine();',
+        'if (.@r >= 5) {',
+        '   bonus bMaxHPrate,7;',
+        '   bonus bMaxSPrate,7;',
+        '   bonus2 bMagicAtkEle,Ele_Wind,10;',
+        '}',
+        'if (.@r >= 7) {',
+        '   bonus bMaxHPrate,10;',
+        '   bonus bMaxSPrate,10;',
+        '   bonus2 bMagicAtkEle,Ele_Wind,10;',
+        '}',
+        'if (getskilllv("SO_VARETYR_SPEAR") >= 10) {',
+        '   bonus bInt,40;',
+        '   skill "WZ_VERMILION",10;',
+        '}',
+        'bonus bMatkRate,10*getskilllv("SO_EL_SYMPATHY");',
+        '.@a = getskilllv("SO_SUMMON_AGNI")+getskilllv("SO_SUMMON_AQUA")+getskilllv("SO_SUMMON_TERA")+getskilllv("SO_SUMMON_VENTUS");',
+        'bonus bDelayrate,-3*.@a;',
+        'bonus bMatk,15*.@a;',
+        'if (getskilllv("SO_SUMMON_VENTUS") >= 3)',
+        '   autobonus3 "{ bonus bSpeedRate,50; }",1000,30000,"SO_ELECTRICWALK";'],
+    5420: [     # Ifrit Mask (iRO); the autocast chances aren't given, rAthena's 5% is kept
+        'bonus bStr,1;',
+        'bonus bInt,1;',
+        'bonus bMdef,5;',
+        'bonus2 bSubEle,Ele_Fire,10;',
+        'bonus2 bSubEle,Ele_Water,-10;',
+        'skill "MG_SIGHT",1;',
+        'bonus3 bAutoSpellWhenHit,"WZ_METEOR",3,50;',
+        'bonus3 bAutoSpell,"MG_FIREBOLT",3,50;'],
+    480188: [   # Valkyrie Curse Blight (iRO)
+        '.@r = getrefine();',
+        'bonus2 bSubClass,Class_All,5;',
+        'bonus2 bSubRace,RC_Player_Human,5;',
+        'bonus2 bSubRace,RC_Player_Doram,5;',
+        'bonus bMaxHPrate,2*.@r;',
+        'bonus bMaxSPrate,2*.@r;',
+        'bonus2 bSubEle,Ele_Ghost,7*.@r;',
+        'if (.@r >= 9) {',
+        '   bonus bAllStats,10;',
+        '   bonus2 bAddEle,Ele_All,10;',
+        '   bonus2 bMagicAddEle,Ele_All,10;',
+        '}',
+        'if (.@r >= 11) {',
+        '   bonus bNoKnockback;',
+        '   bonus2 bAddEle,Ele_All,15;',
+        '   bonus2 bMagicAddEle,Ele_All,15;',
+        '}',
+        'if (getskilllv("SA_SPELLBREAKER") >= 5) {',
+        '   bonus bHPGainValue,100;',
+        '   bonus bSPGainValue,10;',
+        '   bonus bMagicHPGainValue,100;',
+        '   bonus bMagicSPGainValue,10;',
+        '}',
+        'skill "SA_SPELLBREAKER",5;',
+        'if (.@r >= 13)',
+        '   bonus bDelayrate,-20;'],
+    5737: [     # Potted Muka Hat (iRO)
+        'skill "SM_PROVOKE",3;'],
+}
+
+
+def official_scripts(root):
+    out = {}
+    for part in ('usable', 'equip', 'etc'):
+        text = open(os.path.join(root, 'db', 're', 'item_db_%s.yml' % part), encoding='utf-8').read()
+        for entry in re.split(r'\n(?=  - Id: )', text):
+            m = re.match(r'  - Id: (\d+)\n', entry)
+            if not m or int(m.group(1)) not in ADDITIONS:
+                continue
+            aegis = re.search(r'\n    AegisName: (\S+)', entry).group(1)
+            sm = re.search(r'\n    Script: \|\n((?:      .*\n?)*)', entry + '\n')
+            lines = [l[6:] for l in sm.group(1).rstrip('\n').split('\n')] if sm else []
+            out[int(m.group(1))] = (aegis, lines)
+    return out
+
+
+def main():
+    root = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else ROOT)
+    found = official_scripts(root)
+    missing = sorted(set(ADDITIONS) - set(found))
+    if missing:
+        sys.exit('not in the item db any more: %s' % missing)
+    path = os.path.join(root, 'db', 're', 'item_db_iro_abilities.yml')
+    with open(path, 'w', encoding='utf-8', newline='\n') as o:
+        o.write(open(os.path.join(root, 'db', 're', 'item_db_regional.yml'), encoding='utf-8')
+                .read().split('###########################################################################\n')[0])
+        o.write('###########################################################################\n'
+                '# iRO Ability Database\n'
+                '###########################################################################\n'
+                '#\n'
+                '# GENERATED by tools/regional_items/iro_abilities.py. Do not edit by hand.\n'
+                '#\n'
+                '# rAthena items made to work as iRO describes them: the official script\n'
+                '# plus the abilities iRO adds, or, where iRO\'s numbers differ, iRO\'s\n'
+                '# version of the whole script. Only Script is changed.\n'
+                '#\n'
+                '###########################################################################\n'
+                '\nHeader:\n  Type: ITEM_DB\n  Version: 3\n\nBody:\n')
+        for i in sorted(ADDITIONS):
+            why, add = ADDITIONS[i]
+            aegis, lines = found[i]
+            o.write('  - Id: %d\n    AegisName: %s\n    Script: |\n' % (i, aegis))
+            if i in REPLACE:
+                o.write('      // iRO version (rAthena\'s numbers differ): %s\n' % why.split(':')[0])
+                for l in REPLACE[i]:
+                    o.write('      %s\n' % l)
+                continue
+            for l in lines:
+                o.write('      %s\n' % l)
+            o.write('      // iRO: %s\n' % why.replace('\n', ' '))
+            for l in add:
+                o.write('      %s\n' % l)
+    print('wrote %s (%d items)' % (path, len(ADDITIONS)))
+
+
+if __name__ == '__main__':
+    main()

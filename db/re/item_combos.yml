@@ -59318,3 +59318,7 @@ Body:
     Script: |
       bonus2 bExpAddRace,RC_All,5;
       bonus bFixedCast,-200;
+
+Footer:
+  Imports:
+  - Path: db/re/item_combos_regional.yml
