@@ -92,7 +92,7 @@ def server_world(root):
         if m:
             maps.add(m.group(1).lower())
     mobdb = {}
-    for f in ('db/re/mob_db.yml', 'db/import/mob_db.yml'):
+    for f in ('db/re/mob_db.yml', 'db/re/mob_db_world.yml', 'db/import/mob_db.yml'):
         p = os.path.join(root, f)
         if os.path.exists(p):
             t = open(p, encoding='utf-8').read()

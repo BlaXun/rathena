@@ -123308,3 +123308,7 @@ Body:
 #    AegisName: HUNTING_GID_DEFAULT
 #  - Id: 32000
 #    AegisName: MONSTER_2ND_END
+
+Footer:
+  Imports:
+  - Path: db/re/mob_db_world.yml

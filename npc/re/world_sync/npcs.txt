@@ -3682,7 +3682,7 @@ jor_root1,39,93,4	script	Contact Point#ws14382	10429,{
 	mes "Hello there, adventurer.";
 	close;
 }
-jor_root1,32,34,4	script	Rgan Shaman#ws14457	4_M_01,{
+jor_root1,32,34,4	script	Rgan Shaman#ws14457	21985,{
 	mes "[Rgan Shaman]";
 	mes "Hello there, adventurer.";
 	close;
@@ -7807,17 +7807,17 @@ ch1_dw,210,90,4	script	Mechanism#ws19556	10432,{
 	mes "Hello there, adventurer.";
 	close;
 }
-ch1_dw,338,85,4	script	Immortal Legion#ws19557	4_M_01,{
+ch1_dw,338,85,4	script	Immortal Legion#ws19557	22461,{
 	mes "[Immortal Legion]";
 	mes "Hello there, adventurer.";
 	close;
 }
-ch1_dw,338,82,4	script	Immortal Legion#ws19558	4_M_01,{
+ch1_dw,338,82,4	script	Immortal Legion#ws19558	22460,{
 	mes "[Immortal Legion]";
 	mes "Hello there, adventurer.";
 	close;
 }
-ch1_dw,338,78,4	script	Immortal Legion#ws19559	4_M_01,{
+ch1_dw,338,78,4	script	Immortal Legion#ws19559	22462,{
 	mes "[Immortal Legion]";
 	mes "Hello there, adventurer.";
 	close;
@@ -9885,7 +9885,7 @@ niflheim,262,275,4	script	Self-proclaimed Genius Alchemist#ws28471	750,{
 	mes "Hello there, adventurer.";
 	close;
 }
-niflheim,257,280,4	script	Farmer Deilots#ws28668	4_M_01,{
+niflheim,257,280,4	script	Farmer Deilots#ws28668	22321,{
 	mes "[Farmer Deilots]";
 	mes "Hello there, adventurer.";
 	close;
@@ -10793,27 +10793,27 @@ uknw_ruin,244,239,4	script	Alf#ws19395	10384,{
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,187,157,4	script	Curled-up Nyaiz#ws19811	4_M_01,{
+uknw_ruin,187,157,4	script	Curled-up Nyaiz#ws19811	22463,{
 	mes "[Curled-up Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,115,223,4	script	Rolling Nyaiz#ws19812	4_M_01,{
+uknw_ruin,115,223,4	script	Rolling Nyaiz#ws19812	22463,{
 	mes "[Rolling Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,71,152,4	script	Grooming Nyaiz#ws19813	4_M_01,{
+uknw_ruin,71,152,4	script	Grooming Nyaiz#ws19813	22463,{
 	mes "[Grooming Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,70,46,4	script	Dozing Nyaiz#ws19815	4_M_01,{
+uknw_ruin,70,46,4	script	Dozing Nyaiz#ws19815	22463,{
 	mes "[Dozing Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
 }
-uknw_ruin,224,34,4	script	Frowning Nyaiz#ws19816	4_M_01,{
+uknw_ruin,224,34,4	script	Frowning Nyaiz#ws19816	22463,{
 	mes "[Frowning Nyaiz]";
 	mes "Hello there, adventurer.";
 	close;
