@@ -841,6 +841,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 1345
   # 5987 untranslated: Refine Level +7:
   # 5987 untranslated: Increases damage of Cross Impact and Dark Illusion by additional 20%.
@@ -3999,6 +4000,7 @@ Body:
       Left_Hand: true
     ArmorLevel: 1
     Refineable: true
+    View: 1
   - Id: 15916
     AegisName: phRO_15916
     Name: Kitana's Eyeshadows(OSM)
@@ -4050,6 +4052,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2172
     Trade:
       NoTrade: true
@@ -4077,6 +4080,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2202
     Trade:
       NoDrop: true
@@ -9749,6 +9753,7 @@ Body:
     Weight: 10
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 280
     Trade:
       NoDrop: true
@@ -10197,6 +10202,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -11881,6 +11887,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -16004,6 +16011,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 130
     Refineable: true
+    View: 1
     Script: |
       bonus bMaxHPrate,1;
       if (getrefine() >= 7) {
@@ -16066,6 +16074,7 @@ Body:
       Left_Hand: true
     ArmorLevel: 1
     Refineable: true
+    View: 1
     Script: |
       bonus bVit,5;
       bonus bMdef,5;
@@ -16107,6 +16116,7 @@ Body:
       Left_Hand: true
     ArmorLevel: 1
     Refineable: true
+    View: 1
     Script: |
       bonus bVit,5;
       bonus bMdef,5;
@@ -23985,6 +23995,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2381
     Trade:
       NoDrop: true
@@ -24074,6 +24085,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 799
     Trade:
       NoDrop: true
@@ -24087,6 +24099,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2537
     Trade:
       NoDrop: true
@@ -24100,6 +24113,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2571
     Trade:
       NoDrop: true
@@ -24191,6 +24205,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 940
     Trade:
       NoDrop: true
@@ -24205,6 +24220,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 1007
     Trade:
       NoTrade: true
@@ -24296,6 +24312,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     Trade:
       NoStorage: true
   # 400948 untranslated: When refined to +9 or higher, increases ranged physical damage by additional 15%.
@@ -24544,6 +24561,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2692
     Trade:
       NoDrop: true
@@ -24658,6 +24676,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2791
     Trade:
       NoTrade: true
@@ -24872,6 +24891,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2219
     Trade:
       NoDrop: true
@@ -24923,6 +24943,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2415
     Trade:
       NoTrade: true
@@ -25104,6 +25125,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 396
     Trade:
       NoDrop: true
@@ -25116,6 +25138,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2220
     Trade:
       NoDrop: true
@@ -25167,6 +25190,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2208
     Trade:
       NoDrop: true
@@ -25282,6 +25306,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2505
     Trade:
       NoDrop: true
@@ -25295,6 +25320,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2825
     Trade:
       NoDrop: true
@@ -25308,6 +25334,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2826
     Trade:
       NoDrop: true
@@ -25321,6 +25348,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 1000
     Trade:
       NoTrade: true
@@ -25333,6 +25361,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2174
     Trade:
       NoDrop: true
@@ -25345,6 +25374,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2833
     Trade:
       NoStorage: true
@@ -25359,6 +25389,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2207
     Trade:
       NoDrop: true
@@ -25372,6 +25403,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2834
     Trade:
       NoStorage: true
@@ -25388,6 +25420,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2835
     Trade:
       NoStorage: true
@@ -25404,6 +25437,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2836
     Trade:
       NoStorage: true
@@ -25420,6 +25454,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2837
     Trade:
       NoStorage: true
@@ -25436,6 +25471,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2838
     Trade:
       NoStorage: true
@@ -25452,6 +25488,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 1075
     Trade:
       NoDrop: true
@@ -25465,6 +25502,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2845
     Trade:
       NoDrop: true
@@ -25478,6 +25516,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 1221
     Trade:
       NoDrop: true
@@ -25683,6 +25722,7 @@ Body:
     Slots: 1
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 673
     Trade:
       NoDrop: true
@@ -25695,6 +25735,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 2869
     Trade:
       NoDrop: true
@@ -25708,6 +25749,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 338
     Script: |
       bonus bPow,15;
@@ -25809,6 +25851,7 @@ Body:
     Slots: 1
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 105
     Trade:
       NoDrop: true
@@ -25827,6 +25870,7 @@ Body:
     Slots: 1
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 651
     Trade:
       NoDrop: true
@@ -25866,6 +25910,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Top: true
+    ArmorLevel: 1
     View: 870
     Trade:
       NoTrade: true
@@ -25923,6 +25968,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2669
     Trade:
       NoTrade: true
@@ -25961,6 +26007,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -26165,6 +26212,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2653
   - Id: 410608
     AegisName: C_Ear_OF_Bloody
@@ -26172,6 +26220,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2318
     Trade:
       NoDrop: true
@@ -26186,6 +26235,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2823
     Trade:
       NoDrop: true
@@ -26285,6 +26335,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2831
     Trade:
       NoDrop: true
@@ -26298,6 +26349,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2839
     Trade:
       NoStorage: true
@@ -26315,6 +26367,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2840
     Trade:
       NoStorage: true
@@ -26383,6 +26436,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2850
     Trade:
       NoDrop: true
@@ -26396,6 +26450,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2868
     Trade:
       NoDrop: true
@@ -26586,6 +26641,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2094
     Trade:
       NoTrade: true
@@ -26643,6 +26699,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2670
     Trade:
       NoTrade: true
@@ -26753,6 +26810,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2747
     Trade:
       NoDrop: true
@@ -26791,6 +26849,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2760
     Trade:
       NoDrop: true
@@ -26804,6 +26863,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2762
     Trade:
       NoDrop: true
@@ -26817,6 +26877,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2763
     Trade:
       NoDrop: true
@@ -26830,6 +26891,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2764
     Trade:
       NoDrop: true
@@ -26843,6 +26905,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2765
     Trade:
       NoDrop: true
@@ -26856,6 +26919,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2777
     Trade:
       NoDrop: true
@@ -26869,6 +26933,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2778
     Trade:
       NoDrop: true
@@ -26882,6 +26947,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2779
     Trade:
       NoDrop: true
@@ -26895,6 +26961,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2781
     Trade:
       NoDrop: true
@@ -26908,6 +26975,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2782
     Trade:
       NoDrop: true
@@ -26930,6 +26998,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2752
     Trade:
       NoDrop: true
@@ -26969,6 +27038,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2742
     Trade:
       NoDrop: true
@@ -26982,6 +27052,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2824
     Trade:
       NoDrop: true
@@ -26995,6 +27066,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2830
     Trade:
       NoDrop: true
@@ -27008,6 +27080,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2715
     Trade:
       NoDrop: true
@@ -27021,6 +27094,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2844
     Trade:
       NoDrop: true
@@ -27060,6 +27134,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2851
     Trade:
       NoDrop: true
@@ -27133,6 +27208,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2866
     Trade:
       NoDrop: true
@@ -27146,6 +27222,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Mid: true
+    ArmorLevel: 1
     View: 2867
     Trade:
       NoDrop: true
@@ -27190,6 +27267,7 @@ Body:
       Costume_Head_Top: true
       Costume_Head_Mid: true
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 1631
     Trade:
       NoStorage: true
@@ -27201,6 +27279,7 @@ Body:
       Costume_Head_Top: true
       Costume_Head_Mid: true
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2554
     Trade:
       NoTrade: true
@@ -27214,6 +27293,7 @@ Body:
       Costume_Head_Top: true
       Costume_Head_Mid: true
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2552
     Trade:
       NoTrade: true
@@ -28785,6 +28865,7 @@ Body:
     ArmorLevel: 2
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -28848,6 +28929,7 @@ Body:
     ArmorLevel: 2
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -28889,6 +28971,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 130
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -28928,6 +29011,7 @@ Body:
     EquipLevelMin: 180
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -28973,6 +29057,7 @@ Body:
       Left_Hand: true
     ArmorLevel: 1
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29014,6 +29099,7 @@ Body:
     ArmorLevel: 2
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -29150,6 +29236,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 150
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29201,6 +29288,7 @@ Body:
     EquipLevelMin: 150
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -29478,6 +29566,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 200
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29517,6 +29606,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 200
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29590,6 +29680,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 200
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29634,6 +29725,7 @@ Body:
     EquipLevelMin: 150
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29680,6 +29772,7 @@ Body:
     EquipLevelMin: 200
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29741,6 +29834,7 @@ Body:
     EquipLevelMin: 100
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoStorage: true
       NoSell: true
@@ -29778,6 +29872,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 200
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29814,6 +29909,7 @@ Body:
     EquipLevelMin: 200
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -29865,6 +29961,7 @@ Body:
     ArmorLevel: 2
     Refineable: true
     Gradable: true
+    View: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -29925,6 +30022,7 @@ Body:
     ArmorLevel: 1
     EquipLevelMin: 200
     Refineable: true
+    View: 1
     Trade:
       NoTrade: true
       NoStorage: true
@@ -31341,6 +31439,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 74
     Trade:
       NoDrop: true
@@ -31354,6 +31453,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 77
     Trade:
       NoDrop: true
@@ -31588,6 +31688,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 163
     Trade:
       NoDrop: true
@@ -32025,6 +32126,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -32135,6 +32237,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 263
     Trade:
       NoDrop: true
@@ -32287,6 +32390,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 267
     Trade:
       NoDrop: true
@@ -32443,6 +32547,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 109
     Trade:
       NoStorage: true
@@ -32544,6 +32649,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 197
     Trade:
       NoStorage: true
@@ -32553,6 +32659,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 198
     Trade:
       NoStorage: true
@@ -32609,6 +32716,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 271
     Trade:
       NoDrop: true
@@ -32766,6 +32874,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 287
     Trade:
       NoDrop: true
@@ -32857,6 +32966,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 290
     Trade:
       NoDrop: true
@@ -33192,6 +33302,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 304
     Trade:
       NoDrop: true
@@ -33205,6 +33316,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 206
     Trade:
       NoTrade: true
@@ -33217,6 +33329,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Head_Low: true
+    ArmorLevel: 1
     View: 2732
     Trade:
       NoDrop: true
@@ -33229,6 +33342,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 305
     Trade:
       NoTrade: true
@@ -33240,6 +33354,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 306
     Trade:
       NoDrop: true
@@ -33253,6 +33368,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 2827
     Trade:
       NoDrop: true
@@ -33266,6 +33382,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 2828
     Trade:
       NoDrop: true
@@ -33278,6 +33395,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 307
     Trade:
       NoDrop: true
@@ -33291,6 +33409,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 308
     Trade:
       NoStorage: true
@@ -33307,6 +33426,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 309
     Trade:
       NoStorage: true
@@ -33323,6 +33443,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 310
     Trade:
       NoStorage: true
@@ -33339,6 +33460,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 311
     Trade:
       NoStorage: true
@@ -33355,6 +33477,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 312
     Trade:
       NoStorage: true
@@ -33441,6 +33564,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 315
     Trade:
       NoDrop: true
@@ -33454,6 +33578,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 316
     Trade:
       NoDrop: true
@@ -33467,6 +33592,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 318
     Trade:
       NoDrop: true
@@ -33480,6 +33606,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 319
     Trade:
       NoDrop: true
@@ -33493,6 +33620,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     Trade:
       NoDrop: true
       NoTrade: true
@@ -33550,6 +33678,7 @@ Body:
     Type: Armor
     Locations:
       Costume_Garment: true
+    ArmorLevel: 1
     View: 324
     Trade:
       NoDrop: true

@@ -801,7 +801,8 @@ def main():
         if typ == 'Weapon':
             wl = to_int(first(f, 'Weapon Level', '무기레벨', '무기 레벨'))
             e['WeaponLevel'] = min(wl, 5) if wl else 4
-        if typ == 'Armor' and not any(l.startswith('Costume') for l in locs):
+        # renewal's item_db warns about any armor without one, costumes included
+        if typ == 'Armor':
             al = to_int(first(f, 'Armor Level', '방어구 레벨', '방어구레벨'))
             e['ArmorLevel'] = min(al, 2) if al else 1
         if equip:
@@ -821,6 +822,10 @@ def main():
                 e['Gradable'] = True
         if equip and v.get('ClassNum') and typ != 'ShadowGear':
             e['View'] = v['ClassNum']
+        elif typ == 'Armor' and 'Left_Hand' in locs:
+            # a shield needs a view id for skills that check for one; 1 is Guard,
+            # what the item_db would default it to with a warning
+            e['View'] = 1
         rule = moves.get(i)
         if rule:
             flags = ['NoDrop', 'NoTrade', 'NoStorage', 'NoCart', 'NoSell', 'NoMail', 'NoAuction', 'NoGuildStorage']
