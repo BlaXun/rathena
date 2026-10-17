@@ -4,6 +4,22 @@
 OnPCLoginEvent:
 	if (strcharinfo(0) != "Tester")
 		end;
+	if (ltest_relog) {
+		// 17, after the relog: TST_KEEP came back, TST_GONE did not.
+		ltest_relog = 0;
+		.@aid = getcharid(3);
+		sleep2 1500;	// kept statuses come back once the map is loaded
+		skill "TST_PROBE3", 10, 3;
+		.@flee = readparam(bFlee);
+		detachrid;
+		unitskilluseid .@aid, "TST_PROBE3", 9, .@aid;	// what came back
+		unitskilluseid .@aid, "TST_PROBE3", 10, .@aid;	// TST_KEEP off
+		sleep 500;
+		attachrid(.@aid);
+		debugmes "S|probe4_kept_flee " + (.@flee - readparam(bFlee));
+		debugmes "S|end";
+		end;
+	}
 	.@aid = getcharid(3);
 	.@cid = getcharid(0);
 	sleep2 2500;	// the refund NPC, and the client's skill-ups
@@ -398,7 +414,52 @@ OnPCLoginEvent:
 	unitkill .@d1;
 	sleep 500;
 
-	// 13. A boss holds at most 3 stacks of Toxin.
+	// 13. What a ground skill leaves hits at the power of the c:cast or
+	// c:place_unit that placed it, and range hooks change how far a skill
+	// reaches: TST_RANGE_STRIKE's Range is 3, its own hook adds 1 and
+	// TST_LONG_REACH 4 more.
+	debugmes "S|step probe4";
+	attachrid(.@aid);
+	skill "TST_RANGE_STRIKE", 1, 3;
+	percentheal 100, 100;
+	getmapxy(.@m$, .@px, .@py, BL_PC);
+	detachrid;
+	// On the row the later steps walk too: cells a unit can stand on.
+	monster .@m$, .@px + 2, .@py, "--en--", 25990, 1;
+	.@g1 = $@mobid[0];
+	monster .@m$, .@px + 4, .@py, "--en--", 25990, 1;
+	.@g2 = $@mobid[0];
+	monster .@m$, .@px + 6, .@py, "--en--", 25990, 1;
+	.@g3 = $@mobid[0];
+	sleep 500;
+	unitskilluseid .@aid, "TST_PROBE3", 4, .@aid;
+	sleep 3000;	// the units hit every 300 ms for 2 s
+	unitkill .@g1;
+	unitkill .@g2;
+	unitkill .@g3;
+	monster .@m$, .@px + 7, .@py, "--en--", 25990, 1;
+	.@far = $@mobid[0];
+	sleep 500;
+	unitskilluseid .@aid, "TST_PROBE3", 5, .@aid;	// the range: 4
+	getunitdata .@far, .@d;
+	.@hp0 = .@d[UMOB_HP];
+	unitskilluseid .@aid, "TST_RANGE_STRIKE", 1, .@far;	// 7 cells: too far
+	sleep 1000;
+	getunitdata .@far, .@d;
+	.@short = .@hp0 - .@d[UMOB_HP];
+	unitskilluseid .@aid, "TST_PROBE3", 6, .@aid;	// TST_LONG_REACH on
+	sleep 300;
+	unitskilluseid .@aid, "TST_PROBE3", 7, .@aid;	// the range: 8
+	.@hp0 = .@d[UMOB_HP];
+	unitskilluseid .@aid, "TST_RANGE_STRIKE", 1, .@far;
+	sleep 1000;
+	getunitdata .@far, .@d;
+	getmapxy(.@m$, .@qx, .@qy, BL_PC, "Tester");
+	debugmes "S|probe4_reach " + .@short + " " + (.@hp0 - .@d[UMOB_HP]) + " " + (.@qx - .@px) + " " + (.@qy - .@py);
+	unitkill .@far;
+	sleep 500;
+
+	// 14. A boss holds at most 3 stacks of Toxin.
 	debugmes "S|step boss";
 	monster .@m$, .@x + 4, .@y, "--en--", 25993, 1;
 	.@boss = $@mobid[0];
@@ -411,7 +472,7 @@ OnPCLoginEvent:
 	debugmes "S|boss_hp " + .@d[UMOB_HP];
 
 
-	// 14. on_death: a passive keeps the player alive.
+	// 15. on_death: a passive keeps the player alive.
 	debugmes "S|step survive";
 	unitkill .@aid;
 	debugmes "S|hp_after_death " + readparam(Hp, .@cid);
@@ -419,7 +480,7 @@ OnPCLoginEvent:
 	// Still alive a second later (natural regen may have added some HP).
 	debugmes "S|alive_after_death " + (readparam(Hp, .@cid) > 0);
 
-	// 15. A skill reset gives back the skills still learned, and nothing
+	// 16. A skill reset gives back the skills still learned, and nothing
 	// for the ones taken away: the refund already did.
 	debugmes "S|step reset";
 	attachrid(.@aid);
@@ -431,6 +492,18 @@ OnPCLoginEvent:
 	resetskill;
 	debugmes "S|reset_gain " + (SkillPoint - .@before) + " " + .@expected;
 	detachrid;
-	debugmes "S|end";
+
+	// 17. A status with persist = true is kept over a logout: the client
+	// logs out and in again, and the login event goes on at the top.
+	debugmes "S|step persist";
+	attachrid(.@aid);
+	skill "TST_PROBE3", 10, 3;
+	detachrid;
+	unitskilluseid .@aid, "TST_PROBE3", 8, .@aid;	// TST_KEEP x3 for 40 s, TST_GONE
+	sleep 300;
+	unitskilluseid .@aid, "TST_PROBE3", 9, .@aid;	// what there is before
+	attachrid(.@aid);
+	ltest_relog = 1;
+	debugmes "S|client relog";
 	end;
 }

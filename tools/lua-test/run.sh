@@ -82,8 +82,9 @@ for era in re pre-re; do : > "$WORK/npc/$era/scripts_main.conf"; done
 # Appended, so a conf/import of this checkout's own (database login, IPs) still counts.
 printf 'pincode_enabled: no\nchar_maintenance: 0\n' >> "$WORK/conf/import/char_conf.txt"
 printf 'new_account: no\n' >> "$WORK/conf/import/login_conf.txt"
-# The tester learns from the job's own tree, whatever was spent before.
-printf 'player_skillup_limit: no\n' >> "$WORK/conf/import/battle_conf.txt"
+# The tester learns from the job's own tree, whatever was spent before, and
+# leaves at once when the client logs out, though it has just fought.
+printf 'player_skillup_limit: no\nprevent_logout: 0\n' >> "$WORK/conf/import/battle_conf.txt"
 touch "$WORK/conf/import/map_conf.txt"
 
 CLIENT_ARGS=()

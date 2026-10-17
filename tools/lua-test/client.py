@@ -6,8 +6,9 @@ enters the map server, finishes loading (so OnPCLoginEvent runs), sends the
 skill-ups given on the command line, and then stays connected -- ticking so
 the server keeps it -- until `--seconds` have passed or the map server's
 log (`--log`) says "S|end". Meanwhile it does what the scenario asks of a
-player in that log: "S|client use <index>" uses an inventory item, and
-"S|client produce <item id>" picks an entry of a crafting menu.
+player in that log: "S|client use <index>" uses an inventory item,
+"S|client produce <item id>" picks an entry of a crafting menu, and
+"S|client relog" logs out and back in.
 """
 import argparse
 import socket
@@ -95,6 +96,29 @@ def enter_map(ip, port, aid, cid, login_id1, sex):
     return s
 
 
+def connect(args):
+    """Login, character select and map: the map server's socket and the
+    char server's, and the account id."""
+    aid, l1, l2, sex = login(args.host, args.login_port, args.user, args.password)
+    print("login ok: aid %d sex %d" % (aid, sex), flush=True)
+    cs, cid, mapname, ip, port = select_char(args.host, args.char_port, aid, l1, l2, sex, 0)
+    print("char ok: cid %d on %s, map server %s:%d" % (cid, mapname, ip, port), flush=True)
+    ms = enter_map(args.host if ip.startswith("0.") else ip, port, aid, cid, l1, sex)
+    print("in game", flush=True)
+    return aid, cs, ms
+
+
+def reconnect(args, tries=10):
+    """connect(), again while the servers still count the last session."""
+    for _ in range(tries):
+        try:
+            return connect(args)
+        except (RuntimeError, OSError, AssertionError) as e:
+            print("not yet: %s" % e, flush=True)
+            time.sleep(2)
+    raise RuntimeError("could not log in again")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default="127.0.0.1")
@@ -107,12 +131,7 @@ def main():
     ap.add_argument("--skillup", type=int, action="append", default=[])
     args = ap.parse_args()
 
-    aid, l1, l2, sex = login(args.host, args.login_port, args.user, args.password)
-    print("login ok: aid %d sex %d" % (aid, sex), flush=True)
-    cs, cid, mapname, ip, port = select_char(args.host, args.char_port, aid, l1, l2, sex, 0)
-    print("char ok: cid %d on %s, map server %s:%d" % (cid, mapname, ip, port), flush=True)
-    ms = enter_map(args.host if ip.startswith("0.") else ip, port, aid, cid, l1, sex)
-    print("in game", flush=True)
+    aid, cs, ms = connect(args)
     time.sleep(0.5)
     for skill_id in args.skillup:
         ms.sendall(struct.pack("<HH", 0x0112, skill_id))  # CZ_UPGRADE_SKLEVEL
@@ -135,11 +154,18 @@ def main():
             # (CZ_USE_ITEM2) and "S|client produce <item id>" (CZ_REQMAKINGITEM).
             actions = [line.split("S|client ", 1)[1].split() for line in text.splitlines() if "S|client " in line]
             for action in actions[done_actions:]:
+                print("client action %s" % " ".join(action), flush=True)
                 if action[0] == "use":
                     ms.sendall(struct.pack("<HHI", 0x0439, int(action[1]) + 2, aid))
                 elif action[0] == "produce":
                     ms.sendall(struct.pack("<HIIII", 0x018E, int(action[1]), 0, 0, 0))
-                print("client action %s" % " ".join(action), flush=True)
+                elif action[0] == "relog":
+                    # Long enough offline that a timer still running would show.
+                    ms.close()
+                    cs.close()
+                    time.sleep(6)
+                    aid, cs, ms = reconnect(args)
+                    next_tick = 0
             done_actions = len(actions)
             if "S|end" in text:
                 print("scenario finished", flush=True)

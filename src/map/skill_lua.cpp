@@ -101,7 +101,7 @@ void count_hook(lua_State* state, lua_Debug*) {
 enum e_hook : uint8 {
 	HOOK_RATIO = 0, HOOK_HIT, HOOK_ELEMENT, HOOK_ON_HIT, HOOK_ON_STEAL, HOOK_LEVEL, HOOK_JOB_LEVEL, HOOK_HEAL,
 	// About a use of this skill
-	HOOK_ON_CAST, HOOK_CAN_CAST, HOOK_COST, HOOK_BEFORE_CAST, HOOK_HITS, HOOK_CRITICAL,
+	HOOK_ON_CAST, HOOK_CAN_CAST, HOOK_COST, HOOK_BEFORE_CAST, HOOK_HITS, HOOK_CRITICAL, HOOK_RANGE,
 	// For every player who has learned this skill (see LEARNER_HOOKS)
 	HOOK_BONUS, HOOK_ON_ATTACK, HOOK_ON_HIT_TAKEN, HOOK_DAMAGE_DEALT, HOOK_DAMAGE_TAKEN, HOOK_ON_KILL, HOOK_ON_DEATH, HOOK_ON_SKILL, HOOK_TICK,
 	HOOK_STATS, HOOK_CRAFT, HOOK_ON_CRAFT, HOOK_ON_USE,
@@ -109,7 +109,7 @@ enum e_hook : uint8 {
 };
 const char* const hook_names[HOOK_MAX] = {
 	"ratio", "hit", "element", "on_hit", "on_steal", "level", "job_level", "heal",
-	"on_cast", "can_cast", "cost", "before_cast", "hits", "critical",
+	"on_cast", "can_cast", "cost", "before_cast", "hits", "critical", "range",
 	"bonus", "on_attack", "on_hit_taken", "damage_dealt", "damage_taken", "on_kill", "on_death", "on_skill", "tick",
 	"stats", "craft", "on_craft", "on_use",
 };
@@ -205,19 +205,22 @@ s_item_hooks* item_hooks_for(t_itemid nameid) {
 //
 // They are kept here, not as server status changes: the server's statuses
 // are an enum compiled into it, and their effects are code. A mod's status is
-// a name, stacks, a duration and hooks. It lives in memory only, so it ends
-// with a restart, a logout or the unit leaving.
+// a name, stacks, a duration and hooks. It lives in memory, so it ends with a
+// restart, a logout or the unit leaving; with persist = true, a player's is
+// kept in the mod store over a logout or a restart.
 // ---------------------------------------------------------------------------
 
 enum e_status_hook : uint8 {
 	SHOOK_ON_START = 0, SHOOK_ON_END, SHOOK_BONUS, SHOOK_STATS, SHOOK_DAMAGE_DEALT, SHOOK_DAMAGE_TAKEN, SHOOK_ON_ATTACK, SHOOK_ON_HIT_TAKEN, SHOOK_TICK,
 	SHOOK_ON_KILL, SHOOK_ON_DEATH, SHOOK_ON_SKILL, SHOOK_COST, SHOOK_CAN_CAST, SHOOK_CRITICAL, SHOOK_CRAFT, SHOOK_ON_CRAFT, SHOOK_ON_USE,
+	SHOOK_RANGE,
 	SHOOK_CHANCE,  ///< a server status only: the chance it lands
 	SHOOK_MAX
 };
 const char* const status_hook_names[SHOOK_MAX] = {
 	"on_start", "on_end", "bonus", "stats", "damage_dealt", "damage_taken", "on_attack", "on_hit_taken", "tick",
 	"on_kill", "on_death", "on_skill", "cost", "can_cast", "critical", "craft", "on_craft", "on_use",
+	"range",
 	"chance",
 };
 
@@ -244,6 +247,7 @@ struct s_lua_status {
 	bool end_on_death = true;
 	int32 decay_every = 0;         ///< ms between losing stacks; 0: never
 	int32 decay_stacks = 1;
+	bool persist = false;          ///< a player keeps it over a logout (mod store)
 	std::vector<s_hook> hooks[SHOOK_MAX];
 };
 
@@ -301,6 +305,12 @@ bool protected_call(s_hook& hook, const char* skill, int32 nargs, int32 nresults
 
 	lua_pushcfunction(L, message_handler);
 	lua_insert(L, base);
+
+	// A hook can run inside another's call (a range hook, for the other's
+	// unit:skill_range): the other goes on as its own mod, with its budget.
+	std::string outer_mod = current_mod;
+	int32 outer_budget = budget;
+
 	current_mod = hook.mod;
 	budget = CALL_BUDGET;
 
@@ -310,6 +320,8 @@ bool protected_call(s_hook& hook, const char* skill, int32 nargs, int32 nresults
 
 	protected_depth--;
 	lua_remove(L, base);
+	current_mod = outer_mod;
+	budget = outer_budget;
 
 	if (status == LUA_OK)
 		return true;
@@ -909,6 +921,23 @@ int32 lua_unit_cooldown_left(lua_State* state) {
 	return 1;
 }
 
+// unit:skill_range("SN_SHARPSHOOTING", {lv}) -- how far the unit reaches with
+// that skill at that level (1 by default), as the server checks a use: the
+// skill's Range, what the unit adds to it (Vulture's Eye) and mods' range
+// hooks. nil once the unit is gone.
+int32 lua_unit_skill_range(lua_State* state) {
+	luaL_checktype(state, 1, LUA_TTABLE);
+	uint16 skill_id = check_skill(state, 2, "unit:skill_range");
+	uint16 lv = static_cast<uint16>(std::clamp<lua_Integer>(luaL_optinteger(state, 3, 1), 1, MAX_SKILL_LEVEL));
+	block_list* bl = map_id2bl(unit_id_at(state, 1));
+
+	if (bl == nullptr)
+		lua_pushnil(state);
+	else
+		lua_pushinteger(state, skill_get_range2(bl, skill_id, lv, true));
+	return 1;
+}
+
 /// The metatable every unit table shares: its methods.
 int32 unit_meta_ref = LUA_NOREF;
 
@@ -922,7 +951,7 @@ void register_unit_methods() {
 		{ "find_item", lua_unit_find_item },         { "mob_skills", lua_unit_mob_skills },
 		{ "devotees", lua_unit_devotees },           { "homunculus", lua_unit_homunculus },
 		{ "master", lua_unit_master },               { "cooldown_left", lua_unit_cooldown_left },
-		{ nullptr, nullptr },
+		{ "skill_range", lua_unit_skill_range },     { nullptr, nullptr },
 	};
 
 	lua_createtable(L, 0, 1);
@@ -1661,7 +1690,7 @@ int32 lua_hit_polymorph(lua_State* state) {
 	return 0;
 }
 
-/// opts.power of a cast or an attack: % of the damage, 1..1000.
+/// opts.power of a cast, an attack or a placed unit: % of the damage, 1..1000.
 int32 opt_power(lua_State* state, int32 arg) {
 	return static_cast<int32>(std::clamp<lua_Integer>(opt_int(state, arg, "power", 100), 1, 1000));
 }
@@ -1673,7 +1702,8 @@ int32 opt_power(lua_State* state, int32 arg) {
 // no items).
 // opts.by: who casts it (default the hook's caster); opts.x, opts.y: the cell
 // a ground skill goes to (default where `who` stands); opts.power: % of the
-// damage it deals while it is cast (not later hits of what it leaves behind).
+// damage it deals, also later from the ground units it places as it is cast
+// (Storm Gust's ticks).
 int32 lua_hit_cast(lua_State* state) {
 	s_skill_lua_hit& hit = hit_or_error(state, "cast");
 	uint16 skill_id = check_skill(state, 2, "c:cast");
@@ -1869,7 +1899,7 @@ int32 lua_hit_spend(lua_State* state) {
 // c:place_unit("MG_FIREWALL", 10, x, y, {opts}) -- place a ground skill at a
 // cell, owned by the hook's owner (or opts.by), outside the skill's own limit
 // on how many may stand. opts.duration: how long it stays (ms; default the
-// skill's).
+// skill's); opts.power: % of the damage its hits deal.
 int32 lua_hit_place_unit(lua_State* state) {
 	s_skill_lua_hit& hit = hit_or_error(state, "place_unit");
 	uint16 skill_id = check_skill(state, 2, "c:place_unit");
@@ -1884,6 +1914,7 @@ int32 lua_hit_place_unit(lua_State* state) {
 	action.x = static_cast<int16>(luaL_checkinteger(state, 4));
 	action.y = static_cast<int16>(luaL_checkinteger(state, 5));
 	action.duration = std::clamp<lua_Integer>(opt_int(state, 6, "duration", 0), 0, 3600000);
+	action.power = opt_power(state, 6);
 	action.by_id = opt_unit(state, 6, "by", hit);
 	if (action.by_id == 0)
 		action.by_id = current_owner != 0 ? current_owner : hit.src_id;
@@ -2779,7 +2810,7 @@ bool status_bool(lua_State* state, const char* status, const char* key) {
 // status("TC_TOXIN", { icon = "EFST_TOXIN", duration = 10000, max_stacks = 10,
 //   max_stacks_boss = 3, max_stacks_player = 3, per_source = true,
 //   refresh = true, end_on_death = true, decay = { every = 3000, stacks = 1 },
-//   damage_taken = function(c, damage) ... end, ... })
+//   persist = false, damage_taken = function(c, damage) ... end, ... })
 // A status of the mod's own: a name, stacks, a duration and hooks.
 //
 // status("SC_HIDING", { on_start = ..., on_end = ... })
@@ -2862,6 +2893,12 @@ int32 lua_register_status(lua_State* state) {
 			def.refresh = status_bool(state, name, key);
 		} else if (strcmp(key, "end_on_death") == 0) {
 			def.end_on_death = status_bool(state, name, key);
+		} else if (strcmp(key, "persist") == 0) {
+			def.persist = status_bool(state, name, key);
+			// It is kept under its name in the mod store, whose paths are
+			// letters, digits and '_'.
+			if (def.persist && std::any_of(def.name.begin(), def.name.end(), [](char c) { return !ISALNUM(c) && c != '_'; }))
+				return luaL_error(state, "status %s: persist needs a name of letters, digits and '_' only", name);
 		} else if (strcmp(key, "decay") == 0) {
 			if (!lua_istable(state, -1))
 				return luaL_error(state, "status %s: decay is a table like { every = 3000, stacks = 1 }", name);
@@ -2872,7 +2909,7 @@ int32 lua_register_status(lua_State* state) {
 			def.decay_stacks = lua_isnil(state, -1) ? 1 : status_int(state, name, "decay.stacks", 1, 10000);
 			lua_pop(state, 1);
 		} else {
-			return luaL_error(state, "status %s: unknown key \"%s\" (a hook: %s; or icon, duration, max_stacks, max_stacks_boss, max_stacks_player, per_source, refresh, end_on_death, decay, priority)",
+			return luaL_error(state, "status %s: unknown key \"%s\" (a hook: %s; or icon, duration, max_stacks, max_stacks_boss, max_stacks_player, per_source, refresh, end_on_death, decay, persist, priority)",
 				name, key, name_list(status_hook_names, SHOOK_MAX).c_str());
 		}
 		lua_pop(state, 1);
@@ -3283,6 +3320,19 @@ void register_store() {
 
 namespace {
 
+/// skill_attack's dsrc while it works out a hit (skill_lua_dealt_by): the
+/// ground skill unit that deals it, for a ground skill's later hits.
+block_list* dealt_by = nullptr;
+
+/// The power of what a c:cast or c:place_unit placed, by group id: the later
+/// hits of its units deal that % of their damage. `created` (the group's
+/// tick) tells it from a later group given the same id.
+struct s_unit_power {
+	int32 percent;
+	t_tick created;
+};
+std::unordered_map<int32, s_unit_power> unit_power;
+
 /// What hooks asked for where it cannot happen at once (a unit dying, a status
 /// starting or ending inside the server's own code): a timer applies it right
 /// after.
@@ -3349,12 +3399,17 @@ void show_icon(block_list& bl, const s_lua_status& def) {
 		clif_status_change(&bl, def.icon, 1, forever ? INFINITE_TICK : left, stacks, 0, 0);
 }
 
-/// Recalculate what `def`'s bonus and stats hooks give `bl`.
+/// Recalculate what `def`'s bonus and stats hooks give `bl`, and tell a
+/// player's client the ranges its range hooks change.
 void recalc(block_list& bl, const s_lua_status& def) {
-	if (map_session_data* sd = BL_CAST(BL_PC, &bl); sd != nullptr && !def.hooks[SHOOK_BONUS].empty())
+	map_session_data* sd = BL_CAST(BL_PC, &bl);
+
+	if (sd != nullptr && !def.hooks[SHOOK_BONUS].empty())
 		status_calc_pc(sd, SCO_NONE);
 	else if (!def.hooks[SHOOK_STATS].empty())
 		status_calc_bl(&bl, { SCB_DEF, SCB_DEF2, SCB_MDEF, SCB_MDEF2, SCB_HIT, SCB_FLEE, SCB_FLEE2, SCB_CRI, SCB_SPEED, SCB_BATK, SCB_WATK, SCB_MATK, SCB_ASPD, SCB_MAXHP, SCB_MAXSP });
+	if (sd != nullptr && !def.hooks[SHOOK_RANGE].empty())
+		clif_skillinfoblock(*sd);  // the skill list carries each skill's range
 }
 
 /// on_start, on_end or tick of one instance of `def` on `unit`. What the hooks
@@ -3620,6 +3675,161 @@ void give_item(map_session_data& sd, t_itemid nameid, int32 amount, bool floor =
 	}
 }
 
+/// Where a mod's statuses with persist = true are kept, in its char store:
+/// _statuses.<name> holds one "stacks,ms left,source,ms to the next decay"
+/// for each instance, joined by ';' (-1: no end, no decay).
+constexpr const char* PERSIST_PATH = "_statuses";
+
+/// The mods that define a status with persist = true.
+std::vector<std::string> persist_mods;
+
+/// The players whose kept statuses are back on them since they logged in,
+/// and whether any were kept. Until a player is in it, what is stored stays.
+std::unordered_map<int32, bool> persist_loaded;
+
+/// One kept instance of `def` on `sd`, as it was at the logout: it goes on,
+/// so on_start does not run again. One put on since the login stays instead.
+void restore_instance(map_session_data& sd, const s_lua_status& def, int64 stacks, int64 left, int64 source, int64 decay) {
+	int32 cap = stack_cap(sd, def);
+
+	if (cap <= 0 || stacks <= 0)
+		return;
+
+	std::vector<s_lua_status_on>& on_unit = statuses_on[sd.id];
+	int32 source_id = static_cast<int32>(source);
+
+	if (std::any_of(on_unit.begin(), on_unit.end(), [&](const s_lua_status_on& on) {
+			return on.index == def.index && (!def.per_source || on.source_id == source_id);
+		}))
+		return;
+
+	t_tick now = gettick();
+	t_tick expires = left < 0 ? 0 : now + std::max<int64>(left, 1);
+	t_tick next_decay = def.decay_every <= 0 ? 0 : now + (decay >= 0 ? decay : def.decay_every);
+
+	on_unit.push_back({ def.index, source_id, static_cast<int32>(std::min<int64>(stacks, cap)), expires, next_decay });
+}
+
+/// `sd` has loaded the map after logging in: the statuses with persist = true
+/// they had at their last logout come back.
+void restore_persistent(map_session_data& sd) {
+	bool any = false;
+	std::vector<int32> restored;
+
+	for (const std::string& mod : persist_mods) {
+		mod_store::s_target t;
+		std::string error;
+		std::vector<std::pair<std::string, mod_store::s_value>> entries;
+
+		if (!mod_store::target(mod, mod_store::SCOPE_CHAR, &sd, t, error) || !mod_store::read(t, PERSIST_PATH, entries, error))
+			continue;
+		for (const auto& [name, value] : entries) {
+			any = true;
+
+			s_lua_status* def = custom_status(name.c_str());
+
+			// A status this mod no longer keeps is dropped at the logout.
+			if (def == nullptr || !def->persist || def->mod != mod || !value.is_string)
+				continue;
+			for (size_t start = 0; start <= value.text.size();) {
+				size_t end = value.text.find(';', start);
+				std::string one = value.text.substr(start, end == std::string::npos ? std::string::npos : end - start);
+				long long stacks, left, source, decay;
+
+				if (sscanf(one.c_str(), "%lld,%lld,%lld,%lld", &stacks, &left, &source, &decay) == 4)
+					restore_instance(sd, *def, stacks, left, source, decay);
+				if (end == std::string::npos)
+					break;
+				start = end + 1;
+			}
+			if (std::find(restored.begin(), restored.end(), def->index) == restored.end())
+				restored.push_back(def->index);
+		}
+	}
+	persist_loaded[sd.id] = any;
+	for (int32 index : restored) {
+		show_icon(sd, *status_list[index]);
+		recalc(sd, *status_list[index]);
+	}
+}
+
+/// The players who have loaded the map since they logged in get their kept
+/// statuses back.
+void restore_logged_in() {
+	std::vector<int32> due;
+	s_mapiterator* iter = mapit_getallusers();
+
+	for (block_list* bl = mapit_first(iter); mapit_exists(iter); bl = mapit_next(iter)) {
+		const map_session_data* sd = BL_CAST(BL_PC, bl);
+
+		if (sd != nullptr && sd->prev != nullptr && !sd->state.connect_new && persist_loaded.count(sd->id) == 0)
+			due.push_back(sd->id);
+	}
+	mapit_free(iter);
+	for (int32 id : due)
+		if (map_session_data* sd = map_id2sd(id); sd != nullptr)
+			restore_persistent(*sd);
+}
+
+/// mod_store::on_logout: `sd` leaves. Their statuses with persist = true go
+/// into the char store of the mod that defined them; every mod status on
+/// them ends with them.
+void persist_on_logout(map_session_data& sd) {
+	if (L == nullptr)
+		return;
+
+	auto loaded = persist_loaded.find(sd.id);
+
+	// Before they were back on the player (a logout right after the login),
+	// what is stored stays as it is.
+	if (!persist_mods.empty() && loaded != persist_loaded.end()) {
+		std::unordered_map<std::string, std::unordered_map<std::string, std::string>> kept;  // mod, status: instances
+
+		if (auto it = statuses_on.find(sd.id); it != statuses_on.end()) {
+			t_tick now = gettick();
+
+			for (const s_lua_status_on& on : it->second) {
+				const s_lua_status& def = *status_list[on.index];
+
+				if (!def.persist)
+					continue;
+
+				// A player's id is their account's, the same after a restart;
+				// any other unit's is not.
+				int32 source = on.source_id != 0 && map_id2sd(on.source_id) != nullptr ? on.source_id : 0;
+				std::string& text = kept[def.mod][def.name];
+
+				if (!text.empty())
+					text += ';';
+				text += std::to_string(on.stacks) + ',' + std::to_string(on.expires == 0 ? -1 : std::max<int64>(1, DIFF_TICK(on.expires, now)))
+					+ ',' + std::to_string(source) + ',' + std::to_string(on.next_decay == 0 ? -1 : std::max<int64>(0, DIFF_TICK(on.next_decay, now)));
+			}
+		}
+		// Nothing to keep and nothing kept: the store is left alone.
+		if (loaded->second || !kept.empty()) {
+			for (const std::string& mod : persist_mods) {
+				mod_store::s_target t;
+				std::string error;
+				int32 removed = 0;
+
+				if (!mod_store::target(mod, mod_store::SCOPE_CHAR, &sd, t, error) || !mod_store::remove(t, PERSIST_PATH, removed, error))
+					continue;
+				if (auto m = kept.find(mod); m != kept.end()) {
+					for (const auto& [name, text] : m->second) {
+						mod_store::s_value value;
+
+						value.is_string = true;
+						value.text = text;
+						mod_store::set(t, std::string(PERSIST_PATH) + "." + name, value, error);
+					}
+				}
+			}
+		}
+	}
+	persist_loaded.erase(sd.id);
+	statuses_on.erase(sd.id);
+}
+
 /// Every SWEEP_INTERVAL: statuses run out, lose stacks to decay, or leave
 /// with their unit (a player logging out, a monster gone from the server).
 TIMER_FUNC(skill_lua_sweep) {
@@ -3630,6 +3840,9 @@ TIMER_FUNC(skill_lua_sweep) {
 	};
 	std::vector<s_ended> ended;
 	std::vector<std::pair<int32, int32>> changed;  // (unit, status index)
+
+	if (!persist_mods.empty())
+		restore_logged_in();
 
 	for (auto it = statuses_on.begin(); it != statuses_on.end();) {
 		if (map_id2bl(it->first) == nullptr) {
@@ -3803,6 +4016,14 @@ void do_init_skill_lua() {
 		loaded, files.size(), skill_hooks_total, hooks_by_name.size(), item_hooks_total, item_hooks_by_name.size(), status_list.size(), stock_status_hooks.size());
 	skill_lua_attach();
 
+	for (const s_lua_status* def : status_list)
+		if (def->persist && std::find(persist_mods.begin(), persist_mods.end(), def->mod) == persist_mods.end())
+			persist_mods.push_back(def->mod);
+	// A player's mod statuses end when they leave; those with persist = true
+	// are kept in the mod store first.
+	if (!status_list.empty())
+		mod_store::on_logout(persist_on_logout);
+
 	add_timer_func_list(skill_lua_deferred, "skill_lua_deferred");
 	add_timer_func_list(skill_lua_sweep, "skill_lua_sweep");
 	add_timer_func_list(skill_lua_tick, "skill_lua_tick");
@@ -3821,6 +4042,9 @@ void do_final_skill_lua() {
 		delete_timer(deferred_timer, skill_lua_deferred);
 	sweep_timer = tick_timer = deferred_timer = INVALID_TIMER;
 	deferred.clear();
+	unit_power.clear();
+	persist_mods.clear();
+	persist_loaded.clear();
 	statuses_on.clear();
 	status_list.clear();
 	stock_status_hooks.clear();
@@ -4065,7 +4289,62 @@ public:
 	with_power& operator=(const with_power&) = delete;
 };
 
+/// The % of its damage a hit of `skill_id` by `src` deals: a running c:cast
+/// or c:attack's power, or that of the ground unit dealing it.
+int32 power_of(const block_list& src, uint16 skill_id) {
+	if (lua_power.percent != 100 && src.id == lua_power.src_id && skill_id == lua_power.skill_id)
+		return lua_power.percent;
+	if (dealt_by == nullptr || dealt_by->type != BL_SKILL || unit_power.empty())
+		return 100;
+
+	const s_skill_unit_group* group = static_cast<const skill_unit*>(dealt_by)->group.get();
+
+	if (group == nullptr || group->skill_id != skill_id || group->src_id != src.id)
+		return 100;
+
+	auto it = unit_power.find(group->group_id);
+
+	return it != unit_power.end() && it->second.created == group->tick ? it->second.percent : 100;
+}
+
+/// The ids of the ground skill groups `bl` owns.
+std::vector<int32> group_ids(block_list& bl) {
+	std::vector<int32> ids;
+
+	if (unit_data* ud = unit_bl2ud(&bl); ud != nullptr)
+		for (const std::shared_ptr<s_skill_unit_group>& group : ud->skillunits)
+			if (group != nullptr)
+				ids.push_back(group->group_id);
+	return ids;
+}
+
+/// The groups of `skill_id` that `bl` owns now and did not `before` deal
+/// their later hits at `percent` %. Groups gone since are forgotten.
+void keep_power(block_list& bl, uint16 skill_id, int32 percent, const std::vector<int32>& before) {
+	for (auto it = unit_power.begin(); it != unit_power.end();) {
+		std::shared_ptr<s_skill_unit_group> group = skill_id2group(it->first);
+
+		it = group == nullptr || group->tick != it->second.created ? unit_power.erase(it) : std::next(it);
+	}
+
+	unit_data* ud = unit_bl2ud(&bl);
+
+	if (ud == nullptr)
+		return;
+	for (const std::shared_ptr<s_skill_unit_group>& group : ud->skillunits)
+		if (group != nullptr && group->skill_id == skill_id && std::find(before.begin(), before.end(), group->group_id) == before.end())
+			unit_power[group->group_id] = { percent, group->tick };
+}
+
 }  // namespace
+
+skill_lua_dealt_by::skill_lua_dealt_by(block_list* dsrc) : previous_(dealt_by) {
+	dealt_by = dsrc;
+}
+
+skill_lua_dealt_by::~skill_lua_dealt_by() {
+	dealt_by = previous_;
+}
 
 /// Cast a skill the way bAutoSpell does (skill_additional_effect): the same
 /// "can this be cast here" check, ground-skill limit, cost (its HP, spheres
@@ -4469,8 +4748,12 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 
 				if (caster != nullptr && bl != nullptr && !status_isdead(*caster) && !status_isdead(*bl) && caster->m == bl->m) {
 					with_power power(action.power, *caster, static_cast<uint16>(action.type));
+					std::vector<int32> before = action.power != 100 ? group_ids(*caster) : std::vector<int32>();
 
 					cast_like_autospell(caster, bl, static_cast<uint16>(action.type), static_cast<uint16>(action.val1), action.x, action.y);
+					// What it placed on the ground deals its later hits at the same power.
+					if (action.power != 100)
+						keep_power(*caster, static_cast<uint16>(action.type), action.power, before);
 				}
 				break;
 			}
@@ -4578,10 +4861,13 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 				break;
 			case SKILL_LUA_PLACE_UNIT:
 				if (bl != nullptr && !status_isdead(*bl)) {
+					std::vector<int32> before = action.power != 100 ? group_ids(*bl) : std::vector<int32>();
 					std::shared_ptr<s_skill_unit_group> group = skill_unitsetting(bl, static_cast<uint16>(action.type), static_cast<uint16>(action.val1), action.x, action.y, 0);
 
 					if (group != nullptr && action.duration > 0)
 						group->limit = static_cast<t_tick>(action.duration);
+					if (group != nullptr && action.power != 100)
+						keep_power(*bl, static_cast<uint16>(action.type), action.power, before);
 				}
 				break;
 			case SKILL_LUA_END_UNIT:
@@ -4928,11 +5214,11 @@ void skill_lua_damage(int32 attack_type, block_list* src, block_list* target, ui
 	if (L == nullptr || src == nullptr || target == nullptr || d.damage + d.damage2 <= 0)
 		return;
 
-	// A c:cast or c:attack's power scales the damage first: the hooks see
-	// what the hit deals.
-	if (lua_power.percent != 100 && src->id == lua_power.src_id && skill_id == lua_power.skill_id) {
-		d.damage = d.damage * lua_power.percent / 100;
-		d.damage2 = d.damage2 * lua_power.percent / 100;
+	// A c:cast or c:attack's power, or that of what a ground skill placed
+	// with one, scales the damage first: the hooks see what the hit deals.
+	if (int32 percent = power_of(*src, skill_id); percent != 100) {
+		d.damage = d.damage * percent / 100;
+		d.damage2 = d.damage2 * percent / 100;
 		if (d.damage + d.damage2 <= 0)
 			return;
 	}
@@ -5317,6 +5603,48 @@ void skill_lua_requirement(map_session_data& sd, uint16 skill_id, uint16 skill_l
 			read_cost(cost, req, pushed);
 		lua_settop(L, cost - 1);
 	});
+}
+
+namespace {
+
+/// The most a range hook may make a skill's range: past what a client shows.
+constexpr int64 MAX_LUA_RANGE = 30;
+
+/// True while range hooks run: a range they ask for (unit:skill_range) is
+/// the server's own.
+bool in_range_hook = false;
+
+}  // namespace
+
+int32 skill_lua_range(const block_list* bl, uint16 skill_id, uint16 skill_lv, int32 range) {
+	if (L == nullptr || bl == nullptr || in_range_hook)
+		return range;
+
+	s_skill_hooks* hooks = hooks_for(skill_id);
+	bool own = hooks != nullptr && !hooks->hooks[HOOK_RANGE].empty();
+
+	if (!own && !has_status_hook(bl->id, SHOOK_RANGE))
+		return range;
+
+	int64 value = range;
+	acting_for none(nullptr);
+
+	in_range_hook = true;
+	// The skill's own, then the unit's statuses' (which see c.used_skill);
+	// each sees what the one before returned.
+	if (own)
+		call_number_hook(HOOK_RANGE, skill_id, skill_lv, bl, nullptr, value);
+	for_each_status(SHOOK_RANGE, *bl, [&](s_lua_status& def, const s_lua_status_on& on, s_hook& hook) {
+		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
+		push_context(skill_id, skill_lv, bl, nullptr, nullptr);
+		add_status_fields(def, on, *bl);
+		add_used_skill(skill_id, skill_lv);
+		call_number(hook, "range", def.name.c_str(), value);
+	});
+	in_range_hook = false;
+	if (value == range)
+		return range;  // no hook changed it: the server's own, untouched
+	return static_cast<int32>(std::clamp<int64>(value, 0, MAX_LUA_RANGE));
 }
 
 bool skill_lua_on_kill(block_list* src, block_list* target, uint16 skill_id, int64 damage, int64 hp_lost) {

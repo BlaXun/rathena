@@ -160,6 +160,7 @@ skill("TST_STATS_PASSIVE", {
     if not floor_logged then floor_logged = true; V("amotion_min", s.amotion_min) end
   end,
   damage_dealt = function(c, damage)
+    if c.attack_skill == "TST_GROUND_TICK" then V("tick_hit", c.target.id, damage) end
     if c.attack_skill == "TST_SPLASH_STRIKE" and c.target.kind == "mob" then
       V("dealt", c.target.mob_id, "hits", c.hits, "critical", c.critical, "left", c.damage_left, "targets", c.targets, "damage", damage)
       if c.target.mob_id == 25990 then return 1000 end
@@ -228,6 +229,7 @@ status("SC_BLESSING", { on_end = function(c) V("blessing_end", c.val1, c.status_
 -- TST_PROBE3: battle_config, the element, size and DEF tables, a cooldown
 -- started and read, and a cost hook that sees where the use goes.
 local cost_seen = {}
+local keep_starts = 0
 
 skill("TST_PROBE3", {
   custom = true,
@@ -248,9 +250,70 @@ skill("TST_PROBE3", {
       c:cooldown("AL_HEAL", 0, "caster")
     elseif lv == 3 then
       V("cooldown_cleared", c.caster:cooldown_left("AL_HEAL"))
+    elseif lv == 4 then
+      -- A ground skill's later hits at the power of what placed it: one
+      -- placed as it is, one at 50 and one cast at 200, each on a dummy.
+      -- The dummies 2, 4 and 6 cells east.
+      local at = {}
+      for _, u in ipairs(units_around(c.caster, 6, { kind = "mob" })) do
+        if u.mob_id == 25990 and u.y == c.caster.y then at[u.x - c.caster.x] = u end
+      end
+      local plain, half, double = at[2], at[4], at[6]
+      V("tick_units", plain and plain.id or 0, half and half.id or 0, double and double.id or 0)
+      if plain and half and double then
+        c:place_unit("TST_GROUND_TICK", 1, plain.x, plain.y)
+        c:place_unit("TST_GROUND_TICK", 1, half.x, half.y, { power = 50 })
+        c:cast("TST_GROUND_TICK", 1, double, { power = 200 })
+      end
+    elseif lv == 5 then
+      V("range", c.caster:skill_range("TST_RANGE_STRIKE"))
+    elseif lv == 6 then
+      c:apply_status("TST_LONG_REACH", {}, "caster")
+    elseif lv == 7 then
+      V("range_long", c.caster:skill_range("TST_RANGE_STRIKE"))
+    elseif lv == 8 then
+      c:apply_status("TST_KEEP", { stacks = 3, duration = 40000 }, "caster")
+      c:apply_status("TST_GONE", {}, "caster")
+    elseif lv == 9 then
+      local left = -1
+      for _, st in ipairs(c.caster:statuses()) do
+        if st.name == "TST_KEEP" then left = st.remaining end
+      end
+      V("kept", c.caster:status_stacks("TST_KEEP"), left, c.caster:has_status("TST_GONE"), keep_starts)
+    elseif lv == 10 then
+      c:remove_status("TST_KEEP", "caster")
     end
   end,
 })
+
+-- The ground skill of the power test, as its skill_db entry says.
+skill("TST_GROUND_TICK", { custom = true })
+
+-- A strike with Range 3: its own range hook adds 1, and TST_LONG_REACH 4
+-- more for whoever has it.
+skill("TST_RANGE_STRIKE", {
+  custom = true,
+  range = function(c, range) return range + 1 end,
+})
+
+status("TST_LONG_REACH", {
+  duration = 60000,
+  range = function(c, range)
+    if c.used_skill == "TST_RANGE_STRIKE" then return range + 4 end
+  end,
+})
+
+-- Kept over a logout, with its stacks, time left and stats; TST_GONE isn't.
+status("TST_KEEP", {
+  icon = "EFST_ATKER_BLOOD",
+  duration = 60000,
+  max_stacks = 5,
+  persist = true,
+  stats = function(c, s) s.flee = s.flee + 11 * c.stacks end,
+  on_start = function(c) keep_starts = keep_starts + 1 end,
+})
+
+status("TST_GONE", { duration = 60000 })
 
 skill("TST_COST_STRIKE", {
   custom = true,

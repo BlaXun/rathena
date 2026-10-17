@@ -13,7 +13,7 @@ since it needs a database and the app checkout.
 
 | Suite | Loads | Covers | Checks |
 |---|---|---|---|
-| `custom-skills` | `examples/mods/custom-skills` (a Guillotine Cross rework), and the test mods `zz-observe`, `zz-first` and `zz-probe` | taking skills away and refunding them; each kind of custom skill; passives; a mod's statuses with stacks, decay and caps; the hook chains and their priorities; and, through `zz-probe`'s probe skills, the queries, actions and hooks the example has no use for | 99, renewal and pre-renewal |
+| `custom-skills` | `examples/mods/custom-skills` (a Guillotine Cross rework), and the test mods `zz-observe`, `zz-first` and `zz-probe` | taking skills away and refunding them; each kind of custom skill; passives; a mod's statuses with stacks, decay and caps; the hook chains and their priorities; and, through `zz-probe`'s probe skills, the queries, actions and hooks the example has no use for, down to a status kept over a logout (the client logs out and back in) | 106, renewal and pre-renewal |
 | `third-class-sampler` | `examples/mods/third-class-sampler` (about twenty skills of the thirteen third classes with a new effect on their own IDs), and the test mod `zz-watch` | each of those effects, from the outside | 43, renewal only |
 
 ## What you need
@@ -40,7 +40,7 @@ tools/lua-test/run.sh third-class-sampler
 ```
 
 Each suite takes about two minutes. The output is one line per check and a
-total (`99 passed, 0 failed`, `43/43 passed`). The exit status is 0 when every
+total (`106 passed, 0 failed`, `43/43 passed`). The exit status is 0 when every
 check passed. The world and its logs stay in `tools/lua-test/work`
 (`log/map.out` is what the checker reads) until the next run.
 
@@ -89,8 +89,8 @@ the example's tree on the Assassin Cross there (`prere_tree.py`,
 3. It starts the servers. `client.py` logs in as `tester`/`tester123`, selects
    `Tester` and enters the map. The scenario NPC's `OnPCLoginEvent` runs
    the test. When a step needs something only a player can do (use an item,
-   pick from a crafting menu), the scenario asks the client in the log
-   (`S|client use 1`).
+   pick from a crafting menu, log out and back in), the scenario asks the
+   client in the log (`S|client use 1`, `S|client relog`).
 4. The scenario logs `S|` lines (`debugmes`). The test mods log `T|`, `P|`,
    `V|` or `W|` lines through `log()`. After the servers stop, the suite's
    `check.py` reads them from `log/map.out`. It also fails on any Lua error.
@@ -103,6 +103,6 @@ the example's tree on the Assassin Cross there (`prere_tree.py`,
   the next line.
 - **A probe**: when a script can't reach something, add a test skill to
   `test_skills.yml` and hook it in a test mod. The scenario casts it at the
-  level that picks the probe. The kit's skill IDs are 3190–3199; the example
+  level that picks the probe. The kit's skill IDs are 3188–3199; the example
   mods use 3100–3106.
 - **A check**: `check(name, ok, detail)` in the suite's `check.py`.

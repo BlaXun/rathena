@@ -61,7 +61,8 @@ Body:
     WalkSpeed: 200
     Ai: 06
     Class: Boss
-  # One that can be pushed: knockback and slide.
+  # One that can be pushed: knockback and slide. It stays where it is put,
+  # so it never wanders into another test's area.
   - Id: 25994
     AegisName: TEST_PUSHABLE
     Name: Test Pushable
@@ -73,3 +74,5 @@ Body:
     ElementLevel: 1
     WalkSpeed: 200
     Ai: 01
+    Modes:
+      NoRandomWalk: true

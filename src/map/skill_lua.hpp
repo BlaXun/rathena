@@ -153,7 +153,11 @@
  * skill's own AmmoAmount). cost must not change anything else: the server
  * asks several times per use. When it asks at the end of a cast, the use's
  * target is known (c.target, or c.x and c.y for a ground skill); its first
- * check, before the cast, has neither.
+ * check, before the cast, has neither. range returns how far the skill
+ * reaches for c.caster (`range` in: its Range with Vulture's Eye and the
+ * like); unit:skill_range(skill, lv) reads it. A player's client learns
+ * ranges with its skill list, which a mod status with a range hook sends
+ * again when it starts and ends.
  *
  * Hooks that fire for every player who has learned the skill, whatever the
  * player is doing (a passive's effect; c.skill_lv is the learned level):
@@ -194,7 +198,10 @@
  * change), damage_dealt, damage_taken, on_attack, on_hit_taken, on_start,
  * on_end (c.reason: "expired", "decayed", "removed" or "death") and tick
  * (every second). They see c.unit, c.source (who applied it; nil once that
- * unit is gone), c.stacks and c.remaining (ms; -1 for no end). status() with a server status's name
+ * unit is gone), c.stacks and c.remaining (ms; -1 for no end). persist =
+ * true keeps a player's over a logout and a restart, with its stacks and
+ * time left, in the char store of the mod that defined it (_statuses); it
+ * goes on when they are back, without on_start. status() with a server status's name
  * (SC_HIDING) takes on_start and on_end only: on_start may return a new
  * duration in ms, or false to refuse the status.
  *
@@ -218,8 +225,9 @@
  *    on_craft (the item made, a table whose amount and options the hook may
  *    change) and on_use (c.item: a consumable being used, with its creator).
  *  - A mod's status also takes on_kill, on_death (c:survive() keeps any unit
- *    alive), on_skill, cost, can_cast, critical, craft, on_craft and on_use:
- *    for every skill its holder uses (c.used_skill) and everything it does.
+ *    alive), on_skill, cost, can_cast, range, critical, craft, on_craft and
+ *    on_use: for every skill its holder uses (c.used_skill) and everything
+ *    it does.
  *  - A server status takes chance (out of 10000, before resistance), and
  *    status("*", { ... }) hooks every server status at once; their hooks see
  *    c.status_name, c.debuff and c.by_skill.
@@ -231,13 +239,16 @@
  *    size), def_rate(def); unit fields (char_id, weapon_type, spheres,
  *    amotion, aspd, master_id, riding, copied_skill, element_level, ...) and
  *    methods status_info, statuses, ground_units, equipment, count_item,
- *    find_item, mob_skills, devotees, homunculus, master, cooldown_left.
+ *    find_item, mob_skills, devotees, homunculus, master, cooldown_left,
+ *    skill_range.
  *  - Actions: status (now with vals and the chance out of 10000, as
- *    documented), end_status, status_val, cast (opts by, x, y, power),
- *    attack, spheres, slide, knockback, interrupt, summon (opts neutral),
- *    set_target, take_item, copy_skill, itemskill, spend, place_unit,
- *    end_unit, expire, produce_menu, mount, teleport, cooldown; heal (opts
- *    force) defaults to the caster, as documented; give_item (opts floor).
+ *    documented), end_status, status_val, cast (opts by, x, y, power; the
+ *    power reaches what the cast places on the ground), attack, spheres,
+ *    slide, knockback, interrupt, summon (opts neutral), set_target,
+ *    take_item, copy_skill, itemskill, spend, place_unit (opts duration, by,
+ *    power), end_unit, expire, produce_menu, mount, teleport, cooldown; heal
+ *    (opts force) defaults to the caster, as documented; give_item (opts
+ *    floor).
  *  - Context: c.blocked and c.autocast on attacks; c.hits, c.damage_left
  *    (a damage hook's second result sets the left hand's part) and c.targets
  *    on damage; c.damage, c.overkill and c.element on on_kill and on_death.
@@ -380,9 +391,27 @@ template <size_t N>
 void skill_lua_stats(block_list& bl, const std::bitset<N>& flag);
 
 /// battle_calc_attack: mods' damage_dealt and damage_taken hooks, and the
-/// power of a c:cast or c:attack. `count` is battle_calc_attack's own
-/// flag: for an area skill whose damage is split, how many targets share it.
+/// power of a c:cast, c:attack or c:place_unit. `count` is
+/// battle_calc_attack's own flag: for an area skill whose damage is split,
+/// how many targets share it.
 void skill_lua_damage(int32 attack_type, block_list* src, block_list* target, uint16 skill_id, uint16 skill_lv, Damage& d, int32 count);
+
+/// skill_attack, around its damage: the hit is dealt through `dsrc`, which
+/// for a ground skill's later hits is its unit. skill_lua_damage then knows
+/// the power the unit was placed with.
+class skill_lua_dealt_by {
+	block_list* previous_;
+
+public:
+	explicit skill_lua_dealt_by(block_list* dsrc);
+	~skill_lua_dealt_by();
+	skill_lua_dealt_by(const skill_lua_dealt_by&) = delete;
+	skill_lua_dealt_by& operator=(const skill_lua_dealt_by&) = delete;
+};
+
+/// skill_get_range2: how far `bl` reaches with the skill, `range` as the
+/// server has it; mods' range hooks may change it.
+int32 skill_lua_range(const block_list* bl, uint16 skill_id, uint16 skill_lv, int32 range);
 
 /// battle_calc_weapon_attack, once it has decided whether the attack is a
 /// critical: mods' critical hooks may change that.

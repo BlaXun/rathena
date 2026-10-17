@@ -399,6 +399,7 @@ int32 skill_get_range2(const block_list* bl, uint16 skill_id, uint16 skill_lv, b
 		}
 	}
 
+	range = skill_lua_range(bl, skill_id, skill_lv, range);
 	if( !range && bl->type != BL_PC )
 		return 9; // Enable non players to use self skills on others. [Skotlex]
 	return range;
@@ -2792,6 +2793,7 @@ int64 skill_attack (int32 attack_type, block_list* src, block_list *dsrc, block_
 		return 0;
 #endif
 
+	skill_lua_dealt_by lua_dealt_by(dsrc);
 	dmg = battle_calc_attack(attack_type,src,bl,skill_id,skill_lv,flag&0xFFF);
 
 	//If the damage source is a unit, the damage is not delayed

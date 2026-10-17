@@ -254,6 +254,35 @@ check("cost sees the target: 1 SP on the dummy instead of 50",
 cells = [v[1:] for v in vs("cost_cell")]
 check("cost sees a ground skill's cell", cells and cells[-1] == (s("probe3_cell") or "").split(), (cells, s("probe3_cell")))
 
+print("a ground skill's power, range hooks, statuses kept over a logout")
+plain, half, double = v1("tick_units") or ["0", "0", "0"]
+ticks = {}
+for v in vs("tick_hit"):
+    ticks.setdefault(v[1], []).append(int(v[2]))
+
+
+def mean(xs):
+    return sum(xs) / len(xs) if xs else 0
+
+
+p0, p50, p200 = mean(ticks.get(plain, [])), mean(ticks.get(half, [])), mean(ticks.get(double, []))
+check("c:place_unit power 50: every hit of the unit deals half",
+      p0 > 0 and len(ticks.get(half, [])) >= 3 and 0.4 <= p50 / p0 <= 0.6, (p0, p50, {k: len(x) for k, x in ticks.items()}))
+check("c:cast power 200: what the cast placed deals double, hit after hit",
+      p0 > 0 and len(ticks.get(double, [])) >= 3 and 1.7 <= p200 / p0 <= 2.3, (p0, p200))
+check("range hooks: the skill's own +1, a status's +4 (unit:skill_range)",
+      v1("range") == ["4"] and v1("range_long") == ["8"], (v1("range"), v1("range_long")))
+reach = (s("probe4_reach") or "").split()
+check("a use reaches as far as the hooks say, from where the caster stands",
+      len(reach) == 4 and reach[0] == "0" and int(reach[1]) > 0 and reach[2:] == ["0", "0"], reach)
+kept = [v[1:] for v in vs("kept")]
+before, after = (kept + [None, None])[:2]
+check("persist: back after a relog with its 3 stacks; a status without it is not",
+      before and after and before[0] == "3" and after[0] == "3" and before[2] == "true" and after[2] == "false", kept)
+check("persist: its time stood still while offline, and on_start ran once",
+      before and after and 0 <= int(before[1]) - int(after[1]) <= 4000 and after[3] == "1", kept)
+check("persist: its stats hook is back (+11 FLEE a stack)", s("probe4_kept_flee") == "33", s("probe4_kept_flee"))
+
 print("hooks")
 st = (s("probe_stats") or "0 0 0").split()
 check("a passive's stats hook: +7 HIT, ASPD 120, +1000 Max HP", st == ["7", "120", "1000"], st)

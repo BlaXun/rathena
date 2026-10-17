@@ -79,3 +79,31 @@ Body:
     HitCount: 1
     Requires:
       SpCost: 50
+  # A ground skill whose unit hits what stands on its one cell every 300 ms:
+  # the power of what placed it (c:cast, c:place_unit) reaches those hits.
+  - Id: 3189
+    Name: TST_GROUND_TICK
+    Description: Test Ground Tick
+    MaxLevel: 1
+    Type: Weapon
+    TargetType: Ground
+    Range: 9
+    Hit: Single
+    HitCount: 1
+    Element: Neutral
+    Duration1: 2000
+    Unit:
+      Id: Dummyskill
+      Layout: 0
+      Interval: 300
+      Target: Enemy
+  # A strike with a short Range that range hooks lengthen.
+  - Id: 3188
+    Name: TST_RANGE_STRIKE
+    Description: Test Range Strike
+    MaxLevel: 1
+    Type: Weapon
+    TargetType: Attack
+    Range: 3
+    Hit: Single
+    HitCount: 1
