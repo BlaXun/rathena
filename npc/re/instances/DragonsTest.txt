@@ -5,11 +5,12 @@
 //- Part of the Dragon Knight job change (npc/re/jobs/4-1/dragon_knight.txt).
 //- Follows the official quest flow; the dialog is our own
 //- wording, not a translation of the official text.
-//- The positions of the NPCs, eggs, fountains and monsters inside
+//- The positions of the NPCs, eggs, healing stones and monsters inside
 //- 1@4drk are unknown and were picked by us on walkable cells:
-//-   eggs and Oscar: east cave, fountains: west cave,
+//-   eggs and Oscar: east cave, healing stones: west cave,
 //-   soldiers: south cave, dragon: north-east cave.
-//- Monster HP in the trials is lowered by script (our choice).
+//- Trial monsters take more damage than normal, so they fall as if they had
+//- 100,000 (dragon spirits) and 30,000 (soldiers) HP: our choice.
 //- No experience and no loot on the instance map, as in the official quest.
 //- Total : 4 trials.
 //===== Changelogs: ==========================================
@@ -77,7 +78,7 @@ OnInstanceInit:
 	'dk_step = 0;
 	'dk_eggs = 0;
 	'dk_fails = 0;
-	// Fountains of Life (trial 2), in order.
+	// Healing Stones (trial 2), in order.
 	setarray 'dk_fx[1], 19, 25, 43, 65, 65, 68, 78,110,133,136;
 	setarray 'dk_fy[1],100,126,141,152,181,208,231,232,242,271;
 	// Spawn points of Leticia's soldiers (trial 3).
@@ -91,47 +92,69 @@ OnInstanceInit:
 }
 
 1@4drk,264,50,0	script	Dragon Egg#dk1	4_DRAGON_EGG,{
+	if (.revived) {
+		mes "- The egg is warm. Something inside stirs happily. -";
+		close;
+	}
 	if ('dk_step != 1) {
 		mes "- A cold Dragon Egg. -";
 		mes "- Oscar may know what to do with it. -";
 		close;
 	}
-	mes "- The egg is cold, but something inside still stirs faintly. -";
-	mes "- You could share your life force with it. -";
+	// Someone is already sharing their life force with it.
+	if (gettimetick(2) - .busy < 5)
+		end;
+	mes "- Lay your hands on the egg and share your life force with it. -";
+	mes "- ^0000ffYour HP and SP will keep draining until it wakes.^000000 -";
 	next;
+	if (select( "Quit.", "Start." ) == 1)
+		close;
+	close2;
+	getmapxy(.@nmap$, .@nx, .@ny, BL_NPC);
+	// One try every 1.5 seconds until the egg wakes.
 	while (true) {
-		if (select( "Share your life force.", "Step back." ) == 2)
-			close;
 		if (Hp * 100 / MaxHp < 20 || Sp * 100 / MaxSp < 20) {
-			mes "- You are too exhausted to give any more. -";
-			mes "- Rest or recover first. -";
-			close;
+			dispbottom "You are too exhausted to go on. Recover, then touch the egg again.";
+			end;
 		}
+		getmapxy(.@map$, .@x, .@y, BL_PC);
+		if (.@map$ != .@nmap$ || distance(.@x, .@y, .@nx, .@ny) > 3) {
+			dispbottom "You stepped away from the egg.";
+			end;
+		}
+		.busy = gettimetick(2);
 		.@hp = rand(5,15);
 		.@sp = rand(5,15);
 		percentheal -.@hp, -.@sp;
-		specialeffect EF_HEAL2;
+		// Stars and a chime, as in the official quest (the official effect id is unknown).
+		specialeffect EF_BLESSING;
+		sleep2 1500;
 		if (rand(100) < 30)
 			break;
-		mes "- The egg flickers for a moment, then goes still again. -";
-		next;
 	}
+	.busy = 0;
+	.revived = 1;
 	'dk_eggs++;
 	specialeffect EF_RESURRECTION;
-	mes "- The shell warms under your hands. The egg is alive again! -";
-	mes "- Eggs revived: ^0000ff" + 'dk_eggs + " / 7^000000 -";
-	if ('dk_eggs < 7) {
-		close2;
-		disablenpc();
+	callsub S_Tree;
+	dispbottom "The egg is alive again! Eggs revived: " + 'dk_eggs + " / 7";
+	if ('dk_eggs < 7 || 'dk_step != 1)
 		end;
-	}
-	next;
 	'dk_step = 2;
-	mes "- You hear Oscar's voice from somewhere far away. -";
-	mes "- \"Well done. Come, the next trial waits for you.\" -";
-	close2;
-	disablenpc();
+	mapannounce 'dk_map$, "Oscar : Well done, every egg is alive again. Come, the next trial is waiting.", bc_map, 0xFFFF00;
+	sleep2 3000;
 	warp 'dk_map$,19,72;
+	end;
+
+// A revived egg stands in a green tree of light (the Epiclesis effect), as in
+// the official quest. The effect is short, so it is shown again and again.
+S_Tree:
+	specialeffect EF_GLASSWALL4;
+	initnpctimer;
+	return;
+
+OnTimer3000:
+	callsub S_Tree;
 	end;
 }
 1@4drk,255,57,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk2	4_DRAGON_EGG
@@ -157,27 +180,27 @@ OnInstanceInit:
 	}
 	if ('dk_step == 21) {
 		mes "[Oscar]";
-		mes "Fountain of Life: ^0000ff" + 'dk_fountain + " / 10^000000.";
-		mes "Defeat the Bone Acidus at the glowing fountain, then lead the Golden Acidus to it.";
+		mes "Healing Stone: ^0000ff" + 'dk_fountain + " / 10^000000.";
+		mes "Put the dragon spirit at the shining stone to rest, then lead the Golden Acidus into its circle.";
 		mes "It is weak enough already. Whatever you do, don't hurt it.";
 		close3;
 	}
 	mes "[Oscar]";
 	if ('dk_step == 2) {
 		mes "The second trial is the ^0000ffTrial of the Protector^000000.";
-		mes "A young ^0000ffGolden Acidus^000000 is dying. Only the ^0000ff10 Fountains of Life^000000 in this cave can save it.";
-		mes "Lead it to them, one after another. Each one will give it back a little of its strength.";
+		mes "A young ^0000ffGolden Acidus^000000 is dying. Only the ^0000ff10 Healing Stones^000000 in this cave can save it.";
+		mes "Lead it into their circles, one after another. Each stone gives it back a little of its strength.";
 		next;
 		mes "[Oscar]";
-		mes "A Bone Acidus guards each fountain. Defeat it,";
-		mes "then let the Golden Acidus come after you and lead it to the fountain.";
+		mes "The spirits of dragons that died here gather around the stones as Bone Acidus.";
+		mes "Put each one to rest, then let the Golden Acidus come after you and lead it into the circle.";
 		mes "It is frightened and will snap at you, but it can hardly hurt anyone now.";
 		next;
 		mes "[Oscar]";
 		mes "If the Golden Acidus falls, the trial starts over. Protect it.";
 	} else {
 		mes "The Golden Acidus has fallen.";
-		mes "Shall we try again from the first fountain?";
+		mes "Shall we try again from the first stone?";
 	}
 	next;
 	if (select( "I'm ready!", "Give up the test." ) == 2) {
@@ -195,7 +218,7 @@ OnInstanceInit:
 		end;
 	}
 	mes "[Oscar]";
-	mes "Go. The first fountain is just ahead.";
+	mes "Go. The first stone is just ahead.";
 	close2;
 	cutin "",255;
 	if ('dk_step == 2 || 'dk_step == 20)
@@ -203,22 +226,33 @@ OnInstanceInit:
 	end;
 }
 
-1@4drk,19,100,0	script	Fountain of Life#dk1	4_ENERGY_BLUE,{
+// A crystal in a rune circle, as in the official quest. The sprite and the
+// circle effect are our pick: the official ones are not known.
+1@4drk,19,100,0	script	Healing Stone#dk1	4_4JOB_SEALSTONE,{
 	end;
 
+OnShow:
+	enablenpc();
+OnTimer3000:
+	specialeffect EF_MAGIC_FLOOR;
+	initnpctimer;
+	end;
+
+OnHide:
+	stopnpctimer;
 OnInstanceInit:
 	disablenpc();
 	end;
 }
-1@4drk,25,126,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk2	4_ENERGY_BLUE
-1@4drk,43,141,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk3	4_ENERGY_BLUE
-1@4drk,65,152,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk4	4_ENERGY_BLUE
-1@4drk,65,181,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk5	4_ENERGY_BLUE
-1@4drk,68,208,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk6	4_ENERGY_BLUE
-1@4drk,78,231,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk7	4_ENERGY_BLUE
-1@4drk,110,232,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk8	4_ENERGY_BLUE
-1@4drk,133,242,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk9	4_ENERGY_BLUE
-1@4drk,136,271,0	duplicate(Fountain of Life#dk1)	Fountain of Life#dk10	4_ENERGY_BLUE
+1@4drk,25,126,0	duplicate(Healing Stone#dk1)	Healing Stone#dk2	4_4JOB_SEALSTONE
+1@4drk,43,141,0	duplicate(Healing Stone#dk1)	Healing Stone#dk3	4_4JOB_SEALSTONE
+1@4drk,65,152,0	duplicate(Healing Stone#dk1)	Healing Stone#dk4	4_4JOB_SEALSTONE
+1@4drk,65,181,0	duplicate(Healing Stone#dk1)	Healing Stone#dk5	4_4JOB_SEALSTONE
+1@4drk,68,208,0	duplicate(Healing Stone#dk1)	Healing Stone#dk6	4_4JOB_SEALSTONE
+1@4drk,78,231,0	duplicate(Healing Stone#dk1)	Healing Stone#dk7	4_4JOB_SEALSTONE
+1@4drk,110,232,0	duplicate(Healing Stone#dk1)	Healing Stone#dk8	4_4JOB_SEALSTONE
+1@4drk,133,242,0	duplicate(Healing Stone#dk1)	Healing Stone#dk9	4_4JOB_SEALSTONE
+1@4drk,136,271,0	duplicate(Healing Stone#dk1)	Healing Stone#dk10	4_4JOB_SEALSTONE
 
 1@4drk,1,1,0	script	#dk_escort	-1,{
 	end;
@@ -229,28 +263,38 @@ OnStart:
 	killmonster 'dk_map$, .@npc$ + "::OnBoneDead";
 	killmonster 'dk_map$, .@npc$ + "::OnGoldDead";
 	for (.@i = 1; .@i <= 10; .@i++)
-		disablenpc instance_npcname("Fountain of Life#dk" + .@i);
+		donpcevent instance_npcname("Healing Stone#dk" + .@i) + "::OnHide";
 	'dk_step = 21;
 	'dk_fountain = 1;
 	monster 'dk_map$,19,78,"Golden Acidus","4JOB_ACIDUS",1, .@npc$ + "::OnGoldDead";
 	'dk_gold = $@mobid[0];
-	// The dragon arrives dying: a tenth of its HP, healed at each fountain.
+	// The dragon arrives dying: a tenth of its HP, healed at each stone.
 	getunitdata 'dk_gold, .@d;
 	setunitdata 'dk_gold, UMOB_HP, .@d[UMOB_MAXHP] / 10;
 	callsub S_Fountain;
 	initnpctimer;
 	end;
 
-// Shows the current fountain and its guard.
+// Shows the current stone and the dragon spirit at it.
 // After 3 failures the guards are no longer spawned.
 S_Fountain:
-	enablenpc instance_npcname("Fountain of Life#dk" + 'dk_fountain);
+	donpcevent instance_npcname("Healing Stone#dk" + 'dk_fountain) + "::OnShow";
 	if ('dk_fails < 3) {
 		monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Bone Acidus","BONE_ACIDUS",1, instance_npcname("#dk_escort") + "::OnBoneDead";
-		setunitdata $@mobid[0], UMOB_MAXHP, 100000;
-		setunitdata $@mobid[0], UMOB_HP, 100000;
+		callsub S_Weaken, $@mobid[0], 100000;
 	}
-	mapannounce 'dk_map$, "Oscar : Fountain of Life " + 'dk_fountain + " is glowing. Lead the Golden Acidus there!", bc_map, 0xFFFF00;
+	mapannounce 'dk_map$, "Oscar : Healing Stone " + 'dk_fountain + " is shining. Lead the Golden Acidus into its circle!", bc_map, 0xFFFF00;
+	return;
+
+// The trial monsters fall as if they had <hp> HP: the damage they take is
+// multiplied instead. Lowering their HP with setunitdata did not hold, a hit
+// of 182,000 on a "100,000 HP" Bone Acidus left it alive.
+S_Weaken:
+	getunitdata getarg(0), .@w;
+	.@rate = .@w[UMOB_MAXHP] * 100 / getarg(1);
+	if (.@rate > 65535)
+		.@rate = 65535;
+	setunitdata getarg(0), UMOB_DAMAGETAKEN, .@rate;
 	return;
 
 OnTimer1000:
@@ -270,14 +314,14 @@ OnTimer1000:
 		initnpctimer;
 		end;
 	}
-	specialeffect EF_HEAL2, AREA, instance_npcname("Fountain of Life#dk" + .@f);
+	specialeffect EF_HEAL2, AREA, instance_npcname("Healing Stone#dk" + .@f);
 	// Not min(): it would read .@d[UMOB_MAXHP] as the rest of the array.
 	.@hp = .@d[UMOB_HP] + .@d[UMOB_MAXHP] / 10;
 	if (.@f == 10 || .@hp > .@d[UMOB_MAXHP])
 		.@hp = .@d[UMOB_MAXHP];
 	setunitdata 'dk_gold, UMOB_HP, .@hp;
-	disablenpc instance_npcname("Fountain of Life#dk" + .@f);
-	mapannounce 'dk_map$, "The Golden Acidus drinks from the Fountain of Life. (" + .@f + " / 10)", bc_map, 0x00FF99;
+	donpcevent instance_npcname("Healing Stone#dk" + .@f) + "::OnHide";
+	mapannounce 'dk_map$, "The Healing Stone restores some of the Golden Acidus' strength. (" + .@f + " / 10)", bc_map, 0x00FF99;
 	if (.@f < 10) {
 		'dk_fountain++;
 		callsub S_Fountain;
@@ -303,7 +347,7 @@ OnGoldDead:
 	'dk_fails++;
 	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnBoneDead";
 	for (.@i = 1; .@i <= 10; .@i++)
-		disablenpc instance_npcname("Fountain of Life#dk" + .@i);
+		donpcevent instance_npcname("Healing Stone#dk" + .@i) + "::OnHide";
 	mapannounce 'dk_map$, "Oscar : The Golden Acidus has fallen! Come back to me and start over.", bc_map, 0xFFFF00;
 	end;
 
@@ -374,8 +418,18 @@ OnStart:
 S_Spawn:
 	.@r = rand(getarraysize('dk_sx));
 	monster 'dk_map$,'dk_sx[.@r],'dk_sy[.@r],"Leticia's Soldier","BONE_FERUS",1, instance_npcname("#dk_soldiers") + "::OnSoldierDead";
-	setunitdata $@mobid[0], UMOB_MAXHP, 30000;
-	setunitdata $@mobid[0], UMOB_HP, 30000;
+	callsub S_Weaken, $@mobid[0], 30000;
+	return;
+
+// The trial monsters fall as if they had <hp> HP: the damage they take is
+// multiplied instead. Lowering their HP with setunitdata did not hold, a hit
+// of 182,000 on a "100,000 HP" Bone Acidus left it alive.
+S_Weaken:
+	getunitdata getarg(0), .@w;
+	.@rate = .@w[UMOB_MAXHP] * 100 / getarg(1);
+	if (.@rate > 65535)
+		.@rate = 65535;
+	setunitdata getarg(0), UMOB_DAMAGETAKEN, .@rate;
 	return;
 
 OnSoldierDead:
