@@ -92,7 +92,10 @@ OnInstanceInit:
 }
 
 1@4drk,264,50,0	script	Dragon Egg#dk1	4_DRAGON_EGG,{
-	if (.revived) {
+	// The eggs are duplicates and share .variables, so each egg keeps its
+	// state in instance variables named after its own NPC id.
+	.@egg$ = "'dk_egg_" + getnpcid(0);
+	if (getd(.@egg$ + "_ok")) {
 		mes "- The egg is warm. Something inside stirs happily. -";
 		close;
 	}
@@ -102,7 +105,7 @@ OnInstanceInit:
 		close;
 	}
 	// Someone is already sharing their life force with it.
-	if (gettimetick(2) - .busy < 5)
+	if (gettimetick(2) - getd(.@egg$ + "_busy") < 5)
 		end;
 	mes "- Lay your hands on the egg and share your life force with it. -";
 	mes "- ^0000ffYour HP and SP will keep draining until it wakes.^000000 -";
@@ -122,20 +125,20 @@ OnInstanceInit:
 			dispbottom "You stepped away from the egg.";
 			end;
 		}
-		.busy = gettimetick(2);
+		setd .@egg$ + "_busy", gettimetick(2);
 		.@hp = rand(5,15);
 		.@sp = rand(5,15);
 		percentheal -.@hp, -.@sp;
-		// Stars and a chime, as in the official quest (the official effect id is unknown).
-		specialeffect EF_BLESSING;
+		// Stars, as in the official quest (the official effect id is unknown;
+		// the one of Steal looks closest).
+		specialeffect EF_STEAL;
 		sleep2 1500;
 		if (rand(100) < 30)
 			break;
 	}
-	.busy = 0;
-	.revived = 1;
+	setd .@egg$ + "_busy", 0;
+	setd .@egg$ + "_ok", 1;
 	'dk_eggs++;
-	specialeffect EF_RESURRECTION;
 	callsub S_Tree;
 	dispbottom "The egg is alive again! Eggs revived: " + 'dk_eggs + " / 7";
 	if ('dk_eggs < 7 || 'dk_step != 1)
