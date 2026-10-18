@@ -7,10 +7,12 @@
 //- wording, not a translation of the official text.
 //- The positions of the NPCs, eggs, healing stones and monsters inside
 //- 1@4drk are unknown and were picked by us on walkable cells:
-//-   eggs and Oscar: east cave, healing stones: west cave,
+//-   entrance (62,86, after a rAthena forum post), Oscar and eggs: middle cave,
+//-   healing stones: west cave,
 //-   soldiers: south cave, dragon: north-east cave.
-//- Trial monsters take more damage than normal, so they fall as if they had
-//- 100,000 (dragon spirits) and 30,000 (soldiers) HP: our choice.
+//- The dragon spirits and Leticia's soldiers have 1 HP (BONE_ACIDUS_MJ,
+//- BONE_FERUS_MJ) and fall to any hit; the healing stones are Guardian
+//- Stones (E_EMPEL_1) that nothing can hurt.
 //- No experience and no loot on the instance map, as in the official quest.
 //- Total : 4 trials.
 //===== Changelogs: ==========================================
@@ -18,7 +20,7 @@
 //============================================================
 
 // Trial 1: Trial of Life.
-1@4drk,264,43,3	script	Oscar#dk1	4_ED_OSCAR,{
+1@4drk,64,89,3	script	Oscar#dk1	4_ED_OSCAR,{
 	cutin "OSCAR03.bmp",2;
 	switch('dk_step) {
 	case 0:
@@ -91,7 +93,7 @@ OnInstanceInit:
 	end;
 }
 
-1@4drk,264,50,0	script	Dragon Egg#dk1	4_DRAGON_EGG,{
+1@4drk,67,96,0	script	Dragon Egg#dk1	4_DRAGON_EGG,{
 	// The eggs are duplicates and share .variables, so each egg keeps its
 	// state in instance variables named after its own NPC id.
 	.@egg$ = "'dk_egg_" + getnpcid(0);
@@ -160,12 +162,12 @@ OnTimer3000:
 	callsub S_Tree;
 	end;
 }
-1@4drk,255,57,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk2	4_DRAGON_EGG
-1@4drk,242,61,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk3	4_DRAGON_EGG
-1@4drk,241,77,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk4	4_DRAGON_EGG
-1@4drk,241,93,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk5	4_DRAGON_EGG
-1@4drk,243,108,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk6	4_DRAGON_EGG
-1@4drk,243,124,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk7	4_DRAGON_EGG
+1@4drk,79,105,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk2	4_DRAGON_EGG
+1@4drk,90,115,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk3	4_DRAGON_EGG
+1@4drk,96,129,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk4	4_DRAGON_EGG
+1@4drk,99,147,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk5	4_DRAGON_EGG
+1@4drk,112,155,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk6	4_DRAGON_EGG
+1@4drk,114,174,0	duplicate(Dragon Egg#dk1)	Dragon Egg#dk7	4_DRAGON_EGG
 
 
 // Trial 2: Trial of the Protector.
@@ -178,31 +180,31 @@ OnTimer3000:
 	}
 	if ('dk_step >= 30) {
 		mes "[Oscar]";
-		mes "The Golden Acidus is safe. Leticia is waiting for you.";
+		mes "The Spacetime Observer is safe. Leticia is waiting for you.";
 		close3;
 	}
 	if ('dk_step == 21) {
 		mes "[Oscar]";
 		mes "Healing Stone: ^0000ff" + 'dk_fountain + " / 10^000000.";
-		mes "Put the dragon spirit at the shining stone to rest, then lead the Golden Acidus into its circle.";
+		mes "Put the dragon spirit at the shining stone to rest, then lead the Spacetime Observer into its circle.";
 		mes "It is weak enough already. Whatever you do, don't hurt it.";
 		close3;
 	}
 	mes "[Oscar]";
 	if ('dk_step == 2) {
 		mes "The second trial is the ^0000ffTrial of the Protector^000000.";
-		mes "A young ^0000ffGolden Acidus^000000 is dying. Only the ^0000ff10 Healing Stones^000000 in this cave can save it.";
+		mes "A young golden dragon, a ^0000ffSpacetime Observer^000000, is dying. Only the ^0000ff10 Healing Stones^000000 in this cave can save it.";
 		mes "Lead it into their circles, one after another. Each stone gives it back a little of its strength.";
 		next;
 		mes "[Oscar]";
 		mes "The spirits of dragons that died here gather around the stones as Bone Acidus.";
-		mes "Put each one to rest, then let the Golden Acidus come after you and lead it into the circle.";
+		mes "Put each one to rest, then let the Observer come after you and lead it into the circle.";
 		mes "It is frightened and will snap at you, but it can hardly hurt anyone now.";
 		next;
 		mes "[Oscar]";
-		mes "If the Golden Acidus falls, the trial starts over. Protect it.";
+		mes "If the Observer falls, the trial starts over. Protect it.";
 	} else {
-		mes "The Golden Acidus has fallen.";
+		mes "The Spacetime Observer has fallen.";
 		mes "Shall we try again from the first stone?";
 	}
 	next;
@@ -229,9 +231,9 @@ OnTimer3000:
 	end;
 }
 
-// A crystal in a rune circle, as in the official quest. The sprite and the
-// circle effect are our pick: the official ones are not known.
-1@4drk,19,100,0	script	Healing Stone#dk1	4_4JOB_SEALSTONE,{
+// The rune circle around a healing stone (the stone itself is a Guardian
+// Stone monster, see S_Fountain). The circle effect is our pick.
+1@4drk,19,100,0	script	Healing Stone#dk1	CLEAR_NPC,{
 	end;
 
 OnShow:
@@ -247,15 +249,15 @@ OnInstanceInit:
 	disablenpc();
 	end;
 }
-1@4drk,25,126,0	duplicate(Healing Stone#dk1)	Healing Stone#dk2	4_4JOB_SEALSTONE
-1@4drk,43,141,0	duplicate(Healing Stone#dk1)	Healing Stone#dk3	4_4JOB_SEALSTONE
-1@4drk,65,152,0	duplicate(Healing Stone#dk1)	Healing Stone#dk4	4_4JOB_SEALSTONE
-1@4drk,65,181,0	duplicate(Healing Stone#dk1)	Healing Stone#dk5	4_4JOB_SEALSTONE
-1@4drk,68,208,0	duplicate(Healing Stone#dk1)	Healing Stone#dk6	4_4JOB_SEALSTONE
-1@4drk,78,231,0	duplicate(Healing Stone#dk1)	Healing Stone#dk7	4_4JOB_SEALSTONE
-1@4drk,110,232,0	duplicate(Healing Stone#dk1)	Healing Stone#dk8	4_4JOB_SEALSTONE
-1@4drk,133,242,0	duplicate(Healing Stone#dk1)	Healing Stone#dk9	4_4JOB_SEALSTONE
-1@4drk,136,271,0	duplicate(Healing Stone#dk1)	Healing Stone#dk10	4_4JOB_SEALSTONE
+1@4drk,25,126,0	duplicate(Healing Stone#dk1)	Healing Stone#dk2	CLEAR_NPC
+1@4drk,43,141,0	duplicate(Healing Stone#dk1)	Healing Stone#dk3	CLEAR_NPC
+1@4drk,65,152,0	duplicate(Healing Stone#dk1)	Healing Stone#dk4	CLEAR_NPC
+1@4drk,65,181,0	duplicate(Healing Stone#dk1)	Healing Stone#dk5	CLEAR_NPC
+1@4drk,68,208,0	duplicate(Healing Stone#dk1)	Healing Stone#dk6	CLEAR_NPC
+1@4drk,78,231,0	duplicate(Healing Stone#dk1)	Healing Stone#dk7	CLEAR_NPC
+1@4drk,110,232,0	duplicate(Healing Stone#dk1)	Healing Stone#dk8	CLEAR_NPC
+1@4drk,133,242,0	duplicate(Healing Stone#dk1)	Healing Stone#dk9	CLEAR_NPC
+1@4drk,136,271,0	duplicate(Healing Stone#dk1)	Healing Stone#dk10	CLEAR_NPC
 
 1@4drk,1,1,0	script	#dk_escort	-1,{
 	end;
@@ -267,9 +269,10 @@ OnStart:
 	killmonster 'dk_map$, .@npc$ + "::OnGoldDead";
 	for (.@i = 1; .@i <= 10; .@i++)
 		donpcevent instance_npcname("Healing Stone#dk" + .@i) + "::OnHide";
+	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnStone";
 	'dk_step = 21;
 	'dk_fountain = 1;
-	monster 'dk_map$,19,78,"Golden Acidus","4JOB_ACIDUS",1, .@npc$ + "::OnGoldDead";
+	monster 'dk_map$,19,78,"--en--","4JOB_ACIDUS",1, .@npc$ + "::OnGoldDead";
 	'dk_gold = $@mobid[0];
 	// The dragon arrives dying: a tenth of its HP, healed at each stone.
 	getunitdata 'dk_gold, .@d;
@@ -282,22 +285,11 @@ OnStart:
 // After 3 failures the guards are no longer spawned.
 S_Fountain:
 	donpcevent instance_npcname("Healing Stone#dk" + 'dk_fountain) + "::OnShow";
+	monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Healing Stone","E_EMPEL_1",1, instance_npcname("#dk_escort") + "::OnStone";
 	if ('dk_fails < 3) {
-		monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Bone Acidus","BONE_ACIDUS",1, instance_npcname("#dk_escort") + "::OnBoneDead";
-		callsub S_Weaken, $@mobid[0], 100000;
+		monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Bone Acidus","BONE_ACIDUS_MJ",1, instance_npcname("#dk_escort") + "::OnBoneDead";
 	}
-	mapannounce 'dk_map$, "Oscar : Healing Stone " + 'dk_fountain + " is shining. Lead the Golden Acidus into its circle!", bc_map, 0xFFFF00;
-	return;
-
-// The trial monsters fall as if they had <hp> HP: the damage they take is
-// multiplied instead. Lowering their HP with setunitdata did not hold, a hit
-// of 182,000 on a "100,000 HP" Bone Acidus left it alive.
-S_Weaken:
-	getunitdata getarg(0), .@w;
-	.@rate = .@w[UMOB_MAXHP] * 100 / getarg(1);
-	if (.@rate > 65535)
-		.@rate = 65535;
-	setunitdata getarg(0), UMOB_DAMAGETAKEN, .@rate;
+	mapannounce 'dk_map$, "Oscar : Healing Stone " + 'dk_fountain + " is shining. Lead the Spacetime Observer into its circle!", bc_map, 0xFFFF00;
 	return;
 
 OnTimer1000:
@@ -324,7 +316,8 @@ OnTimer1000:
 		.@hp = .@d[UMOB_MAXHP];
 	setunitdata 'dk_gold, UMOB_HP, .@hp;
 	donpcevent instance_npcname("Healing Stone#dk" + .@f) + "::OnHide";
-	mapannounce 'dk_map$, "The Healing Stone restores some of the Golden Acidus' strength. (" + .@f + " / 10)", bc_map, 0x00FF99;
+	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnStone";
+	mapannounce 'dk_map$, "The Healing Stone restores some of the Observer's strength. (" + .@f + " / 10)", bc_map, 0x00FF99;
 	if (.@f < 10) {
 		'dk_fountain++;
 		callsub S_Fountain;
@@ -351,10 +344,12 @@ OnGoldDead:
 	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnBoneDead";
 	for (.@i = 1; .@i <= 10; .@i++)
 		donpcevent instance_npcname("Healing Stone#dk" + .@i) + "::OnHide";
-	mapannounce 'dk_map$, "Oscar : The Golden Acidus has fallen! Come back to me and start over.", bc_map, 0xFFFF00;
+	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnStone";
+	mapannounce 'dk_map$, "Oscar : The Spacetime Observer has fallen! Come back to me and start over.", bc_map, 0xFFFF00;
 	end;
 
 OnBoneDead:
+OnStone:
 	end;
 }
 
@@ -420,19 +415,7 @@ OnStart:
 
 S_Spawn:
 	.@r = rand(getarraysize('dk_sx));
-	monster 'dk_map$,'dk_sx[.@r],'dk_sy[.@r],"Leticia's Soldier","BONE_FERUS",1, instance_npcname("#dk_soldiers") + "::OnSoldierDead";
-	callsub S_Weaken, $@mobid[0], 30000;
-	return;
-
-// The trial monsters fall as if they had <hp> HP: the damage they take is
-// multiplied instead. Lowering their HP with setunitdata did not hold, a hit
-// of 182,000 on a "100,000 HP" Bone Acidus left it alive.
-S_Weaken:
-	getunitdata getarg(0), .@w;
-	.@rate = .@w[UMOB_MAXHP] * 100 / getarg(1);
-	if (.@rate > 65535)
-		.@rate = 65535;
-	setunitdata getarg(0), UMOB_DAMAGETAKEN, .@rate;
+	monster 'dk_map$,'dk_sx[.@r],'dk_sy[.@r],"Leticia's Soldier","BONE_FERUS_MJ",1, instance_npcname("#dk_soldiers") + "::OnSoldierDead";
 	return;
 
 OnSoldierDead:
@@ -562,7 +545,7 @@ OnStart:
 	'dk_step = 41;
 	'dk_tick = 0;
 	disablenpc instance_npcname("Leticia#dk4");
-	monster 'dk_map$,219,211,"Dragon Queen Leticia","4JOB_LETICIA",1, instance_npcname("#dk_dragon") + "::OnDragonDead";
+	monster 'dk_map$,219,211,"--en--","4JOB_LETICIA",1, instance_npcname("#dk_dragon") + "::OnDragonDead";
 	'dk_dragon = $@mobid[0];
 	initnpctimer;
 	end;

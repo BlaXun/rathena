@@ -99522,8 +99522,18 @@ Body:
 #    AegisName: IA_MIYABI_NINGYO
 #  - Id: 3909
 #    AegisName: IA_MARIONETTE
-#  - Id: 3910
-#    AegisName: E_EMPEL_1
+  # Ragnarok Offline: the healing stones of the Dragon Knight job change
+  # (npc/re/instances/DragonsTest.txt); nothing can hurt them. Stats our own.
+  - Id: 3910
+    AegisName: E_EMPEL_1
+    Name: Guardian Stone
+    Hp: 20000000
+    DamageMotion: 200
+    Modes:
+      IgnoreMagic: true
+      IgnoreMelee: true
+      IgnoreMisc: true
+      IgnoreRanged: true
 #  - Id: 3911
 #    AegisName: E_GIBBET
 #  - Id: 3912
@@ -103713,10 +103723,63 @@ Body:
 #    AegisName: ACIDUS_S_MJ
 #  - Id: 20506
 #    AegisName: FERUS_P_MJ
-#  - Id: 20507
-#    AegisName: BONE_FERUS_MJ
-#  - Id: 20508
-#    AegisName: BONE_ACIDUS_MJ
+  # Ragnarok Offline: used by the Dragon Knight job change (npc/re/instances/DragonsTest.txt).
+  # The official stats are unknown: those of BONE_FERUS/BONE_ACIDUS, with 1 HP
+  # (they fall to any hit in the quest) and no experience or drops.
+  - Id: 20507
+    AegisName: BONE_FERUS_MJ
+    Name: Bone Ferus
+    Level: 206
+    Hp: 1
+    Attack: 6732
+    Attack2: 868
+    Defense: 285
+    MagicDefense: 80
+    Str: 242
+    Agi: 173
+    Vit: 75
+    Int: 122
+    Dex: 173
+    Luk: 67
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Undead
+    Element: Undead
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 108
+    AttackMotion: 576
+    DamageMotion: 432
+    Ai: 21
+  - Id: 20508
+    AegisName: BONE_ACIDUS_MJ
+    Name: Bone Acidus
+    Level: 207
+    Hp: 1
+    Attack: 6917
+    Attack2: 870
+    Defense: 294
+    MagicDefense: 81
+    Str: 248
+    Agi: 175
+    Vit: 78
+    Int: 120
+    Dex: 175
+    Luk: 68
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Undead
+    Element: Undead
+    ElementLevel: 4
+    WalkSpeed: 180
+    AttackDelay: 168
+    AttackMotion: 768
+    DamageMotion: 360
+    Ai: 21
 #  - Id: 20509
 #    AegisName: BONE_DETALE_MJ
 #  - Id: 20510
@@ -110185,14 +110248,16 @@ Body:
 #    AegisName: MOLE_TW
   # Ragnarok Offline: 4JOB_LETICIA and 4JOB_ACIDUS are the Dragon Knight job
   # change monsters (npc/re/instances/DragonsTest.txt). The official stats are
-  # unknown; these are our own, Leticia's taken from Detardeurus (DETALE),
-  # her 90,000,000 HP as seen in an official play-through video. The official
-  # name "Red Flame Dragon Queen Letizia" is longer than rAthena's 23 characters.
-  # The Golden Acidus is aggressive but has Dex 1, so it mostly misses.
+  # unknown; these are our own, Leticia's taken from Detardeurus (DETALE).
+  # Names, levels and the Observer's HP after a rAthena forum post; Leticia's
+  # 90,000,000 HP as seen in an official play-through video.
+  # The Spacetime Observer (the golden Acidus) is aggressive but has Dex 1,
+  # so it mostly misses.
   - Id: 20875
     AegisName: 4JOB_LETICIA
-    Name: Dragon Queen Leticia
-    Level: 135
+    Name: Leticia
+    Title: Red Flame Dragon Queen
+    Level: 200
     Hp: 90000000
     Attack: 6108
     Attack2: 2662
@@ -110220,9 +110285,9 @@ Body:
     Class: Boss
   - Id: 20876
     AegisName: 4JOB_ACIDUS
-    Name: Golden Acidus
-    Level: 130
-    Hp: 200000
+    Name: Spacetime Observer
+    Level: 200
+    Hp: 5500000
     Attack: 1
     Attack2: 1
     Defense: 101
