@@ -47,7 +47,6 @@ HANDLER_FUNC(merchantstore_save) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
@@ -65,7 +64,6 @@ HANDLER_FUNC(merchantstore_save) {
 			|| SQL_SUCCESS != stmt.Execute()
 		) {
 			SqlStmt_ShowDebug(stmt);
-			sl.unlock();
 			res.status = HTTP_BAD_REQUEST;
 			res.set_content("Error", "text/plain");
 			return;
@@ -83,14 +81,12 @@ HANDLER_FUNC(merchantstore_save) {
 			|| SQL_SUCCESS != stmt.Execute()
 		) {
 			SqlStmt_ShowDebug(stmt);
-			sl.unlock();
 			res.status = HTTP_BAD_REQUEST;
 			res.set_content("Error", "text/plain");
 			return;
 		}
 	}
 
-	sl.unlock();
 	res.set_content(data, "application/json");
 }
 
@@ -128,7 +124,6 @@ HANDLER_FUNC(merchantstore_load) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
@@ -136,7 +131,6 @@ HANDLER_FUNC(merchantstore_load) {
 
 	if (stmt.NumRows() <= 0) {
 		ShowDebug("[AccountID: %d, World: \"%s\"] Not found in table, sending new info.\n", account_id, world_name);
-		sl.unlock();
 		res.set_content("{\"Type\": 1}", "application/json");
 		return;
 	}
@@ -147,13 +141,11 @@ HANDLER_FUNC(merchantstore_load) {
 		|| SQL_SUCCESS != stmt.NextRow()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
 	}
 
-	sl.unlock();
 
 	databuf[sizeof(databuf) - 1] = 0;
 	auto response = nlohmann::json::parse(databuf);

@@ -24,33 +24,32 @@ bool isAuthorized(const Request &request, bool checkGuildLeader) {
 	auto token = token_str.c_str();
 	auto account_id = std::stoi(request.get_file_value("AID").content);
 
-	SQLLock loginlock(LOGIN_SQL_LOCK);
+	// Destroy the login statement before taking the shared mutex for CHAR SQL.
+	{
+		SQLLock loginlock(LOGIN_SQL_LOCK);
 
-	loginlock.lock();
+		loginlock.lock();
 
-	auto handle = loginlock.getHandle();
+		auto handle = loginlock.getHandle();
 
-	SqlStmt stmt{ *handle };
+		SqlStmt stmt{ *handle };
 
-	if (SQL_SUCCESS != stmt.Prepare(
-			"SELECT `account_id` FROM `%s` WHERE (`account_id` = ? AND `web_auth_token` = ? AND `web_auth_token_enabled` = '1')",
-			login_table)
-		|| SQL_SUCCESS != stmt.BindParam(0, SQLDT_INT32, &account_id, sizeof(account_id))
-		|| SQL_SUCCESS != stmt.BindParam(1, SQLDT_STRING, (void *)token, strlen(token))
-		|| SQL_SUCCESS != stmt.Execute()
-	) {
-		SqlStmt_ShowDebug(stmt);
-		loginlock.unlock();
-		return false;
+		if (SQL_SUCCESS != stmt.Prepare(
+				"SELECT `account_id` FROM `%s` WHERE (`account_id` = ? AND `web_auth_token` = ? AND `web_auth_token_enabled` = '1')",
+				login_table)
+			|| SQL_SUCCESS != stmt.BindParam(0, SQLDT_INT32, &account_id, sizeof(account_id))
+			|| SQL_SUCCESS != stmt.BindParam(1, SQLDT_STRING, (void *)token, strlen(token))
+			|| SQL_SUCCESS != stmt.Execute()
+		) {
+			SqlStmt_ShowDebug(stmt);
+			return false;
+		}
+
+		if (stmt.NumRows() <= 0) {
+			ShowWarning("Request with AID %d and token %s unverified\n", account_id, token);
+			return false;
+		}
 	}
-
-	if (stmt.NumRows() <= 0) {
-		ShowWarning("Request with AID %d and token %s unverified\n", account_id, token);
-		loginlock.unlock();
-		return false;
-	}
-
-	loginlock.unlock();
 	if (!checkGuildLeader) {
 		// we're done, auth ok
 		return true;
@@ -60,7 +59,7 @@ bool isAuthorized(const Request &request, bool checkGuildLeader) {
 
 	SQLLock charlock(CHAR_SQL_LOCK);
 	charlock.lock();
-	handle = charlock.getHandle();
+	auto handle = charlock.getHandle();
 	SqlStmt stmt2{ *handle };
 
 	if (SQL_SUCCESS != stmt2.Prepare(
@@ -71,15 +70,12 @@ bool isAuthorized(const Request &request, bool checkGuildLeader) {
 		|| SQL_SUCCESS != stmt2.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt2);
-		charlock.unlock();
 		return false;
 	}
 
 	if (stmt2.NumRows() <= 0) {
 		ShowDebug("Request with AID %d GDID %d and token %s unverified\n", account_id, guild_id, token);
-		charlock.unlock();
 		return false;
 	}
-	charlock.unlock();
 	return true;
 }

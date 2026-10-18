@@ -57,7 +57,6 @@ HANDLER_FUNC(emblem_download) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
@@ -70,7 +69,6 @@ HANDLER_FUNC(emblem_download) {
 
 	if (stmt.NumRows() <= 0) {
 		ShowError("[GuildID: %d / World: \"%s\"] Not found in table\n", guild_id, world_name);
-		sl.unlock();
 		res.status = HTTP_NOT_FOUND;
 		res.set_content("Error", "text/plain");
 		return;
@@ -83,13 +81,11 @@ HANDLER_FUNC(emblem_download) {
 		|| SQL_SUCCESS != stmt.NextRow()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
 	}
 
-	sl.unlock();
 
 	if (emblem_size > MAX_EMBLEM_SIZE) {
 		ShowDebug("Emblem is too big, current size is %d and the max length is %d.\n", emblem_size, MAX_EMBLEM_SIZE);
@@ -232,7 +228,6 @@ HANDLER_FUNC(emblem_upload) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
@@ -245,7 +240,6 @@ HANDLER_FUNC(emblem_upload) {
 			|| SQL_SUCCESS != stmt.NextRow()
 		) {
 			SqlStmt_ShowDebug(stmt);
-			sl.unlock();
 			res.status = HTTP_BAD_REQUEST;
 			res.set_content("Error", "text/plain");
 			return;
@@ -265,13 +259,11 @@ HANDLER_FUNC(emblem_upload) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
 	}
 
-	sl.unlock();
 
 	std::ostringstream stream;
 	stream << "{\"Type\":1,\"version\":" << version << "}";
