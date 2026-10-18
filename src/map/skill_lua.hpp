@@ -11,7 +11,26 @@
 #include <common/mmo.hpp>
 
 /**
- * Skill hooks written in Lua.
+ * Skill, item and player hooks written in Lua.
+ *
+ * Every hook, and what it decides (each is described below):
+ *
+ *   skill(name, {...})   ratio      the skill's damage ratio
+ *                        hit        its accuracy
+ *                        element    its element
+ *                        on_hit     actions after each hit (drain, heal, status, ...)
+ *                        on_steal   which drop TF_STEAL takes
+ *                        level      the base level its formula reads for a player
+ *                        job_level  the job level its formula reads for a player
+ *                        heal       what AL_HEAL, AB_HIGHNESSHEAL or AB_CHEAL restores
+ *   item(aegis, {...})   on_attack     the wearer attacked
+ *                        on_hit_taken  the wearer was attacked
+ *   player({...})        base_stat  what a player's base stat counts for
+ *                        cast_dex   the DEX the cast-time and skill-delay formulas read
+ *
+ * A hook is off until a mod registers it; with none registered the server
+ * behaves as stock rAthena. Server extensions, the other way a mod switches
+ * behaviour on, are in doc/extensions.md.
  *
  * The files listed in db/import/lua/load.txt (or, with no list, every .lua
  * file in db/import/lua) are run once at start-up, in a sandbox, and
@@ -93,6 +112,31 @@
  *   heal = function(c, stock)
  *     return stock * (100 + math.max(0, c.caster.base_int - 99)) // 100
  *   end
+ *
+ * Player hooks are not tied to a skill or an item; they run for every player:
+ *
+ *   player({
+ *     priority  = 5,
+ *     base_stat = function(c, stock)          -- c.stat: "str", "agi", ... "luk"
+ *       if stock <= 99 then return stock end
+ *       return 99 + (stock - 99) // 3         -- above 99 a point counts for a third
+ *     end,
+ *     cast_dex  = function(c, stock)          -- stock: the DEX in use, bonuses included
+ *       return stock
+ *     end,
+ *   })
+ *
+ * base_stat decides what a stat as the player raised it (c.caster.base_str
+ * and so on, `stock` here) counts for wherever the server uses it: the
+ * status calculation, the status window's bonus column, the weight limit,
+ * Marionette Control, Beast Bane with the Hunter spirit, and the Vacuum
+ * Extreme and Bind Trap resistances. Job, equipment and status bonuses are
+ * added on top afterwards; allocation, resets and saving keep the raised
+ * value. cast_dex decides the DEX the cast-time formula (and the skill-delay
+ * one, with delay_dependon_dex) reads for a player. Both run while the
+ * player's status is being worked out, so c.caster carries only id, name,
+ * job, level, job_level and base_str .. base_luk -- no totals, no HP or SP --
+ * and there is no c.target. The results are kept between 0 and 65535.
  *
  * Two mods may hook the same part of the same skill: every registered hook
  * runs, in ascending priority order (ties broken by mod load order). For
@@ -202,6 +246,13 @@ t_itemid skill_lua_on_steal(struct block_list* src, struct block_list* target, u
 /// mod's level hook on that skill says otherwise. Always `stock` when no hook
 /// is registered.
 int32 skill_lua_level(uint16 skill_id, const block_list* bl, int32 stock);
+
+/// The player() hooks: the value a base stat counts for (`stat` is "str",
+/// "agi", "vit", "int", "dex" or "luk"), and the DEX the cast-time and
+/// skill-delay formulas read. Both return `stock` when no hook is registered.
+class map_session_data;
+int32 skill_lua_base_stat(const map_session_data& sd, const char* stat, int32 stock);
+int32 skill_lua_cast_dex(const map_session_data& sd, int32 stock);
 
 /// As skill_lua_level(), for the job level and the job_level hook.
 int32 skill_lua_job_level(uint16 skill_id, const block_list* bl, int32 stock);
