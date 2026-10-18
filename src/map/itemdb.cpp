@@ -3953,7 +3953,7 @@ bool itemdb_parse_roulette_db(void)
 	uint32 count = 0;
 
 	// retrieve all rows from the item database
-	if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", roulette_table)) {
+	if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s` ORDER BY `index`", roulette_table)) {
 		Sql_ShowDebug(mmysql_handle);
 		return false;
 	}
@@ -3961,44 +3961,50 @@ bool itemdb_parse_roulette_db(void)
 	for (i = 0; i < MAX_ROULETTE_LEVEL; i++)
 		rd.items[i] = 0;
 
-	for (i = 0; i < MAX_ROULETTE_LEVEL; i++) {
-		int32 k, limit = MAX_ROULETTE_COLUMNS - i;
+	while (SQL_SUCCESS == Sql_NextRow(mmysql_handle)) {
+		char* data;
+		t_itemid item_id;
+		uint16 amount;
+		int32 level, flag;
 
-		for (k = 0; k < limit && SQL_SUCCESS == Sql_NextRow(mmysql_handle); k++) {
-			char* data;
-			t_itemid item_id;
-			uint16 amount;
-			int32 level, flag;
+		Sql_GetData(mmysql_handle, 1, &data, nullptr); level = atoi(data);
+		Sql_GetData(mmysql_handle, 2, &data, nullptr); item_id = strtoul(data, nullptr, 10);
+		Sql_GetData(mmysql_handle, 3, &data, nullptr); amount = atoi(data);
+		Sql_GetData(mmysql_handle, 4, &data, nullptr); flag = atoi(data);
 
-			Sql_GetData(mmysql_handle, 1, &data, nullptr); level = atoi(data);
-			Sql_GetData(mmysql_handle, 2, &data, nullptr); item_id = strtoul(data, nullptr, 10);
-			Sql_GetData(mmysql_handle, 3, &data, nullptr); amount = atoi(data);
-			Sql_GetData(mmysql_handle, 4, &data, nullptr); flag = atoi(data);
-
-			if (!item_db.exists(item_id)) {
-				ShowWarning("itemdb_parse_roulette_db: Unknown item ID '%u' in level '%d'\n", item_id, level);
-				continue;
-			}
-			if (amount < 1 || amount > MAX_AMOUNT){
-				ShowWarning("itemdb_parse_roulette_db: Unsupported amount '%hu' for item ID '%u' in level '%d'\n", amount, item_id, level);
-				continue;
-			}
-			if (flag < 0 || flag > 1) {
-				ShowWarning("itemdb_parse_roulette_db: Unsupported flag '%d' for item ID '%u' in level '%d'\n", flag, item_id, level);
-				continue;
-			}
-
-			j = rd.items[i];
-			RECREATE(rd.nameid[i], t_itemid, ++rd.items[i]);
-			RECREATE(rd.qty[i], uint16, rd.items[i]);
-			RECREATE(rd.flag[i], int32, rd.items[i]);
-
-			rd.nameid[i][j] = item_id;
-			rd.qty[i][j] = amount;
-			rd.flag[i][j] = flag;
-
-			++count;
+		if (level < 1 || level > MAX_ROULETTE_LEVEL) {
+			ShowWarning("itemdb_parse_roulette_db: Unsupported level '%d' for item ID '%u'\n", level, item_id);
+			continue;
 		}
+		if (!item_db.exists(item_id)) {
+			ShowWarning("itemdb_parse_roulette_db: Unknown item ID '%u' in level '%d'\n", item_id, level);
+			continue;
+		}
+		if (amount < 1 || amount > MAX_AMOUNT){
+			ShowWarning("itemdb_parse_roulette_db: Unsupported amount '%hu' for item ID '%u' in level '%d'\n", amount, item_id, level);
+			continue;
+		}
+		if (flag < 0 || flag > 1) {
+			ShowWarning("itemdb_parse_roulette_db: Unsupported flag '%d' for item ID '%u' in level '%d'\n", flag, item_id, level);
+			continue;
+		}
+
+		i = level - 1;
+		if (rd.items[i] >= MAX_ROULETTE_COLUMNS - i) {
+			ShowWarning("itemdb_parse_roulette_db: Level %d is full, ignoring item ID '%u'\n", level, item_id);
+			continue;
+		}
+
+		j = rd.items[i];
+		RECREATE(rd.nameid[i], t_itemid, ++rd.items[i]);
+		RECREATE(rd.qty[i], uint16, rd.items[i]);
+		RECREATE(rd.flag[i], int32, rd.items[i]);
+
+		rd.nameid[i][j] = item_id;
+		rd.qty[i][j] = amount;
+		rd.flag[i][j] = flag;
+
+		++count;
 	}
 
 	// free the query result
@@ -4010,24 +4016,16 @@ bool itemdb_parse_roulette_db(void)
 		if (rd.items[i] == limit)
 			continue;
 
-		if (rd.items[i] > limit) {
-			ShowWarning("itemdb_parse_roulette_db: level %d has %d items, only %d supported, capping...\n", i + 1, rd.items[i], limit);
-			rd.items[i] = limit;
-			continue;
-		}
-
 		/** this scenario = rd.items[i] < limit **/
 		ShowWarning("itemdb_parse_roulette_db: Level %d has %d items, %d are required. Filling with Apples...\n", i + 1, rd.items[i], limit);
 
+		j = rd.items[i];
 		rd.items[i] = limit;
 		RECREATE(rd.nameid[i], t_itemid, rd.items[i]);
 		RECREATE(rd.qty[i], uint16, rd.items[i]);
 		RECREATE(rd.flag[i], int32, rd.items[i]);
 
-		for (j = 0; j < MAX_ROULETTE_COLUMNS - i; j++) {
-			if (rd.qty[i][j])
-				continue;
-
+		for (; j < limit; j++) {
 			rd.nameid[i][j] = ITEMID_APPLE;
 			rd.qty[i][j] = 1;
 			rd.flag[i][j] = 0;
