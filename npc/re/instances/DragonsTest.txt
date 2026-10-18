@@ -9,8 +9,8 @@
 //- 1@4drk are unknown and were picked by us on walkable cells:
 //-   eggs and Oscar: east cave, fountains: west cave,
 //-   soldiers: south cave, dragon: north-east cave.
-//- Monster HP in the trials is lowered by script; experience and
-//- loot are switched off on the instance map. Both are our choice.
+//- Monster HP in the trials is lowered by script (our choice).
+//- No experience and no loot on the instance map, as in the official quest.
 //- Total : 4 trials.
 //===== Changelogs: ==========================================
 //= 1.0 First version. [MondoTruth]
@@ -159,17 +159,19 @@ OnInstanceInit:
 		mes "[Oscar]";
 		mes "Fountain of Life: ^0000ff" + 'dk_fountain + " / 10^000000.";
 		mes "Defeat the Bone Acidus at the glowing fountain, then lead the Golden Acidus to it.";
-		mes "And whatever you do, don't hurt the Golden Acidus.";
+		mes "It is weak enough already. Whatever you do, don't hurt it.";
 		close3;
 	}
 	mes "[Oscar]";
 	if ('dk_step == 2) {
 		mes "The second trial is the ^0000ffTrial of the Protector^000000.";
-		mes "A young ^0000ffGolden Acidus^000000 must drink from ^0000ff10 Fountains of Life^000000, one after another.";
+		mes "A young ^0000ffGolden Acidus^000000 is dying. Only the ^0000ff10 Fountains of Life^000000 in this cave can save it.";
+		mes "Lead it to them, one after another. Each one will give it back a little of its strength.";
 		next;
 		mes "[Oscar]";
 		mes "A Bone Acidus guards each fountain. Defeat it,";
-		mes "then draw the Golden Acidus after you and lead it to the fountain.";
+		mes "then let the Golden Acidus come after you and lead it to the fountain.";
+		mes "It is frightened and will snap at you, but it can hardly hurt anyone now.";
 		next;
 		mes "[Oscar]";
 		mes "If the Golden Acidus falls, the trial starts over. Protect it.";
@@ -202,8 +204,7 @@ OnInstanceInit:
 }
 
 1@4drk,19,100,0	script	Fountain of Life#dk1	4_ENERGY_BLUE,{
-	mes "- Fresh life force wells up here. -";
-	close;
+	end;
 
 OnInstanceInit:
 	disablenpc();
@@ -233,6 +234,9 @@ OnStart:
 	'dk_fountain = 1;
 	monster 'dk_map$,19,78,"Golden Acidus","4JOB_ACIDUS",1, .@npc$ + "::OnGoldDead";
 	'dk_gold = $@mobid[0];
+	// The dragon arrives dying: a tenth of its HP, healed at each fountain.
+	getunitdata 'dk_gold, .@d;
+	setunitdata 'dk_gold, UMOB_HP, .@d[UMOB_MAXHP] / 10;
 	callsub S_Fountain;
 	initnpctimer;
 	end;
@@ -267,6 +271,11 @@ OnTimer1000:
 		end;
 	}
 	specialeffect EF_HEAL2, AREA, instance_npcname("Fountain of Life#dk" + .@f);
+	// Not min(): it would read .@d[UMOB_MAXHP] as the rest of the array.
+	.@hp = .@d[UMOB_HP] + .@d[UMOB_MAXHP] / 10;
+	if (.@f == 10 || .@hp > .@d[UMOB_MAXHP])
+		.@hp = .@d[UMOB_MAXHP];
+	setunitdata 'dk_gold, UMOB_HP, .@hp;
 	disablenpc instance_npcname("Fountain of Life#dk" + .@f);
 	mapannounce 'dk_map$, "The Golden Acidus drinks from the Fountain of Life. (" + .@f + " / 10)", bc_map, 0x00FF99;
 	if (.@f < 10) {
@@ -276,6 +285,8 @@ OnTimer1000:
 		end;
 	}
 	'dk_step = 30;
+	mapannounce 'dk_map$, "Oscar : Its strength is back. The Trial of the Protector is passed!", bc_map, 0xFFFF00;
+	sleep 3000;
 	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnGoldDead";
 	sleep 2000;
 	mapannounce 'dk_map$, "??? : So the little one trusts you. Then let me see what else you have.", bc_map, 0xFF99CC;
@@ -494,7 +505,7 @@ OnStart:
 	'dk_step = 41;
 	'dk_tick = 0;
 	disablenpc instance_npcname("Leticia#dk4");
-	monster 'dk_map$,219,211,"Leticia","4JOB_LETICIA",1, instance_npcname("#dk_dragon") + "::OnDragonDead";
+	monster 'dk_map$,219,211,"Dragon Queen Leticia","4JOB_LETICIA",1, instance_npcname("#dk_dragon") + "::OnDragonDead";
 	'dk_dragon = $@mobid[0];
 	initnpctimer;
 	end;
@@ -509,7 +520,7 @@ OnTimer1000:
 		end;
 	}
 	getunitdata 'dk_dragon, .@d;
-	if (.@d[UMOB_HP] * 100 / .@d[UMOB_MAXHP] <= 91) {
+	if (.@d[UMOB_HP] <= .@d[UMOB_MAXHP] / 100 * 91) {
 		callsub S_Passed;
 		end;
 	}

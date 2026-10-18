@@ -110185,12 +110185,15 @@ Body:
 #    AegisName: MOLE_TW
   # Ragnarok Offline: 4JOB_LETICIA and 4JOB_ACIDUS are the Dragon Knight job
   # change monsters (npc/re/instances/DragonsTest.txt). The official stats are
-  # unknown; these are our own, Leticia's taken from Detardeurus (DETALE).
+  # unknown; these are our own, Leticia's taken from Detardeurus (DETALE),
+  # her 90,000,000 HP as seen in an official play-through video. The official
+  # name "Red Flame Dragon Queen Letizia" is longer than rAthena's 23 characters.
+  # The Golden Acidus is aggressive but has Dex 1, so it mostly misses.
   - Id: 20875
     AegisName: 4JOB_LETICIA
-    Name: Leticia
+    Name: Dragon Queen Leticia
     Level: 135
-    Hp: 6005000
+    Hp: 90000000
     Attack: 6108
     Attack2: 2662
     Defense: 364
@@ -110228,7 +110231,7 @@ Body:
     Agi: 78
     Vit: 50
     Int: 55
-    Dex: 108
+    Dex: 1
     Luk: 55
     AttackRange: 1
     SkillRange: 10
