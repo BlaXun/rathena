@@ -232,14 +232,15 @@ OnTimer3000:
 }
 
 // The rune circle around a healing stone (the stone itself is a Guardian
-// Stone monster, see S_Fountain). The circle effect is our pick.
+// Stone monster, see S_Fountain). The circle is the client's ground-cast
+// circle (EF_GROUNDSAMPLE); the official effect is not known.
 1@4drk,19,100,0	script	Healing Stone#dk1	CLEAR_NPC,{
 	end;
 
 OnShow:
 	enablenpc();
 OnTimer3000:
-	specialeffect EF_MAGIC_FLOOR;
+	specialeffect EF_GROUNDSAMPLE;
 	initnpctimer;
 	end;
 
@@ -285,9 +286,11 @@ OnStart:
 // After 3 failures the guards are no longer spawned.
 S_Fountain:
 	donpcevent instance_npcname("Healing Stone#dk" + 'dk_fountain) + "::OnShow";
-	monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Healing Stone","E_EMPEL_1",1, instance_npcname("#dk_escort") + "::OnStone";
+	monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Healing Stone","E_EMPEL_1",1, instance_npcname("#dk_escort") + "::OnStone", Size_Large;
 	if ('dk_fails < 3) {
 		monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Bone Acidus","BONE_ACIDUS_MJ",1, instance_npcname("#dk_escort") + "::OnBoneDead";
+		// The client may not know BONE_ACIDUS_MJ: show it as BONE_ACIDUS (20617).
+		setunitdata $@mobid[0], UMOB_CLASS, 20617;
 	}
 	mapannounce 'dk_map$, "Oscar : Healing Stone " + 'dk_fountain + " is shining. Lead the Spacetime Observer into its circle!", bc_map, 0xFFFF00;
 	return;
@@ -416,6 +419,8 @@ OnStart:
 S_Spawn:
 	.@r = rand(getarraysize('dk_sx));
 	monster 'dk_map$,'dk_sx[.@r],'dk_sy[.@r],"Leticia's Soldier","BONE_FERUS_MJ",1, instance_npcname("#dk_soldiers") + "::OnSoldierDead";
+	// The client may not know BONE_FERUS_MJ: show it as BONE_FERUS (20616).
+	setunitdata $@mobid[0], UMOB_CLASS, 20616;
 	return;
 
 OnSoldierDead:
