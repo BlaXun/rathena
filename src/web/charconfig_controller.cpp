@@ -44,7 +44,6 @@ HANDLER_FUNC(charconfig_save) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
@@ -56,7 +55,6 @@ HANDLER_FUNC(charconfig_save) {
 			|| SQL_SUCCESS != stmt.NextRow()
 		) {
 			SqlStmt_ShowDebug(stmt);
-			sl.unlock();
 			res.status = HTTP_BAD_REQUEST;
 			res.set_content("Error", "text/plain");
 			return;
@@ -79,13 +77,11 @@ HANDLER_FUNC(charconfig_save) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
 	}
 
-	sl.unlock();
 	res.set_content(data_str, "application/json");
 }
 
@@ -121,7 +117,6 @@ HANDLER_FUNC(charconfig_load) {
 		|| SQL_SUCCESS != stmt.Execute()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
@@ -137,13 +132,11 @@ HANDLER_FUNC(charconfig_load) {
 			SQL_SUCCESS != stmt.BindParam( 3, SQLDT_STRING, (void*)data.c_str(), strlen( data.c_str() ) ) ||
 			SQL_SUCCESS != stmt.Execute() ){
 			SqlStmt_ShowDebug( stmt );
-			sl.unlock();
 			res.status = HTTP_BAD_REQUEST;
 			res.set_content( "Error", "text/plain" );
 			return;
 		}
 
-		sl.unlock();
 		res.set_content( data, "application/json" );
 		return;
 	}
@@ -154,13 +147,11 @@ HANDLER_FUNC(charconfig_load) {
 		|| SQL_SUCCESS != stmt.NextRow()
 	) {
 		SqlStmt_ShowDebug(stmt);
-		sl.unlock();
 		res.status = HTTP_BAD_REQUEST;
 		res.set_content("Error", "text/plain");
 		return;
 	}
 
-	sl.unlock();
 
 	databuf[sizeof(databuf) - 1] = 0;
 
