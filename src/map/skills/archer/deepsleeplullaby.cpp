@@ -16,7 +16,7 @@ void SkillDeepSleepLullaby::castendNoDamageId(block_list *src, block_list *targe
 	map_session_data* sd = BL_CAST(BL_PC, src);
 
 	if (flag&1) {
-		int32 rate = 4 * skill_lv + (sd ? pc_checkskill(sd, WM_LESSON) * 2 : 0) + status_get_lv(src) / 15 + (sd ? sd->status.job_level / 5 : 0);
+		int32 rate = 4 * skill_lv + (sd ? pc_checkskill(sd, WM_LESSON) * 2 : 0) + status_get_lv_dmg(src, getSkillId()) / 15 + status_get_joblv_dmg(sd, 0, getSkillId()) / 5;
 		int32 duration = skill_get_time(getSkillId(), skill_lv) - (status_get_base_status(target)->int_ * 50 + status_get_lv(target) * 50); // Duration reduction for Deep Sleep Lullaby is doubled
 
 		sc_start(src, target, type, rate, skill_lv, duration);
