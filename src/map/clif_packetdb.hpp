@@ -1688,7 +1688,7 @@
 	packet(0x09B1,4);
 	parseable_packet(0x09B4,6,clif_parse_sale_open,2);
 	parseable_packet(0x09BC,6,clif_parse_sale_close,2);
-	parseable_packet(0x09C3,8,clif_parse_sale_refresh,2,6);
+	parseable_packet( HEADER_CZ_REQ_COUNT_BARGAIN_SALE_ITEM, sizeof( PACKET_CZ_REQ_COUNT_BARGAIN_SALE_ITEM ), clif_parse_sale_refresh, 0 );
 	// New Packet
 	packet(0x097A,-1); // ZC_ALL_QUEST_LIST2
 	packet(0x09DB,-1); // ZC_NOTIFY_MOVEENTRY10
