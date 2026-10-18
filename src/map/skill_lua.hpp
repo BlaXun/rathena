@@ -85,6 +85,15 @@
  * restore; c.base is that amount before the skill's own bonus, which only
  * AB_CHEAL has (2.5 % per party member). c.target is the unit being healed.
  *
+ * For a player, c.caster and c.target also carry base_str, base_agi,
+ * base_vit, base_int, base_dex and base_luk: the stats as the player raised
+ * them, where str, agi and the rest are the totals in use (with job, gear
+ * and status bonuses). A hook can so reward what was invested in a stat:
+ *
+ *   heal = function(c, stock)
+ *     return stock * (100 + math.max(0, c.caster.base_int - 99)) // 100
+ *   end
+ *
  * Two mods may hook the same part of the same skill: every registered hook
  * runs, in ascending priority order (ties broken by mod load order). For
  * ratio, hit and element each hook sees what the previous one returned as

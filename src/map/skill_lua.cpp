@@ -252,6 +252,14 @@ void push_unit(const block_list* bl) {
 	if (const map_session_data* sd = BL_CAST(BL_PC, bl); sd != nullptr) {
 		set_int("job", sd->status.class_);
 		set_int("job_level", sd->status.job_level);
+		// The stats as the player raised them, before job, gear and status
+		// bonuses (c.caster.int and the rest are the totals in use).
+		set_int("base_str", sd->status.str);
+		set_int("base_agi", sd->status.agi);
+		set_int("base_vit", sd->status.vit);
+		set_int("base_int", sd->status.int_);
+		set_int("base_dex", sd->status.dex);
+		set_int("base_luk", sd->status.luk);
 		// Item bonuses a hook might want to honour on a skill that stock
 		// rAthena does not apply them to.
 		set_int("classchange", sd->bonus.classchange);
