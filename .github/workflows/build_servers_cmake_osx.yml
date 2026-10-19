@@ -31,7 +31,9 @@ jobs:
       matrix:
           # The macos-latest label currently points to macos-14.
           # macos-latest YAML-label will use macos-15 in August 2025
-          os: [macos-14, macos-15]
+          # RAGNAROKMAC: macos-14 fails in "Update & Install packages" (Homebrew)
+          # on every run, and the app's server only ever builds on Linux.
+          os: [macos-15]
 
     steps:
       - uses: actions/checkout@v4
