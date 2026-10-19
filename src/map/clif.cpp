@@ -19564,6 +19564,9 @@ void clif_search_store_info_ack( const map_session_data& sd ){
 
 		clif_addcards( &entry.slot, &it );
 #if PACKETVER >= 20150226
+		for( int32 j = 0; j < MAX_ITEM_RDM_OPT; j++ ){
+			it.option[j] = ssitem->option[j];
+		}
 		clif_add_random_options( entry.option_data, it );
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200724
 		entry.grade = ssitem->enchantgrade;
@@ -20880,7 +20883,7 @@ void clif_roulette_open( map_session_data* sd ){
 	p.PacketType = 0xa1a;
 	p.Result = 0; // result
 	p.Serial = 0; // serial
-	p.Step = (sd->roulette.claimPrize) ? sd->roulette.stage - 1 : 0;
+	p.Step = (sd->roulette.claimPrize) ? sd->roulette.prizeStage : 0;
 	p.Idx = (sd->roulette.claimPrize) ? sd->roulette.prizeIdx : -1;
 	p.AdditionItemID = sd->roulette.bonusItemID;
 	p.GoldPoint = sd->roulette_point.gold;
@@ -21613,10 +21616,10 @@ void clif_sale_amount( const sale_item_data* sale_item, const block_list* bl, en
 }
 
 /// The client requested a refresh of the current remaining count of a sale item
-/// 09ac <account id>.L <item id>.W (CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO)
+/// 09c3 <account id>.L <item id>.W/.L (CZ_REQ_COUNT_BARGAIN_SALE_ITEM)
 void clif_parse_sale_refresh( int32 fd, map_session_data* sd ){
 #if PACKETVER_SUPPORTS_SALES
-	const PACKET_CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO* p = reinterpret_cast<PACKET_CZ_REQ_CASH_BARGAIN_SALE_ITEM_INFO*>( RFIFOP( fd, 0 ) );
+	const PACKET_CZ_REQ_COUNT_BARGAIN_SALE_ITEM* p = reinterpret_cast<PACKET_CZ_REQ_COUNT_BARGAIN_SALE_ITEM*>( RFIFOP( fd, 0 ) );
 
 	struct sale_item_data* sale;
 

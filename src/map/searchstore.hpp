@@ -75,6 +75,7 @@ struct s_search_store_info_item {
 	uint16 amount;
 	uint32 price;
 	t_itemid card[MAX_SLOTS];
+	s_item_randomoption option[MAX_ITEM_RDM_OPT]{};
 	unsigned char refine;
 	uint8 enchantgrade;
 };

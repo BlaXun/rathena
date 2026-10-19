@@ -9792,6 +9792,17 @@ Body:
       StopAttacking: true
       StopCasting: true
       BossResist: true
+  - Status: Mtp_W_Potion_100
+    Icon: EFST_MTP_W_POTION_100
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+      NoForcedEnd: true
+    Script: |
+      bonus2 bAddItemHealRate, 1100006, getstatus(SC_MTP_W_POTION_100, 1); // Dried Ice Gangu
   - Status: C_Buff_3
     Icon: EFST_C_BUFF_3
     Flags:
