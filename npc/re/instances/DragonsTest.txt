@@ -11,8 +11,8 @@
 //-   healing stones: west cave,
 //-   soldiers: south cave, dragon: north-east cave.
 //- The dragon spirits and Leticia's soldiers have 1 HP (BONE_ACIDUS_MJ,
-//- BONE_FERUS_MJ) and fall to any hit; the healing stones are Guardian
-//- Stones (E_EMPEL_1) that nothing can hurt.
+//- BONE_FERUS_MJ) and fall to any hit; the healing stones are NPCs that
+//- look like a big Guardian Stone (E_EMPEL_1), so nothing can hurt them.
 //- No experience and no loot on the instance map, as in the official quest.
 //- Total : 4 trials.
 //===== Changelogs: ==========================================
@@ -231,14 +231,15 @@ OnTimer3000:
 	end;
 }
 
-// The rune circle around a healing stone (the stone itself is a Guardian
-// Stone monster, see S_Fountain). The circle is the client's ground-cast
-// circle (EF_GROUNDSAMPLE); the official effect is not known.
-1@4drk,19,100,0	script	Healing Stone#dk1	CLEAR_NPC,{
+// A healing stone: a big Guardian Stone in a rune circle. The circle is
+// the client's ground-cast circle (EF_GROUNDSAMPLE); the official effect
+// is not known.
+1@4drk,19,100,0	script	Healing Stone#dk1	E_EMPEL_1,{
 	end;
 
 OnShow:
 	enablenpc();
+	setnpcdisplay strnpcinfo(3), "Healing Stone", 3910, Size_Large;
 OnTimer3000:
 	specialeffect EF_GROUNDSAMPLE;
 	initnpctimer;
@@ -250,15 +251,15 @@ OnInstanceInit:
 	disablenpc();
 	end;
 }
-1@4drk,25,126,0	duplicate(Healing Stone#dk1)	Healing Stone#dk2	CLEAR_NPC
-1@4drk,43,141,0	duplicate(Healing Stone#dk1)	Healing Stone#dk3	CLEAR_NPC
-1@4drk,65,152,0	duplicate(Healing Stone#dk1)	Healing Stone#dk4	CLEAR_NPC
-1@4drk,65,181,0	duplicate(Healing Stone#dk1)	Healing Stone#dk5	CLEAR_NPC
-1@4drk,68,208,0	duplicate(Healing Stone#dk1)	Healing Stone#dk6	CLEAR_NPC
-1@4drk,78,231,0	duplicate(Healing Stone#dk1)	Healing Stone#dk7	CLEAR_NPC
-1@4drk,110,232,0	duplicate(Healing Stone#dk1)	Healing Stone#dk8	CLEAR_NPC
-1@4drk,133,242,0	duplicate(Healing Stone#dk1)	Healing Stone#dk9	CLEAR_NPC
-1@4drk,136,271,0	duplicate(Healing Stone#dk1)	Healing Stone#dk10	CLEAR_NPC
+1@4drk,25,126,0	duplicate(Healing Stone#dk1)	Healing Stone#dk2	E_EMPEL_1
+1@4drk,43,141,0	duplicate(Healing Stone#dk1)	Healing Stone#dk3	E_EMPEL_1
+1@4drk,65,152,0	duplicate(Healing Stone#dk1)	Healing Stone#dk4	E_EMPEL_1
+1@4drk,65,181,0	duplicate(Healing Stone#dk1)	Healing Stone#dk5	E_EMPEL_1
+1@4drk,68,208,0	duplicate(Healing Stone#dk1)	Healing Stone#dk6	E_EMPEL_1
+1@4drk,78,231,0	duplicate(Healing Stone#dk1)	Healing Stone#dk7	E_EMPEL_1
+1@4drk,110,232,0	duplicate(Healing Stone#dk1)	Healing Stone#dk8	E_EMPEL_1
+1@4drk,133,242,0	duplicate(Healing Stone#dk1)	Healing Stone#dk9	E_EMPEL_1
+1@4drk,136,271,0	duplicate(Healing Stone#dk1)	Healing Stone#dk10	E_EMPEL_1
 
 1@4drk,1,1,0	script	#dk_escort	-1,{
 	end;
@@ -270,7 +271,6 @@ OnStart:
 	killmonster 'dk_map$, .@npc$ + "::OnGoldDead";
 	for (.@i = 1; .@i <= 10; .@i++)
 		donpcevent instance_npcname("Healing Stone#dk" + .@i) + "::OnHide";
-	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnStone";
 	'dk_step = 21;
 	'dk_fountain = 1;
 	monster 'dk_map$,19,78,"--en--","4JOB_ACIDUS",1, .@npc$ + "::OnGoldDead";
@@ -286,7 +286,6 @@ OnStart:
 // After 3 failures the guards are no longer spawned.
 S_Fountain:
 	donpcevent instance_npcname("Healing Stone#dk" + 'dk_fountain) + "::OnShow";
-	monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Healing Stone","E_EMPEL_1",1, instance_npcname("#dk_escort") + "::OnStone", Size_Large;
 	if ('dk_fails < 3) {
 		monster 'dk_map$,'dk_fx['dk_fountain],'dk_fy['dk_fountain],"Bone Acidus","BONE_ACIDUS_MJ",1, instance_npcname("#dk_escort") + "::OnBoneDead";
 		// The client may not know BONE_ACIDUS_MJ: show it as BONE_ACIDUS (20617).
@@ -319,7 +318,6 @@ OnTimer1000:
 		.@hp = .@d[UMOB_MAXHP];
 	setunitdata 'dk_gold, UMOB_HP, .@hp;
 	donpcevent instance_npcname("Healing Stone#dk" + .@f) + "::OnHide";
-	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnStone";
 	mapannounce 'dk_map$, "The Healing Stone restores some of the Observer's strength. (" + .@f + " / 10)", bc_map, 0x00FF99;
 	if (.@f < 10) {
 		'dk_fountain++;
@@ -347,12 +345,10 @@ OnGoldDead:
 	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnBoneDead";
 	for (.@i = 1; .@i <= 10; .@i++)
 		donpcevent instance_npcname("Healing Stone#dk" + .@i) + "::OnHide";
-	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnStone";
 	mapannounce 'dk_map$, "Oscar : The Spacetime Observer has fallen! Come back to me and start over.", bc_map, 0xFFFF00;
 	end;
 
 OnBoneDead:
-OnStone:
 	end;
 }
 
@@ -466,17 +462,16 @@ OnTimer300000:
 	if ('dk_step == 40) {
 		cutin "4job_leticia_02.png",2;
 		mes "[Leticia]";
-		mes "The last one is the ^0000ffTrial of Patience^000000.";
-		mes "I will take my true form, and you will face me.";
+		mes "Fine, you're tougher than I expected.";
+		mes "But tough isn't enough to beat me. One more test, a harder one, little creature.";
 		next;
 		mes "[Leticia]";
-		mes "You don't have to win. Bring my HP down to ^0000ff91%^000000.";
-		mes "Sometimes a ^00aa00green aura^000000 will cover me and your attacks will barely scratch me.";
-		mes "Keep your nerve and wait for it to fade.";
+		mes "I'll fight you in my weakest form.";
+		mes "Manage to leave even a scratch on me, and I'll accept you.";
 		next;
-		if (select( "I'm ready!", "Wait a moment." ) == 2) {
+		if (select( "Quit.", "Okay." ) == 1) {
 			mes "[Leticia]";
-			mes "I'll be here.";
+			mes "Scared already? I'll be here.";
 			close3;
 		}
 		mes "[Leticia]";
@@ -488,51 +483,17 @@ OnTimer300000:
 	}
 	if ('dk_step != 50)
 		end;
-	cutin "4job_leticia_04.png",2;
-	mes "[Leticia]";
-	mes "Phew... You kept your head even when nothing seemed to work.";
-	mes "That's the patience a dragon needs from its companion.";
-	next;
-	if (Class != JOB_RUNE_KNIGHT && Class != JOB_RUNE_KNIGHT_T) {
-		mes "[Leticia]";
-		mes "Hm? You're not a Rune Knight anymore. I can't help you like this.";
-		close3;
-	}
-	if (checkdragon() || ismounting()) {
-		mes "[Leticia]";
-		mes "Before we go on, get down from your mount.";
-		mes "You can take it off in the equipment window.";
-		close3;
-	}
-	if (SkillPoint > 0) {
-		mes "[Leticia]";
-		mes "You still have skill points left. Learn your skills first.";
-		close3;
-	}
-	if (checkweight(490087,1) == 0) {
-		mes "[Leticia]";
-		mes "You're carrying too much. Make some room in your inventory first.";
-		close3;
-	}
-	mes "[Leticia]";
-	mes "You passed every trial. Will you become a ^ff0000Dragon Knight^000000?";
-	next;
-	if (select( "Yes.", "Not yet." ) == 2) {
-		mes "[Leticia]";
-		mes "Take your time. I'll wait.";
-		close3;
-	}
-	completequest 12508;
-	jobchange JOB_DRAGON_KNIGHT;
-	getitem 490087,1;	// 4th_Q_Necklace
 	cutin "4job_leticia_01.png",2;
 	mes "[Leticia]";
-	mes "From today you are a Dragon Knight, a true friend of the dragons.";
-	mes "Keep this necklace as proof of your test. I'll send you back to Oscar.";
+	mes "Ha... You really did scratch me.";
+	mes "All right, I accept you. Let's talk where the air is fresher, next to Oscar.";
 	close2;
 	cutin "",255;
+	// The choice itself is made with Leticia next to Oscar
+	// (npc/re/jobs/4-1/dragon_knight.txt).
+	job_dk_4th = 1;
 	.@id = instance_id();
-	warp "gef_fild08",54,98;
+	warp "gef_fild08",54,99;
 	instance_destroy .@id;
 	end;
 
@@ -548,16 +509,16 @@ OnStart:
 	if ('dk_step != 40)
 		end;
 	'dk_step = 41;
-	'dk_tick = 0;
+	'dk_shown = 0;
 	disablenpc instance_npcname("Leticia#dk4");
 	monster 'dk_map$,219,211,"--en--","4JOB_LETICIA",1, instance_npcname("#dk_dragon") + "::OnDragonDead";
 	'dk_dragon = $@mobid[0];
+	mapannounce 'dk_map$, "Attack Leticia and bring her HP down to 90%.", bc_map, 0xFFFF00;
 	initnpctimer;
 	end;
 
-// Every 30 seconds Leticia is covered by a green aura for 10 seconds
-// and takes only 10% of the damage.
-OnTimer1000:
+// Shows her HP every 2 seconds while it changes.
+OnTimer2000:
 	if ('dk_step != 41)
 		end;
 	if (unitexists('dk_dragon) == false) {
@@ -565,18 +526,13 @@ OnTimer1000:
 		end;
 	}
 	getunitdata 'dk_dragon, .@d;
-	if (.@d[UMOB_HP] <= .@d[UMOB_MAXHP] / 100 * 91) {
+	if (.@d[UMOB_HP] <= .@d[UMOB_MAXHP] / 10 * 9) {
 		callsub S_Passed;
 		end;
 	}
-	'dk_tick++;
-	if ('dk_tick % 30 == 15) {
-		setunitdata 'dk_dragon, UMOB_DAMAGETAKEN, 10;
-		unittalk 'dk_dragon, "Leticia : Let's see you get through this!";
-		mapannounce 'dk_map$, "A green aura covers Leticia. Your attacks barely reach her!", bc_map, 0x00FF00;
-	} else if ('dk_tick % 30 == 25) {
-		setunitdata 'dk_dragon, UMOB_DAMAGETAKEN, 100;
-		mapannounce 'dk_map$, "The green aura around Leticia fades.", bc_map, 0x00FF00;
+	if (.@d[UMOB_HP] != 'dk_shown) {
+		'dk_shown = .@d[UMOB_HP];
+		mapannounce 'dk_map$, "Leticia's HP: " + .@d[UMOB_HP] + " / " + .@d[UMOB_MAXHP], bc_map, 0xFFFF00;
 	}
 	initnpctimer;
 	end;

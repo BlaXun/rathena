@@ -55,6 +55,12 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 		mes "Each one is held in the Dragon's Test, a place I will open for you.";
 		next;
 	}
+	if (job_dk_4th == 1) {
+		cutin "OSCAR03.bmp",2;
+		mes "[Oscar]";
+		mes "You came back from the test! Leticia is right here and she wants a word with you.";
+		close3;
+	}
 	if (isbegin_quest(12509) == 1) {
 		if (checkquest(12509,PLAYTIME) != 2) {
 			cutin "OSCAR03.bmp",2;
@@ -149,4 +155,72 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 		close3;
 	}
 	end;
+}
+
+// Leticia waits here after the last trial; the job change happens here.
+gef_fild08,57,100,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
+	if (job_dk_4th != 1) {
+		cutin "4job_leticia_01.png",2;
+		mes "[Leticia]";
+		mes "What are you staring at? I'm just enjoying the breeze.";
+		close3;
+	}
+	cutin "4job_leticia_04.png",2;
+	mes "[Leticia]";
+	mes "It's been ages since I met a creature this much fun.";
+	next;
+	mes "[Leticia]";
+	mes "A dragon's companion needs the support of at least two dragon signs.";
+	mes "You earned them. What happens now is your choice.";
+	next;
+	if (Class != JOB_RUNE_KNIGHT && Class != JOB_RUNE_KNIGHT_T) {
+		mes "[Leticia]";
+		mes "Hm? You're not a Rune Knight anymore. I can't help you like this.";
+		close3;
+	}
+	if (checkdragon() || ismounting()) {
+		mes "[Leticia]";
+		mes "Before we go on, get down from your mount.";
+		mes "You can take it off in the equipment window.";
+		close3;
+	}
+	if (SkillPoint > 0) {
+		mes "[Leticia]";
+		mes "You still have skill points left. Learn your skills first.";
+		close3;
+	}
+	if (checkweight(490087,1) == 0) {
+		mes "[Leticia]";
+		mes "You're carrying too much. Make some room in your inventory first.";
+		close3;
+	}
+	mes "[Leticia]";
+	mes "Will you promise to stay our friend for a long, long time?";
+	next;
+	if (select( "Wait, let me think...", "Yes." ) == 1) {
+		mes "[Leticia]";
+		mes "Take your time. I'll wait.";
+		close3;
+	}
+	mes "[Leticia]";
+	mes "Then I'll give you a share of my dragon power. Stay still.";
+	// The official animation is not known: Leticia's breath and a
+	// level-up light on the player stand in for it.
+	specialeffect EF_M05;
+	specialeffect2 EF_HITBODY;
+	sleep2 1000;
+	specialeffect EF_M05;
+	specialeffect2 EF_ANGEL;
+	sleep2 1000;
+	job_dk_4th = 0;
+	completequest 12508;
+	jobchange JOB_DRAGON_KNIGHT;
+	getitem 490087,1;	// 4th_Q_Necklace
+	specialeffect2 EF_JOBLVUP;
+	next;
+	cutin "4job_leticia_01.png",2;
+	mes "[Leticia]";
+	mes "Lovely!";
+	mes "From today you are a Dragon Knight. Keep the necklace as proof of your test.";
+	close3;
 }
