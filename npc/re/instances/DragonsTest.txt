@@ -25,7 +25,8 @@
 	switch('dk_step) {
 	case 0:
 		mes "[Oscar]";
-		mes "Welcome to the Dragon's Test.";
+		mes "Welcome to the Dragon's Test, " + strcharinfo(0) + ".";
+		mes "Think of it as a first meeting with the dragons who may become your friends.";
 		mes "The first trial is the ^0000ffTrial of Life^000000.";
 		next;
 		mes "[Oscar]";
@@ -33,7 +34,8 @@
 		mes "Share your own strength with them until each one wakes again.";
 		next;
 		mes "[Oscar]";
-		mes "It will drain your HP and SP, and an egg may need several tries.";
+		mes "They will draw on your ^0000ffHP and SP^000000, so keep an eye on both.";
+		mes "The first few tries on an egg are the hardest; it gets easier after that.";
 		mes "Rest whenever you must.";
 		next;
 		switch( select( "I'm ready!", "Give up the test." ) ) {
@@ -80,6 +82,8 @@ OnInstanceInit:
 	'dk_step = 0;
 	'dk_eggs = 0;
 	'dk_fails = 0;
+	// The rune circle around the shining healing stone.
+	'dk_circle_ef = EF_BOTTOM_SANC;
 	// Healing Stones (trial 2), in order.
 	setarray 'dk_fx[1], 19, 25, 43, 65, 65, 68, 78,110,133,136;
 	setarray 'dk_fy[1],100,126,141,152,181,208,231,232,242,271;
@@ -135,14 +139,24 @@ OnInstanceInit:
 		// the one of Steal looks closest).
 		specialeffect EF_STEAL;
 		sleep2 1500;
-		if (rand(100) < 30)
+		// The first tries on each egg are harder (the official chances are
+		// not known).
+		.@tries = getd(.@egg$ + "_tries") + 1;
+		setd .@egg$ + "_tries", .@tries;
+		.@chance = 30;
+		if (.@tries <= 3)
+			.@chance = 10;
+		if (rand(100) < .@chance)
 			break;
 	}
 	setd .@egg$ + "_busy", 0;
 	setd .@egg$ + "_ok", 1;
 	'dk_eggs++;
 	callsub S_Tree;
-	dispbottom "The egg is alive again! Eggs revived: " + 'dk_eggs + " / 7";
+	mes "- The egg's mana curls gently around your hand. -";
+	mes "- It has answered you: the bond is made. -";
+	mes "Eggs revived: ^0000ff" + 'dk_eggs + " / 7^000000";
+	close2;
 	if ('dk_eggs < 7 || 'dk_step != 1)
 		end;
 	'dk_step = 2;
@@ -151,10 +165,12 @@ OnInstanceInit:
 	warp 'dk_map$,19,72;
 	end;
 
-// A revived egg stands in a green tree of light (the Epiclesis effect), as in
-// the official quest. The effect is short, so it is shown again and again.
+// A revived egg stands in a green tree of light over a green circle (the
+// Epiclesis effects), as in the official quest. The effects are short, so
+// they are shown again and again.
 S_Tree:
 	specialeffect EF_GLASSWALL4;
+	specialeffect EF_GLASSWALL3;
 	initnpctimer;
 	return;
 
@@ -194,7 +210,7 @@ OnTimer3000:
 	if ('dk_step == 2) {
 		mes "The second trial is the ^0000ffTrial of the Protector^000000.";
 		mes "A young golden dragon, a ^0000ffSpacetime Observer^000000, is dying. Only the ^0000ff10 Healing Stones^000000 in this cave can save it.";
-		mes "Lead it into their circles, one after another. Each stone gives it back a little of its strength.";
+		mes "Whenever it comes close to a stone, it regains some strength. Lead it from stone to stone until its strength is fully back: that is your second trial.";
 		next;
 		mes "[Oscar]";
 		mes "The spirits of dragons that died here gather around the stones as Bone Acidus.";
@@ -208,7 +224,7 @@ OnTimer3000:
 		mes "Shall we try again from the first stone?";
 	}
 	next;
-	if (select( "I'm ready!", "Give up the test." ) == 2) {
+	if (select( "Quit.", "I'm ready." ) == 1) {
 		mes "[Oscar]";
 		mes "Giving up ends this test. You'll need a rest before you can try again.";
 		mes "Are you sure?";
@@ -231,9 +247,9 @@ OnTimer3000:
 	end;
 }
 
-// A healing stone: a big Guardian Stone in a rune circle. The circle is
-// the client's ground-cast circle (EF_GROUNDSAMPLE); the official effect
-// is not known. The dragon is healed when it walks within 3 cells of
+// A healing stone: a big Guardian Stone in a rune circle. The official
+// circle effect is not known; 'dk_circle_ef (set in Oscar#dk1) is the
+// client effect drawn in its place. The dragon is healed when it walks within 3 cells of
 // the shining stone (OnTouchNPC; hidden stones don't react).
 1@4drk,19,100,0	script	Healing Stone#dk1	E_EMPEL_1,3,3,{
 	end;
@@ -247,7 +263,7 @@ OnShow:
 	enablenpc();
 	setnpcdisplay strnpcinfo(3), "Healing Stone", 3910, Size_Large;
 OnTimer3000:
-	specialeffect EF_GROUNDSAMPLE;
+	specialeffect 'dk_circle_ef;
 	initnpctimer;
 	end;
 
@@ -488,7 +504,7 @@ OnTimer300000:
 	// (npc/re/jobs/4-1/dragon_knight.txt).
 	job_dk_4th = 1;
 	.@id = instance_id();
-	warp "gef_fild08",54,99;
+	warp "gef_fild08",55,104;
 	instance_destroy .@id;
 	end;
 

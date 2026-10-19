@@ -36,13 +36,26 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 	}
 	if (isbegin_quest(12508) == 0) {
 		cutin "OSCAR03.bmp",2;
+		mes "- Oscar is gazing into the distance, as if he were waiting for someone. -";
+		next;
+		select( "Oscar? What are you doing out here?" );
 		mes "[Oscar]";
-		mes "So you're the Rune Knight who keeps a dragon by their side.";
-		mes "There is a test that only dragons may hold, and few riders are ever invited to it.";
+		mes "Ah, there you are.";
+		mes "Some time ago I saw someone in a vision. The face was a blur, but I knew they would come to me today.";
 		next;
 		mes "[Oscar]";
-		mes "Those who pass become ^ff0000Dragon Knights^000000, true companions of the dragons.";
-		mes "Those who fail... well, they go home tired.";
+		mes "And now here you stand, " + strcharinfo(0) + ".";
+		mes "You came to become a ^ff0000Dragon Knight^000000, didn't you?";
+		next;
+		if (select( "Yes.", "No, I'm just passing by." ) == 2) {
+			mes "[Oscar]";
+			mes "Is that so? Then I won't keep you.";
+			mes "If you ever change your mind, you know where to find me.";
+			close3;
+		}
+		mes "[Oscar]";
+		mes "Nobody is ever pushed into this. Whatever you decide, we will respect it.";
+		mes "So, " + strcharinfo(0) + ": will you take the ^ff0000Dragon's Test^000000 and become one of us?";
 		next;
 		if (select( "I want to take the test.", "Maybe later." ) == 2) {
 			mes "[Oscar]";
@@ -96,10 +109,10 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 	}
 	cutin "OSCAR03.bmp",2;
 	mes "[Oscar]";
-	mes "Are you ready to face the Dragon's Test?";
+	mes "Then take my hands and clear your mind.";
 	next;
-	switch( select( "Apply for the Dragon's Test.", "Enter the Dragon's Test.", "Not now." ) ) {
-	case 1:
+	switch( select( "Enter the Dragon's Test.", "Apply for the Dragon's Test." ) ) {
+	case 2:
 		.@id = instance_create(.@md_name$);
 		if (.@id == -3) {
 			mes "[Oscar]";
@@ -116,7 +129,7 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 		mes "There. The way is open.";
 		mes "Talk to me again when you want to go in.";
 		close3;
-	case 2:
+	case 1:
 		// Back to the trial in progress, e.g. after dying inside.
 		.@x = -1;
 		.@y = -1;
@@ -152,17 +165,17 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 			end;
 		}
 		end;
-	case 3:
-		close3;
 	}
 	end;
 }
 
 // Leticia waits here after the last trial; the job change happens here.
-// Only players who beat her in the Dragon's Test can see her.
+// Only players who beat her in the Dragon's Test can see her, and for them
+// fireflies dance over the field (EF_FIREFLY; the official effect is not
+// known).
 gef_fild08	mapflag	loadevent
 
-gef_fild08,57,100,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
+gef_fild08,57,104,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
 	if (job_dk_4th != 1)
 		end;
 	cutin "4job_leticia_04.png",2;
@@ -207,13 +220,18 @@ gef_fild08,57,100,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
 	close2;
 	// No picture or window over the animation.
 	cutin "",255;
-	// The official animation is not known: Leticia's breath and a
-	// level-up light on the player stand in for it.
+	// The official animation is not known. In its place: blue sparkles and
+	// an expanding circle around the player, Leticia's breath, then a white
+	// light.
+	specialeffect2 EF_CONCENTRATION2;
+	specialeffect2 EF_DHOWL_STR;
 	specialeffect EF_M05;
-	specialeffect2 EF_HITBODY;
 	sleep2 1000;
 	specialeffect EF_M05;
+	specialeffect2 EF_DHOWL_STR;
+	sleep2 1000;
 	specialeffect2 EF_ANGEL;
+	specialeffect2 EF_LEVEL99_4;
 	sleep2 1000;
 	job_dk_4th = 0;
 	completequest 12508;
@@ -235,7 +253,17 @@ OnInit:
 	end;
 
 OnPCLoadMapEvent:
-	if (strcharinfo(3) == "gef_fild08" && job_dk_4th == 1)
-		cloakoffnpcself;
+	if (strcharinfo(3) != "gef_fild08" || job_dk_4th != 1)
+		end;
+	cloakoffnpcself;
+	deltimer strnpcinfo(3) + "::OnFirefly";
+	addtimer 500, strnpcinfo(3) + "::OnFirefly";
+	end;
+
+OnFirefly:
+	if (strcharinfo(3) != "gef_fild08" || job_dk_4th != 1)
+		end;
+	specialeffect2 EF_FIREFLY, SELF;
+	addtimer 2000, strnpcinfo(3) + "::OnFirefly";
 	end;
 }
