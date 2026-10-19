@@ -56,6 +56,7 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 		next;
 	}
 	if (job_dk_4th == 1) {
+		cloakoffnpcself "Leticia#dk_end";
 		cutin "OSCAR03.bmp",2;
 		mes "[Oscar]";
 		mes "You came back from the test! Leticia is right here and she wants a word with you.";
@@ -158,13 +159,12 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 }
 
 // Leticia waits here after the last trial; the job change happens here.
+// Only players who beat her in the Dragon's Test can see her.
+gef_fild08	mapflag	loadevent
+
 gef_fild08,57,100,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
-	if (job_dk_4th != 1) {
-		cutin "4job_leticia_01.png",2;
-		mes "[Leticia]";
-		mes "What are you staring at? I'm just enjoying the breeze.";
-		close3;
-	}
+	if (job_dk_4th != 1)
+		end;
 	cutin "4job_leticia_04.png",2;
 	mes "[Leticia]";
 	mes "It's been ages since I met a creature this much fun.";
@@ -222,5 +222,17 @@ gef_fild08,57,100,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
 	mes "[Leticia]";
 	mes "Lovely!";
 	mes "From today you are a Dragon Knight. Keep the necklace as proof of your test.";
-	close3;
+	close2;
+	cutin "",255;
+	cloakonnpcself;
+	end;
+
+OnInit:
+	cloakonnpc;
+	end;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == "gef_fild08" && job_dk_4th == 1)
+		cloakoffnpcself;
+	end;
 }
