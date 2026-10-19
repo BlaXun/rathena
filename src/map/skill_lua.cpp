@@ -84,6 +84,9 @@ const char* const hook_names[HOOK_MAX] = { "ratio", "hit", "element", "on_hit", 
 enum e_item_hook : uint8 { ITEM_HOOK_ON_ATTACK = 0, ITEM_HOOK_ON_HIT_TAKEN, ITEM_HOOK_MAX };
 const char* const item_hook_names[ITEM_HOOK_MAX] = { "on_attack", "on_hit_taken" };
 
+enum e_player_hook : uint8 { PLAYER_HOOK_BASE_STAT = 0, PLAYER_HOOK_CAST_DEX, PLAYER_HOOK_MAX };
+const char* const player_hook_names[PLAYER_HOOK_MAX] = { "base_stat", "cast_dex" };
+
 constexpr int32 PRIORITY_MIN = 0;
 constexpr int32 PRIORITY_MAX = 10;
 constexpr int32 PRIORITY_DEFAULT = 5;
@@ -129,6 +132,9 @@ s_skill_hooks* hooks_for(uint16 skill_id) {
 
 std::unordered_map<std::string, s_item_hooks> item_hooks_by_name;
 std::unordered_map<t_itemid, s_item_hooks*> item_hooks_by_id;
+
+/// player() hooks: not keyed by anything, every player goes through them.
+std::vector<s_hook> player_hooks[PLAYER_HOOK_MAX];
 
 // While a skill cast from Lua (c:cast) runs, no Lua hook runs: an item whose
 // on_attack casts a skill that hits would otherwise trigger itself forever.
@@ -252,6 +258,14 @@ void push_unit(const block_list* bl) {
 	if (const map_session_data* sd = BL_CAST(BL_PC, bl); sd != nullptr) {
 		set_int("job", sd->status.class_);
 		set_int("job_level", sd->status.job_level);
+		// The stats as the player raised them, before job, gear and status
+		// bonuses (c.caster.int and the rest are the totals in use).
+		set_int("base_str", sd->status.str);
+		set_int("base_agi", sd->status.agi);
+		set_int("base_vit", sd->status.vit);
+		set_int("base_int", sd->status.int_);
+		set_int("base_dex", sd->status.dex);
+		set_int("base_luk", sd->status.luk);
 		// Item bonuses a hook might want to honour on a skill that stock
 		// rAthena does not apply them to.
 		set_int("classchange", sd->bonus.classchange);
@@ -657,6 +671,68 @@ int32 lua_register_item(lua_State* state) {
 			return luaL_error(state, "item %s: %s must be a function", name, key);
 
 		std::vector<s_hook>& vec = entry.hooks[which];
+		s_hook hook;
+		hook.mod = current_mod;
+		hook.priority = priority;
+		hook.load_order = next_load_order++;
+		hook.ref = luaL_ref(state, LUA_REGISTRYINDEX);
+
+		auto existing = std::find_if(vec.begin(), vec.end(),
+			[&](const s_hook& h) { return h.mod == current_mod; });
+		if (existing != vec.end()) {
+			luaL_unref(state, LUA_REGISTRYINDEX, existing->ref);
+			*existing = hook;
+		} else {
+			vec.push_back(hook);
+		}
+
+		std::stable_sort(vec.begin(), vec.end(),
+			[](const s_hook& a, const s_hook& b) {
+				if (a.priority != b.priority)
+					return a.priority < b.priority;
+				return a.load_order < b.load_order;
+			});
+	}
+	return 0;
+}
+
+// player({ priority = 5, base_stat = ..., cast_dex = ... })
+// Same chaining and priority rules as skill(); the hooks run for every player.
+int32 lua_register_player(lua_State* state) {
+	luaL_checktype(state, 1, LUA_TTABLE);
+
+	int32 priority = PRIORITY_DEFAULT;
+	lua_getfield(state, 1, "priority");
+	if (!lua_isnil(state, -1)) {
+		if (!lua_isinteger(state, -1))
+			return luaL_error(state, "player: priority must be a whole number between %d and %d", PRIORITY_MIN, PRIORITY_MAX);
+		lua_Integer p = lua_tointeger(state, -1);
+		if (p < PRIORITY_MIN || p > PRIORITY_MAX)
+			return luaL_error(state, "player: priority %d is outside the %d..%d range", static_cast<int32>(p), PRIORITY_MIN, PRIORITY_MAX);
+		priority = static_cast<int32>(p);
+	}
+	lua_pop(state, 1);
+
+	lua_pushnil(state);
+	while (lua_next(state, 1) != 0) {
+		const char* key = lua_type(state, -2) == LUA_TSTRING ? lua_tostring(state, -2) : "";
+
+		if (strcmp(key, "priority") == 0) {
+			lua_pop(state, 1);
+			continue;
+		}
+
+		int32 which = -1;
+
+		for (int32 i = 0; i < PLAYER_HOOK_MAX; i++)
+			if (strcmp(key, player_hook_names[i]) == 0)
+				which = i;
+		if (which < 0)
+			return luaL_error(state, "player: unknown hook \"%s\" (base_stat, cast_dex or priority)", key);
+		if (!lua_isfunction(state, -1))
+			return luaL_error(state, "player: %s must be a function", key);
+
+		std::vector<s_hook>& vec = player_hooks[which];
 		s_hook hook;
 		hook.mod = current_mod;
 		hook.priority = priority;
@@ -1101,6 +1177,7 @@ void do_init_skill_lua() {
 
 	lua_register(L, "skill", lua_register_skill);
 	lua_register(L, "item", lua_register_item);
+	lua_register(L, "player", lua_register_player);
 	lua_register(L, "const", lua_constant);
 	lua_register(L, "log", lua_log);
 	lua_register(L, "print", lua_log);
@@ -1132,8 +1209,12 @@ void do_init_skill_lua() {
 	for (const auto& it : item_hooks_by_name)
 		for (int32 i = 0; i < ITEM_HOOK_MAX; i++)
 			item_hooks_total += it.second.hooks[i].size();
-	ShowStatus("Lua: loaded %zu of %zu file(s), %zu skill hook(s) across %zu skill(s), %zu item hook(s) across %zu item(s).\n",
-		loaded, files.size(), skill_hooks_total, hooks_by_name.size(), item_hooks_total, item_hooks_by_name.size());
+	size_t player_hooks_total = 0;
+
+	for (int32 i = 0; i < PLAYER_HOOK_MAX; i++)
+		player_hooks_total += player_hooks[i].size();
+	ShowStatus("Lua: loaded %zu of %zu file(s), %zu skill hook(s) across %zu skill(s), %zu item hook(s) across %zu item(s), %zu player hook(s).\n",
+		loaded, files.size(), skill_hooks_total, hooks_by_name.size(), item_hooks_total, item_hooks_by_name.size(), player_hooks_total);
 	skill_lua_attach();
 }
 
@@ -1142,6 +1223,8 @@ void do_final_skill_lua() {
 	hooks_by_name.clear();
 	item_hooks_by_id.clear();
 	item_hooks_by_name.clear();
+	for (auto& vec : player_hooks)
+		vec.clear();
 	current_hit = nullptr;
 	if (L != nullptr) {
 		lua_close(L);
@@ -1435,6 +1518,73 @@ bool is_stealable(const mob_data& md, t_itemid nameid) {
 }
 
 } // namespace
+
+namespace {
+
+/// What a player() hook sees as c.caster. It runs while the player's status is
+/// being calculated, so it carries only what is settled then: who the player
+/// is, the levels and the stats as the player raised them -- not the totals.
+void push_player(const map_session_data& sd) {
+	lua_createtable(L, 0, 12);
+	set_int("id", sd.id);
+	lua_pushstring(L, "player");
+	lua_setfield(L, -2, "kind");
+	lua_pushstring(L, sd.status.name);
+	lua_setfield(L, -2, "name");
+	set_int("job", sd.status.class_);
+	set_int("level", sd.status.base_level);
+	set_int("job_level", sd.status.job_level);
+	set_int("base_str", sd.status.str);
+	set_int("base_agi", sd.status.agi);
+	set_int("base_vit", sd.status.vit);
+	set_int("base_int", sd.status.int_);
+	set_int("base_dex", sd.status.dex);
+	set_int("base_luk", sd.status.luk);
+}
+
+/// Runs a player() hook chain on `value`, the same way call_number_hook runs a
+/// skill's: each hook gets what the previous one returned, nil keeps it.
+int64 call_player_hook(e_player_hook which, const map_session_data& sd, const char* stat, int64 value) {
+	if (L == nullptr || player_hooks[which].empty())
+		return value;
+
+	for (s_hook& hook : player_hooks[which]) {
+		if (hook.ref == LUA_NOREF)
+			continue;  // this one failed earlier and is off until restart
+
+		lua_rawgeti(L, LUA_REGISTRYINDEX, hook.ref);
+		lua_createtable(L, 0, 2);
+		push_player(sd);
+		lua_setfield(L, -2, "caster");
+		if (stat != nullptr) {
+			lua_pushstring(L, stat);
+			lua_setfield(L, -2, "stat");
+		}
+		lua_pushinteger(L, value);
+		if (!protected_call(hook, "player", 2, 1))
+			continue;
+
+		if (lua_isinteger(L, -1)) {
+			value = lua_tointeger(L, -1);
+		} else if (lua_type(L, -1) == LUA_TNUMBER) {
+			value = static_cast<int64>(lua_tonumber(L, -1));
+		} else if (!lua_isnil(L, -1)) {
+			ShowError("Lua: %s's player %s hook returned a %s, not a number; keeping the running value.\n", hook.mod.c_str(), player_hook_names[which], luaL_typename(L, -1));
+		}
+		lua_pop(L, 1);
+	}
+	return value;
+}
+
+} // namespace
+
+int32 skill_lua_base_stat(const map_session_data& sd, const char* stat, int32 stock) {
+	return static_cast<int32>(std::clamp<int64>(call_player_hook(PLAYER_HOOK_BASE_STAT, sd, stat, stock), 0, USHRT_MAX));
+}
+
+int32 skill_lua_cast_dex(const map_session_data& sd, int32 stock) {
+	return static_cast<int32>(std::clamp<int64>(call_player_hook(PLAYER_HOOK_CAST_DEX, sd, nullptr, stock), 0, USHRT_MAX));
+}
 
 int32 skill_lua_level(uint16 skill_id, const block_list* bl, int32 stock) {
 	return call_level_hook(HOOK_LEVEL, skill_id, bl, stock);

@@ -20,6 +20,24 @@ Introduced in #7 (BlaXun); typed values in #10.
 An unknown `Id` reads as **off**: `extension_enabled` returns false and value calls return the
 stock value. A typo gets stock behaviour, not a crash, so check the spelling with `@extensions`.
 
+## The other gate: Lua hooks
+
+Where a mod should bring the numbers itself, not just switch a behaviour on (a formula, a curve, a
+per-skill rule), the fork offers a Lua hook instead. A hook is off until a mod's Lua file registers
+it (`db/import/lua/`); with none registered the server is stock. The full reference, with examples,
+is the comment at the top of `src/map/skill_lua.hpp`. Every hook:
+
+| Registered with | Hook | What it decides |
+|---|---|---|
+| `skill(name, {...})` | `ratio`, `hit`, `element` | a skill's damage ratio, accuracy and element |
+| | `on_hit` | actions after each hit: drain, heal, status, polymorph, cast |
+| | `on_steal` | which drop `TF_STEAL` takes |
+| | `level`, `job_level` | the base or job level a skill's formula reads for a player |
+| | `heal` | what Heal, Highness Heal or Coluceo Heal restores |
+| `item(aegis, {...})` | `on_attack`, `on_hit_taken` | the wearer attacked, or was attacked |
+| `player({...})` | `base_stat` | what a player's base stat counts for (a soft cap, for instance) |
+| | `cast_dex` | the DEX the cast-time and skill-delay formulas read for a player |
+
 ## Adding an extension (in this fork)
 
 1. **Register it** in `db/extension_db.yml`, with `Enabled: false`:
