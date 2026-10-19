@@ -44,7 +44,7 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 		mes "Some time ago I saw someone in a vision. The face was a blur, but I knew they would come to me today.";
 		next;
 		mes "[Oscar]";
-		mes "And now here you stand, " + strcharinfo(0) + ".";
+		mes "And now here you stand, ^0000ff" + strcharinfo(0) + "^000000.";
 		mes "You came to become a ^ff0000Dragon Knight^000000, didn't you?";
 		next;
 		if (select( "Yes.", "No, I'm just passing by." ) == 2) {
@@ -55,7 +55,7 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 		}
 		mes "[Oscar]";
 		mes "Nobody is ever pushed into this. Whatever you decide, we will respect it.";
-		mes "So, " + strcharinfo(0) + ": will you take the ^ff0000Dragon's Test^000000 and become one of us?";
+		mes "So, ^0000ff" + strcharinfo(0) + "^000000: will you take the ^ff0000Dragon's Test^000000 and become one of us?";
 		next;
 		if (select( "I want to take the test.", "Maybe later." ) == 2) {
 			mes "[Oscar]";

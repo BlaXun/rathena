@@ -25,7 +25,7 @@
 	switch('dk_step) {
 	case 0:
 		mes "[Oscar]";
-		mes "Welcome to the Dragon's Test, " + strcharinfo(0) + ".";
+		mes "Welcome to the Dragon's Test, ^0000ff" + strcharinfo(0) + "^000000.";
 		mes "Think of it as a first meeting with the dragons who may become your friends.";
 		mes "The first trial is the ^0000ffTrial of Life^000000.";
 		next;
