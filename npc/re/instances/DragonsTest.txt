@@ -233,8 +233,14 @@ OnTimer3000:
 
 // A healing stone: a big Guardian Stone in a rune circle. The circle is
 // the client's ground-cast circle (EF_GROUNDSAMPLE); the official effect
-// is not known.
-1@4drk,19,100,0	script	Healing Stone#dk1	E_EMPEL_1,{
+// is not known. The dragon is healed when it walks within 3 cells of
+// the shining stone (OnTouchNPC; hidden stones don't react).
+1@4drk,19,100,0	script	Healing Stone#dk1	E_EMPEL_1,3,3,{
+	end;
+
+OnTouchNPC:
+	if (getattachedrid() == 'dk_gold)
+		donpcevent instance_npcname("#dk_escort") + "::OnArrive";
 	end;
 
 OnShow:
@@ -251,21 +257,20 @@ OnInstanceInit:
 	disablenpc();
 	end;
 }
-1@4drk,25,126,0	duplicate(Healing Stone#dk1)	Healing Stone#dk2	E_EMPEL_1
-1@4drk,43,141,0	duplicate(Healing Stone#dk1)	Healing Stone#dk3	E_EMPEL_1
-1@4drk,65,152,0	duplicate(Healing Stone#dk1)	Healing Stone#dk4	E_EMPEL_1
-1@4drk,65,181,0	duplicate(Healing Stone#dk1)	Healing Stone#dk5	E_EMPEL_1
-1@4drk,68,208,0	duplicate(Healing Stone#dk1)	Healing Stone#dk6	E_EMPEL_1
-1@4drk,78,231,0	duplicate(Healing Stone#dk1)	Healing Stone#dk7	E_EMPEL_1
-1@4drk,110,232,0	duplicate(Healing Stone#dk1)	Healing Stone#dk8	E_EMPEL_1
-1@4drk,133,242,0	duplicate(Healing Stone#dk1)	Healing Stone#dk9	E_EMPEL_1
-1@4drk,136,271,0	duplicate(Healing Stone#dk1)	Healing Stone#dk10	E_EMPEL_1
+1@4drk,25,126,0	duplicate(Healing Stone#dk1)	Healing Stone#dk2	E_EMPEL_1,3,3
+1@4drk,43,141,0	duplicate(Healing Stone#dk1)	Healing Stone#dk3	E_EMPEL_1,3,3
+1@4drk,65,152,0	duplicate(Healing Stone#dk1)	Healing Stone#dk4	E_EMPEL_1,3,3
+1@4drk,65,181,0	duplicate(Healing Stone#dk1)	Healing Stone#dk5	E_EMPEL_1,3,3
+1@4drk,68,208,0	duplicate(Healing Stone#dk1)	Healing Stone#dk6	E_EMPEL_1,3,3
+1@4drk,78,231,0	duplicate(Healing Stone#dk1)	Healing Stone#dk7	E_EMPEL_1,3,3
+1@4drk,110,232,0	duplicate(Healing Stone#dk1)	Healing Stone#dk8	E_EMPEL_1,3,3
+1@4drk,133,242,0	duplicate(Healing Stone#dk1)	Healing Stone#dk9	E_EMPEL_1,3,3
+1@4drk,136,271,0	duplicate(Healing Stone#dk1)	Healing Stone#dk10	E_EMPEL_1,3,3
 
 1@4drk,1,1,0	script	#dk_escort	-1,{
 	end;
 
 OnStart:
-	stopnpctimer;
 	.@npc$ = instance_npcname("#dk_escort");
 	killmonster 'dk_map$, .@npc$ + "::OnBoneDead";
 	killmonster 'dk_map$, .@npc$ + "::OnGoldDead";
@@ -279,7 +284,6 @@ OnStart:
 	getunitdata 'dk_gold, .@d;
 	setunitdata 'dk_gold, UMOB_HP, .@d[UMOB_MAXHP] / 10;
 	callsub S_Fountain;
-	initnpctimer;
 	end;
 
 // Shows the current stone and the dragon spirit at it.
@@ -294,23 +298,18 @@ S_Fountain:
 	mapannounce 'dk_map$, "Oscar : Healing Stone " + 'dk_fountain + " is shining. Lead the Spacetime Observer into its circle!", bc_map, 0xFFFF00;
 	return;
 
-OnTimer1000:
-	if ('dk_step != 21)
+// The dragon reached the shining stone, or the last spirit there fell
+// while the dragon was already waiting at it.
+OnArrive:
+OnBoneDead:
+	if ('dk_step != 21 || unitexists('dk_gold) == false)
 		end;
-	if (unitexists('dk_gold) == false) {
-		initnpctimer;
+	if (mobcount('dk_map$, instance_npcname("#dk_escort") + "::OnBoneDead") > 0)
 		end;
-	}
-	if (mobcount('dk_map$, instance_npcname("#dk_escort") + "::OnBoneDead") > 0) {
-		initnpctimer;
-		end;
-	}
 	getunitdata 'dk_gold, .@d;
 	.@f = 'dk_fountain;
-	if (distance(.@d[UMOB_X], .@d[UMOB_Y], 'dk_fx[.@f], 'dk_fy[.@f]) > 3) {
-		initnpctimer;
+	if (distance(.@d[UMOB_X], .@d[UMOB_Y], 'dk_fx[.@f], 'dk_fy[.@f]) > 3)
 		end;
-	}
 	specialeffect EF_HEAL2, AREA, instance_npcname("Healing Stone#dk" + .@f);
 	// Not min(): it would read .@d[UMOB_MAXHP] as the rest of the array.
 	.@hp = .@d[UMOB_HP] + .@d[UMOB_MAXHP] / 10;
@@ -322,7 +321,6 @@ OnTimer1000:
 	if (.@f < 10) {
 		'dk_fountain++;
 		callsub S_Fountain;
-		initnpctimer;
 		end;
 	}
 	'dk_step = 30;
@@ -339,7 +337,6 @@ OnTimer1000:
 OnGoldDead:
 	if ('dk_step != 21)
 		end;
-	stopnpctimer;
 	'dk_step = 20;
 	'dk_fails++;
 	killmonster 'dk_map$, instance_npcname("#dk_escort") + "::OnBoneDead";
@@ -348,8 +345,6 @@ OnGoldDead:
 	mapannounce 'dk_map$, "Oscar : The Spacetime Observer has fallen! Come back to me and start over.", bc_map, 0xFFFF00;
 	end;
 
-OnBoneDead:
-	end;
 }
 
 
