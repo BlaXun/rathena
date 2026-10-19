@@ -94,6 +94,37 @@ void count_hook(lua_State* state, lua_Debug*) {
 		luaL_error(state, "stopped after %d thousand instructions", CALL_BUDGET);
 }
 
+// pcall and xpcall as the base library has them, except that neither catches
+// the budget running out: `while true do pcall(f) end` would otherwise catch
+// every count_hook error and never stop. The error goes on to the hook's own
+// protected call, which switches the hook off.
+int32 lua_budgeted_pcall(lua_State* state) {
+	luaL_checkany(state, 1);
+	int32 status = lua_pcall(state, lua_gettop(state) - 1, LUA_MULTRET, 0);
+
+	if (status != LUA_OK && budget <= 0)
+		return lua_error(state);
+	lua_pushboolean(state, status == LUA_OK);
+	lua_insert(state, 1);
+	return lua_gettop(state);
+}
+
+int32 lua_budgeted_xpcall(lua_State* state) {
+	int32 n = lua_gettop(state);
+
+	luaL_checktype(state, 2, LUA_TFUNCTION);
+	lua_pushvalue(state, 1);  // the function, above the message handler at 2
+	lua_rotate(state, 3, 1);  // below its arguments
+	int32 status = lua_pcall(state, n - 2, LUA_MULTRET, 2);
+
+	if (status != LUA_OK && budget <= 0)
+		return lua_error(state);
+	lua_pushboolean(state, status == LUA_OK);
+	lua_replace(state, 1);  // the function's slot: true or false, then results
+	lua_remove(state, 2);   // the message handler
+	return lua_gettop(state);
+}
+
 // ---------------------------------------------------------------------------
 // Hooks, by skill name and then by id
 // ---------------------------------------------------------------------------
@@ -4040,6 +4071,8 @@ void do_init_skill_lua() {
 	luaL_requiref(L, LUA_TABLIBNAME, luaopen_table, 1);
 	luaL_requiref(L, LUA_UTF8LIBNAME, luaopen_utf8, 1);
 	lua_settop(L, 0);
+	lua_register(L, "pcall", lua_budgeted_pcall);
+	lua_register(L, "xpcall", lua_budgeted_xpcall);
 
 	lua_register(L, "skill", lua_register_skill);
 	lua_register(L, "item", lua_register_item);
@@ -4148,9 +4181,12 @@ void do_final_skill_lua() {
 
 void skill_lua_attach() {
 	hooks_by_id.clear();
+	item_hooks_by_id.clear();
 	for (std::vector<uint16>& skills : learner_skills)
 		skills.clear();
-	if (L == nullptr || hooks_by_name.empty())
+	// Not on hooks_by_name.empty(): a mod with item() hooks alone still needs
+	// its items resolved below.
+	if (L == nullptr)
 		return;
 
 	std::unordered_map<std::string, bool> found;
@@ -4201,7 +4237,6 @@ void skill_lua_attach() {
 
 	// Resolve each registered item AegisName to its nameid. An item that
 	// does not exist is named loudly rather than silently ignored.
-	item_hooks_by_id.clear();
 	for (auto& it : item_hooks_by_name) {
 		std::shared_ptr<item_data> id = item_db.search_aegisname(it.first.c_str());
 
