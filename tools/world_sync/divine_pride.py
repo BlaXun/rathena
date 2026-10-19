@@ -14,6 +14,8 @@ WalkSpeed and the attack timings come from the formulas fitted against
 monsters rAthena already has (see CALIBRATION). Drops whose item the item db
 doesn't know are left out and listed in the report.
 
+db/mob_db.yml imports mob_db_world.yml before db/re/mob_db.yml, so an
+official entry for the same monster always wins; prune.py then drops ours.
 Rerun generate.py afterwards: the new monsters then get their spawns.
 """
 import argparse

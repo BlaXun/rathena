@@ -5,46 +5,6 @@
 //= clients' navigation tables. Do not edit by hand.
 //============================================================
 
-air_if,35,72,4	script	Travel to yuno#ws15604	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFyuno^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "yuno",157,123;
-	end;
-}
-air_if,30,70,4	script	Travel to rachel#ws15606	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFrachel^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "rachel",267,126;
-	end;
-}
-alberta,240,47,4	script	Travel to dewata#ws25715	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFdewata^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "dewata",232,53;
-	end;
-}
-alde_gld,186,142,4	script	Travel to hero_lb#ws15757	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFhero_lb^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "hero_lb",136,136;
-	end;
-}
-aldebaran,223,222,4	script	Travel to xmas_fild01#ws27739	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFxmas_fild01^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "xmas_fild01",78,68;
-	end;
-}
 ba_chess,13,16,4	script	Travel to ba_maison#ws14256	4W_SAILOR,{
 	mes "[Guide]";
 	mes "Shall I take you to ^0000FFba_maison^000000?";
@@ -59,30 +19,6 @@ ba_chess,13,36,4	script	Travel to bl_depth2#ws14258	4W_SAILOR,{
 	if (select("Yes, please.:No, thanks.") == 2) close;
 	close2;
 	warp "bl_depth2",194,188;
-	end;
-}
-ba_lib,170,99,4	script	Travel to job4_mag#ws17281	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFjob4_mag^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "job4_mag",70,42;
-	end;
-}
-ba_maison,242,128,4	script	Travel to ba_chess#ws14253	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFba_chess^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "ba_chess",16,16;
-	end;
-}
-ba_maison,206,267,4	script	Travel to job4_mag#ws17211	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFjob4_mag^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "job4_mag",70,42;
 	end;
 }
 bl_death,65,121,4	script	Travel to bl_depth1#ws14239	4W_SAILOR,{
@@ -157,76 +93,12 @@ bl_venom,182,250,4	script	Travel to bl_depth1#ws14241	4W_SAILOR,{
 	warp "bl_depth1",73,178;
 	end;
 }
-dali02,45,96,4	script	Travel to moc_fild22#ws25366	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFmoc_fild22^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "moc_fild22",36,196;
-	end;
-}
-dic_fild01,232,189,4	script	Travel to mid_camp#ws24133	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFmid_camp^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "mid_camp",62,127;
-	end;
-}
-gef_fild07,264,286,4	script	Travel to iz_dun00t#ws30014	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFiz_dun00t^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "iz_dun00t",168,168;
-	end;
-}
-gef_fild13,176,222,4	script	Travel to hero_lb#ws15753	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFhero_lb^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "hero_lb",136,143;
-	end;
-}
-hugel,186,147,4	script	Travel to airplane#ws21746	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFairplane^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "airplane",244,58;
-	end;
-}
-icecastle,46,164,4	script	Travel to icas_in2#ws14327	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFicas_in2^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "icas_in2",33,114;
-	end;
-}
-icecastle,141,212,4	script	Travel to jor_safty1#ws14612	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFjor_safty1^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "jor_safty1",198,152;
-	end;
-}
 iroweekrace,134,208,4	script	Travel to izlude#ws13866	4W_SAILOR,{
 	mes "[Guide]";
 	mes "Shall I take you to ^0000FFizlude^000000?";
 	if (select("Yes, please.:No, thanks.") == 2) close;
 	close2;
 	warp "izlude",147,189;
-	end;
-}
-izlude,128,186,4	script	Travel to iroweekrace#ws13856	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFiroweekrace^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "iroweekrace",69,301;
 	end;
 }
 jor_root1,32,75,4	script	Travel to jor_safty2#ws14702	4W_SAILOR,{
@@ -261,102 +133,6 @@ jor_twice,43,331,4	script	Travel to jor_twig#ws14325	4W_SAILOR,{
 	warp "jor_twig",212,114;
 	end;
 }
-lasagna,302,323,4	script	Travel to jawaii#ws26848	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFjawaii^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "jawaii",245,125;
-	end;
-}
-lhz_airport,138,43,4	script	Travel to airplane#ws21763	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFairplane^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "airplane",244,58;
-	end;
-}
-lhz_airport,148,43,4	script	Travel to airplane#ws21766	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFairplane^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "airplane",244,58;
-	end;
-}
-mjolnir_03,236,185,4	script	Travel to star_frst#ws18017	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFstar_frst^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "star_frst",89,32;
-	end;
-}
-moc_fild20,209,332,4	script	Travel to moc_fild22b#ws23616	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFmoc_fild22b^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "moc_fild22b",38,195;
-	end;
-}
-pay_gld,200,150,4	script	Travel to hero_lb#ws15765	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFhero_lb^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "hero_lb",143,143;
-	end;
-}
-prt_gld,207,162,4	script	Travel to hero_lb#ws15761	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFhero_lb^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "hero_lb",143,136;
-	end;
-}
-s_atelier,122,59,4	script	Travel to prt_in#ws17328	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFprt_in^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "prt_in",280,167;
-	end;
-}
-t_garden,78,92,4	script	Travel to for_dun01#ws15055	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFfor_dun01^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "for_dun01",159,35;
-	end;
-}
-t_garden,157,92,4	script	Travel to for_dun02#ws15059	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFfor_dun02^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "for_dun02",33,55;
-	end;
-}
-tra_fild,112,171,4	script	Travel to tra_fild#ws17099	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFtra_fild^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "tra_fild",111,74;
-	end;
-}
-tra_fild,111,79,4	script	Travel to tra_fild#ws17102	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFtra_fild^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "tra_fild",112,167;
-	end;
-}
 vr_bob,293,202,4	script	Travel to vr_bob#ws14909	4W_SAILOR,{
 	mes "[Guide]";
 	mes "Shall I take you to ^0000FFvr_bob^000000?";
@@ -387,14 +163,6 @@ vr_bob,295,209,4	script	Travel to vr_bob#ws14928	4W_SAILOR,{
 	if (select("Yes, please.:No, thanks.") == 2) close;
 	close2;
 	warp "vr_bob",293,199;
-	end;
-}
-c_tower1,245,197,4	script	Travel to clock_01#ws26250	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFclock_01^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "clock_01",84,44;
 	end;
 }
 ch1fild1,106,84,4	script	Travel to ch1zero1#ws20091	4W_SAILOR,{
@@ -435,14 +203,6 @@ ch2safe4,235,176,4	script	Travel to ch2safe4#ws20399	4W_SAILOR,{
 	if (select("Yes, please.:No, thanks.") == 2) close;
 	close2;
 	warp "ch2safe4",202,35;
-	end;
-}
-comodo,186,80,4	script	Travel to cmd_bhole#ws28673	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFcmd_bhole^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "cmd_bhole",246,356;
 	end;
 }
 hem_dun01,221,209,4	script	Travel to ch1_dw#ws19531	4W_SAILOR,{
@@ -605,14 +365,6 @@ jor_raise2,100,26,4	script	Travel to jor_mbase#ws18735	4W_SAILOR,{
 	warp "jor_mbase",161,338;
 	end;
 }
-jor_tail,233,41,4	script	Travel to jor_crk#ws19071	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFjor_crk^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "jor_crk",137,137;
-	end;
-}
 kin_in01,171,122,4	script	Travel to kin_in01#ws20470	4W_SAILOR,{
 	mes "[Guide]";
 	mes "Shall I take you to ^0000FFkin_in01^000000?";
@@ -637,68 +389,12 @@ mbase_in,85,141,4	script	Travel to mbase_in#ws19115	4W_SAILOR,{
 	warp "mbase_in",66,182;
 	end;
 }
-moc_fild11,192,214,4	script	Travel to moc_akhet#ws28664	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFmoc_akhet^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "moc_akhet",190,56;
-	end;
-}
-mosk_dun02,267,28,4	script	Travel to mosk_dun01#ws25568	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFmosk_dun01^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "mosk_dun01",201,269;
-	end;
-}
-mosk_fild02,202,54,4	script	Travel to moscovia#ws25576	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFmoscovia^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "moscovia",140,54;
-	end;
-}
 mu_fild01,84,160,4	script	Travel to ygg_roots#ws19672	4W_SAILOR,{
 	mes "[Guide]";
 	mes "Shall I take you to ^0000FFygg_roots^000000?";
 	if (select("Yes, please.:No, thanks.") == 2) close;
 	close2;
 	warp "ygg_roots",342,248;
-	end;
-}
-odin_tem03,193,301,4	script	Travel to job4_tro#ws31398	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFjob4_tro^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "job4_tro",48,43;
-	end;
-}
-prt_church,186,36,4	script	Travel to treasure_n1#ws32145	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFtreasure_n1^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "treasure_n1",163,43;
-	end;
-}
-prt_fild08,144,355,4	script	Travel to memohall#ws13533	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFmemohall^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "memohall",205,17;
-	end;
-}
-ra_fild10,352,341,4	script	Travel to ra_pol01#ws28604	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFra_pol01^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "ra_pol01",294,106;
 	end;
 }
 rgs_dun1,273,80,4	script	Travel to ch2safe4#ws20368	4W_SAILOR,{
@@ -715,14 +411,6 @@ star_in,177,84,4	script	Travel to star_frst#ws30885	4W_SAILOR,{
 	if (select("Yes, please.:No, thanks.") == 2) close;
 	close2;
 	warp "star_frst",62,116;
-	end;
-}
-treasure_n1,167,44,4	script	Travel to prontera#ws32150	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFprontera^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "prontera",209,289;
 	end;
 }
 uknw_ruin,266,243,4	script	Travel to ygg_roots#ws19676	4W_SAILOR,{
@@ -869,14 +557,6 @@ ygg_edge,31,117,4	script	Travel to ygg_roots#ws19662	4W_SAILOR,{
 	warp "ygg_roots",325,147;
 	end;
 }
-ygg_edge,152,177,4	script	Travel to veledor#ws20152	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFveledor^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "veledor",149,315;
-	end;
-}
 ygg_roots,325,153,4	script	Travel to ygg_edge#ws19664	4W_SAILOR,{
 	mes "[Guide]";
 	mes "Shall I take you to ^0000FFygg_edge^000000?";
@@ -907,14 +587,6 @@ ygg_roots,34,126,4	script	Travel to uknw_ruin#ws19674	4W_SAILOR,{
 	if (select("Yes, please.:No, thanks.") == 2) close;
 	close2;
 	warp "uknw_ruin",264,238;
-	end;
-}
-yggdrasil01,143,98,4	script	Travel to ygg_edge#ws19654	4W_SAILOR,{
-	mes "[Guide]";
-	mes "Shall I take you to ^0000FFygg_edge^000000?";
-	if (select("Yes, please.:No, thanks.") == 2) close;
-	close2;
-	warp "ygg_edge",255,240;
 	end;
 }
 yuno_lib,61,84,4	script	Travel to vr_zrr01#ws27850	4W_SAILOR,{

@@ -4,30 +4,36 @@
 The clients' navigation data (data/luafiles514/lua files/navigation/navi_*.lub,
 iRO's _us and kRO's _krpri) lists every map's monsters (with counts), NPCs
 (name, sprite, position) and links (warp portals and NPC transports). This
-compares it with what the renewal server loads and writes what is missing:
+compares it with what the renewal server loads. It only fills maps rAthena
+does nothing with: the maps it adds, and rAthena's maps that have no spawn
+line anywhere in npc/ (loaded or not, commented out or not), no NPCs, no
+portals and no script warps (e.g. Biosphere, Jormungandr). Everything rAthena
+spawns, scripts, gates or turned off stays rAthena's.
 
-  db/map_index.txt, conf/maps_athena.conf, db/map_cache.dat
-      maps the clients have and the server doesn't, with their cells read from
-      the GRF's .gat (and the water level from its .rsw), as tools/mapcache does
+  db/map_index.txt, conf/maps_athena.conf
+      the maps the clients have and the server doesn't, in a generated block
+      at the end, rewritten on every run
+  db/re/map_cache.dat
+      their cells, read from the GRF's .gat (and the water level from its
+      .rsw) as tools/mapcache does; never the shared db/map_cache.dat
   npc/re/world_sync/spawns.txt
-      monsters the clients list for a map and the server doesn't spawn there
-      (whole-map spawns at the clients' counts; bosses respawn hourly)
-  npc/re/world_sync/warps.txt
-      walk-in portals the clients list and the server lacks
-  npc/re/world_sync/transports.txt
-      "talk to travel" links as NPCs that offer the trip
+      the clients' monsters on those maps (whole-map spawns at the clients'
+      counts; MVPs one per hour, boss-class monsters three at most, slowly)
+  npc/re/world_sync/warps.txt, transports.txt
+      portals and "talk to travel" links out of those maps
   npc/re/world_sync/npcs.txt
-      the clients' service NPCs the server lacks that can work from client data
-      alone (Kafra, storage, guild storage, tool shops). Maps rAthena already
-      scripts get nothing else: the clients list every NPC a quest may show
+      Kafras and tool shops on those maps
+  --entrances FILE
+      links from rAthena's maps into those maps, for an opt-in mod: a player
+      whose client lacks a new map would hang on its loading screen
   --placeholders FILE
       every other NPC the clients place, with its sprite, name and spot and a
       greeting (their dialog and logic aren't in any client data), for an
       optional mod; also the client's signboards that mark an NPC nobody places
 
 Monsters missing from the monster db aren't spawned (listed in the report);
-event monsters (E_*) are skipped. Rerun after an upstream merge: anything
-upstream adds is no longer missing.
+monsters only scripts summon (E_, G_, MD_, ...) are skipped. After an
+upstream merge run prune.py (no client data needed), or rerun this.
 """
 import argparse
 import collections
@@ -43,6 +49,13 @@ sys.path.insert(0, HERE)
 import luadata  # noqa: E402
 
 SKIP_MAPS = {'null', 'monk_test'}
+MARK = '//------------------------- World sync (generated) ---------------------------'
+EVENT_MAP = re.compile(r'evt|event|race|arena|gld|^guild_|^gvg|^pvp|^que_')
+# monsters that only scripts, instances or events summon (E_ event, G_ summoned, MD_ instance, ...)
+SCRIPT_MOB = re.compile(r'^(?:E_|G_|MD_|EVENT_|HIDDEN|DUMMY|TEST|C\d_)|_DUMMY|_TEST$')
+SPAWN_LINE = re.compile(r'^\s*(?://+|/\*)?\s*([a-z0-9_@.\-]+),\d+,\d+(?:,\d+,\d+)?\t+(?:boss_|miniboss_)?monster\t', re.I)
+SCRIPT_WARP = re.compile(r'\bwarp\s*\(?\s*"([a-z0-9_@.\-]+)"', re.I)
+SCRIPT_SPAWN = re.compile(r'\b(?:area)?monster\s*\(?\s*"([a-z0-9_@.\-]+)"', re.I)
 INVISIBLE = {111, 139, 844, 10252}            # hidden / trigger sprites
 HDR = re.compile(r'^([a-z0-9_@.\-]+)(?:,(\d+),(\d+)(?:,(\d+))?(?:,\d+)*)?\t+'
                  r'(script|shop|cashshop|itemshop|pointshop|marketshop|warp|warp2|monster|boss_monster|'
@@ -90,19 +103,55 @@ def server_world(root):
                 warps.append((mp.lower(), int(x or 0), int(y or 0), rest.split(',')[2].lower() if rest.count(',') >= 2 else ''))
             else:
                 npcs.append((mp.lower(), int(x or 0), int(y or 0), name.split('::')[0].split('#')[0].strip().lower()))
-    maps = set()
-    for line in open(os.path.join(root, 'conf', 'maps_athena.conf'), errors='replace'):
-        m = re.match(r'map:\s*(\S+)', line)
-        if m:
-            maps.add(m.group(1).lower())
-    mobdb = {}
-    for f in ('db/re/mob_db.yml', 'db/re/mob_db_world.yml', 'db/import/mob_db.yml'):
+    maps, ours = set(), set()
+    conf_text = open(os.path.join(root, 'conf', 'maps_athena.conf'), errors='replace').read()
+    official_text, _, ours_text = conf_text.partition(MARK)
+    for m in re.finditer(r'^map:\s*(\S+)', official_text, re.M):
+        maps.add(m.group(1).lower())
+    for m in re.finditer(r'^map:\s*(\S+)', ours_text, re.M):
+        ours.add(m.group(1).lower())
+    mobdb, mobclass = {}, {}
+    for f in ('db/re/mob_db_world.yml', 'db/re/mob_db.yml', 'db/import/mob_db.yml'):
         p = os.path.join(root, f)
         if os.path.exists(p):
             t = open(p, encoding='utf-8').read()
-            for m in re.finditer(r'^  - Id: (\d+)\s*\n    AegisName: (\S+)', t, re.M):
-                mobdb[int(m.group(1))] = m.group(2)
-    return maps, npcs, mobs, warps, mobdb
+            for e in re.split(r'\n(?=  - Id: )', t):
+                m = re.match(r'  - Id: (\d+)\s*\n    AegisName: (\S+)', e)
+                if m:
+                    mobdb[int(m.group(1))] = m.group(2)
+                    mobclass[int(m.group(1))] = 'mvp' if '\n    MvpExp:' in e else \
+                        'boss' if re.search(r'\n    Class: Boss', e) else 'normal'
+    return maps, ours - maps, npcs, mobs, warps, mobdb, mobclass
+
+
+def touched_maps(root):
+    """Maps rAthena decides the monsters of: any spawn line for them anywhere in npc/ (loaded or
+    not, commented out or not: upstream turns spawns off on purpose), any script or instance that
+    summons monsters on them, and the instance maps. Also returns the maps scripts warp to."""
+    touched, warped = set(), set()
+    for base, _, fns in os.walk(os.path.join(root, 'npc')):
+        if os.sep + 'world_sync' in base:
+            continue
+        for fn in fns:
+            if not fn.endswith('.txt'):
+                continue
+            for line in open(os.path.join(base, fn), errors='replace'):
+                m = SPAWN_LINE.match(line)
+                if m:
+                    touched.add(m.group(1).lower())
+                for m in SCRIPT_SPAWN.finditer(line):
+                    touched.add(m.group(1).lower())
+                for m in SCRIPT_WARP.finditer(line):
+                    warped.add(m.group(1).lower())
+    p = os.path.join(root, 'db', 're', 'instance_db.yml')
+    if os.path.exists(p):
+        for m in re.finditer(r'^\s+(?:Map:\s*|-\s*Map:\s*)?([a-z0-9_@.\-]+)(?::\s*true)?\s*$',
+                             open(p, encoding='utf-8').read(), re.M):
+            if '@' in m.group(1):
+                touched.add(m.group(1).lower())
+        for m in re.finditer(r'Map:\s*([a-z0-9_@.\-]+)', open(p, encoding='utf-8').read()):
+            touched.add(m.group(1).lower())
+    return touched, warped
 
 
 # ------------------------------------------------------------------ client side
@@ -164,7 +213,31 @@ def map_cells(grfs, name):
     return xs, ys, bytes(cells)
 
 
+def cached(path):
+    if not os.path.exists(path):
+        return set()
+    data = open(path, 'rb').read()
+    _, count = struct.unpack_from('<IH', data, 0)
+    have, off = set(), 8
+    for _ in range(count):
+        name, xs, ys, ln = struct.unpack_from('<12shhi', data, off)
+        have.add(name.split(b'\0')[0].decode())
+        off += 20 + ln
+    return have
+
+
+def set_block(path, lines):
+    """Rewrite the generated block at the end of a list file (nothing appended twice)."""
+    t = open(path, encoding='utf-8', errors='surrogateescape').read()
+    t = t.split('\n' + MARK)[0].rstrip('\n') + '\n'
+    if lines:
+        t += '\n' + MARK + '\n' + ''.join(lines)
+    open(path, 'w', encoding='utf-8', errors='surrogateescape', newline='\n').write(t)
+
+
 def add_to_cache(path, maps):
+    if not os.path.exists(path):
+        open(path, 'wb').write(struct.pack('<IH', 8, 0) + b'\0\0')
     data = bytearray(open(path, 'rb').read())
     size, count = struct.unpack_from('<IH', data, 0)
     have, off = set(), 8
@@ -228,11 +301,7 @@ def npc_role(name):
         return 'kafra'
     if re.fullmatch(r'tool (?:dealer|merchant|shop)', low):
         return 'tools'
-    if re.search(r'storage locker|storage box|storage keeper', low):
-        return 'locker'
-    if re.search(r'guild storage', low):
-        return 'guild'
-    return None
+    return None                                  # storage stays with the Kafras (and their fee)
 
 
 def npc_name(s):
@@ -252,11 +321,14 @@ def main():
     ap.add_argument('--signboards', help="the client's signboardlist.lub (markers for NPCs the server lacks)")
     ap.add_argument('--placeholders', help='write the NPCs that only greet (no logic yet) to this file, '
                                            'e.g. for a mod; without it they are left out')
+    ap.add_argument('--entrances', help="write the links from rAthena's maps into the maps world sync fills "
+                                        "to this file, for an opt-in mod (players need those maps in their client)")
     ap.add_argument('--report')
     a = ap.parse_args()
     root = os.path.abspath(a.rathena)
 
-    maps, s_npcs, s_mobs, s_warps, mobdb = server_world(root)
+    maps, ours, s_npcs, s_mobs, s_warps, mobdb, mobclass = server_world(root)
+    touched, warped = touched_maps(root)
     dirs = [(d, enc, tag) for d, enc, tag in ((a.iro_navi, 'latin-1', 'iRO'), (a.kro_navi, 'cp949', 'kRO')) if d]
     nv = navi(dirs)
     report = collections.defaultdict(list)
@@ -276,7 +348,7 @@ def main():
                 if m:
                     client_maps.add(m.group(1).lower())
     new_maps = {}
-    for mp in sorted(client_maps - maps - SKIP_MAPS):
+    for mp in sorted(client_maps - maps - ours - SKIP_MAPS):
         if not re.fullmatch(r'[a-z0-9_@.\-]{1,11}', mp) or grfs is None:
             continue
         c = map_cells(grfs, mp)
@@ -286,7 +358,12 @@ def main():
             report['maps whose .gat is DES-encrypted (skipped)'].append(mp)
         else:
             report['maps without .gat in the GRFs'].append(mp)
-    loaded = maps | set(new_maps)
+    world = ours | set(new_maps)                 # the maps world sync adds
+    loaded = maps | world
+    # maps world sync may fill: its own, and rAthena's that rAthena does nothing with (listed, but
+    # no spawns anywhere, no NPCs, no portals, no script warps: e.g. Biosphere, Jormungandr)
+    used = touched | warped | {n[0] for n in s_npcs} | {w[0] for w in s_warps} | {w[3] for w in s_warps}
+    fillable = world | {m for m in maps if m not in used}
 
     # --- spawns
     want = collections.defaultdict(dict)
@@ -297,7 +374,11 @@ def main():
             continue
         mid, cnt = r[4] & 0xFFFF, r[4] >> 16
         aegis = str(r.get(6, ''))
-        if not mid or aegis.startswith('E_'):
+        if not mid or SCRIPT_MOB.search(aegis) or SCRIPT_MOB.search(mobdb.get(mid, '')):
+            continue
+        if mp not in fillable or EVENT_MAP.search(mp) or '@' in mp:
+            # rAthena (or a script, instance or event) decides this map's monsters
+            report['spawns left to rAthena (map it spawns, scripts or turned off)'].append('%s %d' % (mp, mid))
             continue
         want[mp][mid] = max(cnt, want[mp].get(mid, 0), 1)
         if r.get(3) == 301:
@@ -310,8 +391,12 @@ def main():
             if mid not in mobdb:
                 report['monsters not in the monster db (not spawned)'].append('%s %d' % (mp, mid))
                 continue
-            if (mp, mid) in boss:
-                spawns.append('%s,0,0\tboss_monster\t--ja--\t%d,%d,3600000,600000,0' % (mp, mid, cnt))
+            kind = mobclass.get(mid)
+            if kind == 'mvp' or (mp, mid) in boss:
+                spawns.append('%s,0,0\tboss_monster\t--ja--\t%d,1,3600000,600000,0' % (mp, mid))
+            elif kind == 'boss':
+                # boss-class field monsters: few and slow, as rAthena spawns them
+                spawns.append('%s,0,0\tmonster\t--ja--\t%d,%d,1800000,600000,0' % (mp, mid, min(cnt, 3)))
             else:
                 spawns.append('%s,0,0\tmonster\t--ja--\t%d,%d,5000,0,0' % (mp, mid, cnt))
 
@@ -328,11 +413,20 @@ def main():
         return any(s[0] == mp and ((abs(s[1] - x) <= 3 and abs(s[2] - y) <= 3) or (n and re.sub(r'[^a-z0-9가-힣]', '', s[3]) == n))
                    for s in s_npcs)
 
-    warps, transports, seen = [], [], set()
+    warps, transports, entrances, seen = [], [], [], set()
     for tag, r in nv['link']:
         src, dst = str(r.get(1, '')).lower(), str(r.get(9, '')).lower()
         x, y, dx, dy, typ = r.get(7, 0), r.get(8, 0), r.get(10, 0), r.get(11, 0), r.get(3)
         if src not in loaded or dst not in loaded or (src, x, y) in seen:
+            continue
+        if src not in fillable or (src not in world and dst in world):
+            # rAthena's maps keep rAthena's links: its NPCs gate many behind quests and fees, and
+            # a link into a map the player's client may lack would strand them. Entrances into
+            # the maps world sync fills go to --entrances (an opt-in mod) instead.
+            if dst in fillable and not has_warp(src, x, y, dst):     # also: every map -> a map only world sync adds
+                entrances.append('%s,%d,%d,0\twarp\tws_%s_%d\t1,1,%s,%d,%d' % (src, x, y, src, r.get(2, 0), dst, dx, dy))
+            else:
+                report['links left to rAthena (from a map it already uses)'].append('%s -> %s' % (src, dst))
             continue
         seen.add((src, x, y))
         if typ == 200 and not has_warp(src, x, y, dst):
@@ -404,6 +498,8 @@ def main():
             continue
         n = npc_name(names_en.get(name.strip(), name))
         role = npc_role(n)
+        if role and (mp not in fillable or EVENT_MAP.search(mp)):
+            role = None                           # rAthena's maps keep rAthena's services
         if mp in scripted and not role:
             # rAthena's scripts run this map: the client lists NPCs its quests show and hide on
             # cue, and an always-there copy with no logic only gets in the way
@@ -485,26 +581,27 @@ def main():
         mc = mc.replace('import: npc/re/scripts_warps.conf\n',
                         'import: npc/re/scripts_warps.conf\nimport: npc/re/scripts_world_sync.conf\n')
         open(main_conf, 'w').write(mc)
-    if new_maps:
-        idx = os.path.join(root, 'db', 'map_index.txt')
-        t = open(idx).read()
-        names = [m for m in sorted(new_maps) if not re.search(r'^%s(\s|$)' % re.escape(m), t, re.M)]
-        if names:
-            open(idx, 'a').write('\n//------------------------- World sync (generated) ---------------------------\n' + '\n'.join(names) + '\n')
-        cf = os.path.join(root, 'conf', 'maps_athena.conf')
-        t = open(cf).read()
-        names = [m for m in sorted(new_maps) if not re.search(r'^map:\s*%s\s*$' % re.escape(m), t, re.M)]
-        if names:
-            open(cf, 'a').write('\n//------------------------- World sync (generated) ---------------------------\n' +
-                                ''.join('map: %s\n' % m for m in names))
-        add_to_cache(os.path.join(root, 'db', 'map_cache.dat'), new_maps)
+    # map lists: one generated block each, rewritten every run (maps upstream ships drop out)
+    idx = os.path.join(root, 'db', 'map_index.txt')
+    official_idx = set(re.findall(r'^([a-z0-9_@.\-]+)', open(idx, errors='replace').read().split('\n' + MARK)[0], re.M))
+    names = sorted(m for m in world if m not in maps and m not in official_idx)
+    set_block(idx, ['%s\n' % m for m in names])
+    set_block(os.path.join(root, 'conf', 'maps_athena.conf'), ['map: %s\n' % m for m in sorted(m for m in world if m not in maps)])
+    # cells go to the renewal cache, never the shared db/map_cache.dat upstream rewrites
+    have = cached(os.path.join(root, 'db', 'map_cache.dat'))
+    add_to_cache(os.path.join(root, 'db', 're', 'map_cache.dat'), {m: c for m, c in new_maps.items() if m not in have})
 
+    if a.entrances:
+        with open(a.entrances, 'w', encoding='cp949', errors='replace', newline='\n') as o:
+            o.write(head % 'World sync: entrances into the maps world sync fills (needs them in the client)'
+                    + '\n'.join(sorted(set(entrances))) + '\n')
     if a.placeholders:
         with open(a.placeholders, 'w', encoding='cp949', errors='replace', newline='\n') as o:
             o.write(head % 'World sync: placeholder NPCs (sprite, name, spot; no logic yet)' + '\n'.join(placeholders) + '\n')
     stats = {'new maps': len(new_maps), 'spawns': len(spawns), 'warps': len(warps),
              'transports': len(transports), 'npcs': len(npcs),
-             'placeholder npcs' + ('' if a.placeholders else ' (left out)'): len(placeholders)}
+             'placeholder npcs' + ('' if a.placeholders else ' (left out)'): len(placeholders),
+             'entrances' + ('' if a.entrances else ' (left out)'): len(set(entrances))}
     for k, v in stats.items():
         print('%-12s %d' % (k, v))
     for k, v in report.items():
