@@ -82,8 +82,6 @@ OnInstanceInit:
 	'dk_step = 0;
 	'dk_eggs = 0;
 	'dk_fails = 0;
-	// The rune circle around the shining healing stone.
-	'dk_circle_ef = EF_LOCKON;
 	// Healing Stones (trial 2), in order.
 	setarray 'dk_fx[1], 19, 25, 43, 65, 65, 68, 78,110,133,136;
 	setarray 'dk_fy[1],100,126,141,152,181,208,231,232,242,271;
@@ -247,10 +245,10 @@ OnTimer3000:
 	end;
 }
 
-// A healing stone: a big Guardian Stone in a rune circle. The official
-// circle effect is not known; 'dk_circle_ef (set in Oscar#dk1) is the
-// client effect drawn in its place. The dragon is healed when it walks within 3 cells of
-// the shining stone (OnTouchNPC; hidden stones don't react).
+// A healing stone: a big Guardian Stone. Officially it stands in a rune
+// circle, but the client has no matching effect, so it has none for now.
+// The dragon is healed when it walks within 3 cells of the shining stone
+// (OnTouchNPC; hidden stones don't react).
 1@4drk,19,100,0	script	Healing Stone#dk1	E_EMPEL_1,3,3,{
 	end;
 
@@ -262,13 +260,9 @@ OnTouchNPC:
 OnShow:
 	enablenpc();
 	setnpcdisplay strnpcinfo(3), "Healing Stone", 3910, Size_Large;
-OnTimer2000:
-	specialeffect 'dk_circle_ef;
-	initnpctimer;
 	end;
 
 OnHide:
-	stopnpctimer;
 OnInstanceInit:
 	disablenpc();
 	end;
