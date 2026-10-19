@@ -3780,22 +3780,22 @@ void clif_updatestatus( map_session_data& sd, enum _sp type ){
 			break;
 
 		case SP_STR:
-			clif_couplestatus(sd, type, sd.status.str, sd.battle_status.str - sd.status.str);
+			clif_couplestatus(sd, type, sd.status.str, sd.battle_status.str - status_effective_base_stat(sd, PARAM_STR));
 			break;
 		case SP_AGI:
-			clif_couplestatus(sd, type, sd.status.agi, sd.battle_status.agi - sd.status.agi);
+			clif_couplestatus(sd, type, sd.status.agi, sd.battle_status.agi - status_effective_base_stat(sd, PARAM_AGI));
 			break;
 		case SP_VIT:
-			clif_couplestatus(sd, type, sd.status.vit, sd.battle_status.vit - sd.status.vit);
+			clif_couplestatus(sd, type, sd.status.vit, sd.battle_status.vit - status_effective_base_stat(sd, PARAM_VIT));
 			break;
 		case SP_INT:
-			clif_couplestatus(sd, type, sd.status.int_, sd.battle_status.int_ - sd.status.int_);
+			clif_couplestatus(sd, type, sd.status.int_, sd.battle_status.int_ - status_effective_base_stat(sd, PARAM_INT));
 			break;
 		case SP_DEX:
-			clif_couplestatus(sd, type, sd.status.dex, sd.battle_status.dex - sd.status.dex);
+			clif_couplestatus(sd, type, sd.status.dex, sd.battle_status.dex - status_effective_base_stat(sd, PARAM_DEX));
 			break;
 		case SP_LUK:
-			clif_couplestatus(sd, type, sd.status.luk, sd.battle_status.luk - sd.status.luk);
+			clif_couplestatus(sd, type, sd.status.luk, sd.battle_status.luk - status_effective_base_stat(sd, PARAM_LUK));
 			break;
 
 		case SP_CARTINFO:

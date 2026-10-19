@@ -3674,8 +3674,10 @@ int32 status_get_lv(const block_list *bl);
 #define status_get_vit(bl) status_get_status_data(*bl)->vit
 #define status_get_int(bl) status_get_status_data(*bl)->int_
 #define status_get_dex(bl) status_get_status_data(*bl)->dex
+int32 status_effective_base_stat(const map_session_data& sd, int32 param);
 int32 status_get_lv_dmg(const block_list* bl, uint16 skill_id);
 int32 status_get_joblv_dmg(const map_session_data* sd, int32 fallback, uint16 skill_id);
+int32 status_cast_dex(block_list* bl);
 #define status_get_luk(bl) status_get_status_data(*bl)->luk
 #define status_get_pow(bl) status_get_status_data(*bl)->pow
 #define status_get_sta(bl) status_get_status_data(*bl)->sta
