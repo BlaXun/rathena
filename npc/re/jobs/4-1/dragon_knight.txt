@@ -204,6 +204,9 @@ gef_fild08,57,100,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
 	}
 	mes "[Leticia]";
 	mes "Then I'll give you a share of my dragon power. Stay still.";
+	close2;
+	// No picture or window over the animation.
+	cutin "",255;
 	// The official animation is not known: Leticia's breath and a
 	// level-up light on the player stand in for it.
 	specialeffect EF_M05;
@@ -217,7 +220,7 @@ gef_fild08,57,100,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
 	jobchange JOB_DRAGON_KNIGHT;
 	getitem 490087,1;	// 4th_Q_Necklace
 	specialeffect2 EF_JOBLVUP;
-	next;
+	sleep2 2000;
 	cutin "4job_leticia_01.png",2;
 	mes "[Leticia]";
 	mes "Lovely!";
