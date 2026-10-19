@@ -92,7 +92,6 @@ bool party_booking_read( std::string& world_name, std::vector<s_party_booking_en
 		|| SQL_SUCCESS != stmt.BindColumn( 10, SQLDT_STRING, (void*)comment, sizeof( comment ) )
 	){
 		SqlStmt_ShowDebug( stmt );
-		sl.unlock();
 		return false;
 	}
 
@@ -103,7 +102,6 @@ bool party_booking_read( std::string& world_name, std::vector<s_party_booking_en
 		output.push_back( entry );
 	}
 
-	sl.unlock();
 
 	return true;
 }
@@ -118,31 +116,30 @@ HANDLER_FUNC(partybooking_add){
 	uint32 aid = std::stoi( req.get_file_value( "AID" ).content );
 	uint32 cid = std::stoi( req.get_file_value( "GID" ).content );
 
-	SQLLock csl( CHAR_SQL_LOCK );
-	csl.lock();
-	auto chandle = csl.getHandle();
-	SqlStmt stmt{ *chandle };
-	if( SQL_SUCCESS != stmt.Prepare( "SELECT 1 FROM `%s` WHERE `leader_id` = ? AND `leader_char` = ?", party_table, aid, cid )
-		|| SQL_SUCCESS != stmt.BindParam( 0, SQLDT_UINT32, &aid, sizeof( aid ) )
-		|| SQL_SUCCESS != stmt.BindParam( 1, SQLDT_UINT32, &cid, sizeof( cid ) )
-		|| SQL_SUCCESS != stmt.Execute()
-	){
-		SqlStmt_ShowDebug( stmt );
-		csl.unlock();
-		res.status = HTTP_BAD_REQUEST;
-		res.set_content( "Error", "text/plain" );
-		return;
-	}
+	// Finish the CHAR statement before taking the same mutex for MAP SQL.
+	{
+		SQLLock csl( CHAR_SQL_LOCK );
+		csl.lock();
+		auto chandle = csl.getHandle();
+		SqlStmt stmt{ *chandle };
+		if( SQL_SUCCESS != stmt.Prepare( "SELECT 1 FROM `%s` WHERE `leader_id` = ? AND `leader_char` = ?", party_table, aid, cid )
+			|| SQL_SUCCESS != stmt.BindParam( 0, SQLDT_UINT32, &aid, sizeof( aid ) )
+			|| SQL_SUCCESS != stmt.BindParam( 1, SQLDT_UINT32, &cid, sizeof( cid ) )
+			|| SQL_SUCCESS != stmt.Execute()
+		){
+			SqlStmt_ShowDebug( stmt );
+			res.status = HTTP_BAD_REQUEST;
+			res.set_content( "Error", "text/plain" );
+			return;
+		}
 
-	if( stmt.NumRows() <= 0 ){
-		// No party or not party leader
-		csl.unlock();
-		res.status = HTTP_BAD_REQUEST;
-		res.set_content( "Error", "text/plain" );
-		return;
+		if( stmt.NumRows() <= 0 ){
+			// No party or not party leader
+			res.status = HTTP_BAD_REQUEST;
+			res.set_content( "Error", "text/plain" );
+			return;
+		}
 	}
-
-	csl.unlock();
 
 	auto world_name = req.get_file_value( "WorldName" ).content;
 
