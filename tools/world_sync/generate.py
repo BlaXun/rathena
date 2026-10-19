@@ -423,7 +423,8 @@ def main():
             # rAthena's maps keep rAthena's links: its NPCs gate many behind quests and fees, and
             # a link into a map the player's client may lack would strand them. Entrances into
             # the maps world sync fills go to --entrances (an opt-in mod) instead.
-            if dst in fillable and not has_warp(src, x, y, dst):     # also: every map -> a map only world sync adds
+            if dst in fillable and not EVENT_MAP.search(src) and not has_warp(src, x, y, dst):
+                seen.add((src, x, y))             # also: every map -> a map only world sync adds
                 entrances.append('%s,%d,%d,0\twarp\tws_%s_%d\t1,1,%s,%d,%d' % (src, x, y, src, r.get(2, 0), dst, dx, dy))
             else:
                 report['links left to rAthena (from a map it already uses)'].append('%s -> %s' % (src, dst))
