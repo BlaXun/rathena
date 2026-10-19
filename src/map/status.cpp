@@ -3682,6 +3682,41 @@ int32 status_get_joblv_dmg(const map_session_data* sd, int32 fallback, uint16 sk
 }
 
 /**
+ * What a player's base stat counts for: the stat as the player raised it, or
+ * what a mod's Lua `base_stat` hook makes of it (a soft cap, for instance).
+ * Job, equipment and status bonuses are added on top by the caller.
+ * @param sd: Player
+ * @param param: PARAM_STR .. PARAM_LUK
+ * @return The value the stat calculations use
+ */
+int32 status_effective_base_stat(const map_session_data& sd, int32 param) {
+	static const char* const names[] = { "str", "agi", "vit", "int", "dex", "luk" };
+
+	switch (param) {
+		case PARAM_STR: return skill_lua_base_stat(sd, names[0], sd.status.str);
+		case PARAM_AGI: return skill_lua_base_stat(sd, names[1], sd.status.agi);
+		case PARAM_VIT: return skill_lua_base_stat(sd, names[2], sd.status.vit);
+		case PARAM_INT: return skill_lua_base_stat(sd, names[3], sd.status.int_);
+		case PARAM_DEX: return skill_lua_base_stat(sd, names[4], sd.status.dex);
+		case PARAM_LUK: return skill_lua_base_stat(sd, names[5], sd.status.luk);
+		default: return 0;
+	}
+}
+
+/**
+ * DEX as the cast-time and skill-delay formulas read it: the unit's DEX, or for
+ * a player what a mod's Lua `cast_dex` hook makes of it.
+ * @param bl: Object casting
+ * @return DEX for those formulas
+ */
+int32 status_cast_dex(block_list* bl) {
+	int32 dex = status_get_dex(bl);
+	map_session_data* sd = BL_CAST(BL_PC, bl);
+
+	return sd != nullptr ? skill_lua_cast_dex(*sd, dex) : dex;
+}
+
+/**
  * Calculates player's weight
  * @param sd: Player object
  * @param flag: Calculation type
@@ -3699,7 +3734,7 @@ bool status_calc_weight(map_session_data *sd, enum e_status_calc_weight_opt flag
 	sc = &sd->sc;
 	b_max_weight = sd->max_weight; // Store max weight for later comparison
 	b_weight = sd->weight; // Store current weight for later comparison
-	sd->max_weight = job_db.get_maxWeight(pc_mapid2jobid(sd->class_, sd->status.sex)) + sd->status.str * 300; // Recalculate max weight
+	sd->max_weight = job_db.get_maxWeight(pc_mapid2jobid(sd->class_, sd->status.sex)) + status_effective_base_stat(*sd, PARAM_STR) * 300; // Recalculate max weight
 
 	if (flag&CALCWT_ITEM) {
 		sd->weight = 0; // Reset current weight
@@ -4328,17 +4363,17 @@ int32 status_calc_pc_sub(map_session_data* sd, uint8 opt)
 		base_status->int_ += 20;
 
 	// Bonuses from cards and equipment as well as base stat, remember to avoid overflows.
-	i = base_status->str + sd->status.str + sd->indexed_bonus.param_bonus[PARAM_STR] + sd->indexed_bonus.param_equip[PARAM_STR];
+	i = base_status->str + status_effective_base_stat(*sd, PARAM_STR) + sd->indexed_bonus.param_bonus[PARAM_STR] + sd->indexed_bonus.param_equip[PARAM_STR];
 	base_status->str = cap_value(i,0,USHRT_MAX);
-	i = base_status->agi + sd->status.agi + sd->indexed_bonus.param_bonus[PARAM_AGI] + sd->indexed_bonus.param_equip[PARAM_AGI];
+	i = base_status->agi + status_effective_base_stat(*sd, PARAM_AGI) + sd->indexed_bonus.param_bonus[PARAM_AGI] + sd->indexed_bonus.param_equip[PARAM_AGI];
 	base_status->agi = cap_value(i,0,USHRT_MAX);
-	i = base_status->vit + sd->status.vit + sd->indexed_bonus.param_bonus[PARAM_VIT] + sd->indexed_bonus.param_equip[PARAM_VIT];
+	i = base_status->vit + status_effective_base_stat(*sd, PARAM_VIT) + sd->indexed_bonus.param_bonus[PARAM_VIT] + sd->indexed_bonus.param_equip[PARAM_VIT];
 	base_status->vit = cap_value(i,0,USHRT_MAX);
-	i = base_status->int_+ sd->status.int_+ sd->indexed_bonus.param_bonus[PARAM_INT] + sd->indexed_bonus.param_equip[PARAM_INT];
+	i = base_status->int_+ status_effective_base_stat(*sd, PARAM_INT)+ sd->indexed_bonus.param_bonus[PARAM_INT] + sd->indexed_bonus.param_equip[PARAM_INT];
 	base_status->int_ = cap_value(i,0,USHRT_MAX);
-	i = base_status->dex + sd->status.dex + sd->indexed_bonus.param_bonus[PARAM_DEX] + sd->indexed_bonus.param_equip[PARAM_DEX];
+	i = base_status->dex + status_effective_base_stat(*sd, PARAM_DEX) + sd->indexed_bonus.param_bonus[PARAM_DEX] + sd->indexed_bonus.param_equip[PARAM_DEX];
 	base_status->dex = cap_value(i,0,USHRT_MAX);
-	i = base_status->luk + sd->status.luk + sd->indexed_bonus.param_bonus[PARAM_LUK] + sd->indexed_bonus.param_equip[PARAM_LUK];
+	i = base_status->luk + status_effective_base_stat(*sd, PARAM_LUK) + sd->indexed_bonus.param_bonus[PARAM_LUK] + sd->indexed_bonus.param_equip[PARAM_LUK];
 	base_status->luk = cap_value(i,0,USHRT_MAX);
 	i = base_status->pow + sd->status.pow + sd->indexed_bonus.param_bonus[PARAM_POW] + sd->indexed_bonus.param_equip[PARAM_POW];
 	base_status->pow = cap_value(i, 0, USHRT_MAX);
@@ -9942,7 +9977,7 @@ t_tick status_get_sc_def(const block_list* src, const block_list* bl, sc_type ty
 			tick_def2 = status_get_base_status(bl)->vit * 100;
 			break;
 		case SC_VACUUM_EXTREME:
-			tick_def2 = (sd ? sd->status.str : status_get_base_status(bl)->str) * 50;
+			tick_def2 = (sd ? status_effective_base_stat(*sd, PARAM_STR) : status_get_base_status(bl)->str) * 50;
 			break;
 		case SC_KYOUGAKU:
 			tick_def2 = 30*status->int_;
@@ -9955,7 +9990,7 @@ t_tick status_get_sc_def(const block_list* src, const block_list* bl, sc_type ty
 			tick_def2 = status_get_lv(bl) * 100 + (sd ? sd->status.job_level : 1) * 200;
 			break;
 		case SC_B_TRAP:
-			tick_def = (sd ? sd->status.str : status_get_base_status(bl)->str) * 50; //! TODO: Figure out reduction formula
+			tick_def = (sd ? status_effective_base_stat(*sd, PARAM_STR) : status_get_base_status(bl)->str) * 50; //! TODO: Figure out reduction formula
 			break;
 		case SC_NORECOVER_STATE:
 			tick_def2 = status->luk * 100;
@@ -11490,12 +11525,12 @@ static bool status_change_start_post_delay(block_list* src, block_list* bl, sc_t
 
 			val3 = 0;
 			val4 = 0;
-			stat = ( sd ? sd->status.str : status_get_base_status(bl)->str ) / 2; val3 |= cap_value(stat,0,0xFF)<<16;
-			stat = ( sd ? sd->status.agi : status_get_base_status(bl)->agi ) / 2; val3 |= cap_value(stat,0,0xFF)<<8;
-			stat = ( sd ? sd->status.vit : status_get_base_status(bl)->vit ) / 2; val3 |= cap_value(stat,0,0xFF);
-			stat = ( sd ? sd->status.int_: status_get_base_status(bl)->int_) / 2; val4 |= cap_value(stat,0,0xFF)<<16;
-			stat = ( sd ? sd->status.dex : status_get_base_status(bl)->dex ) / 2; val4 |= cap_value(stat,0,0xFF)<<8;
-			stat = ( sd ? sd->status.luk : status_get_base_status(bl)->luk ) / 2; val4 |= cap_value(stat,0,0xFF);
+			stat = ( sd ? status_effective_base_stat(*sd, PARAM_STR) : status_get_base_status(bl)->str ) / 2; val3 |= cap_value(stat,0,0xFF)<<16;
+			stat = ( sd ? status_effective_base_stat(*sd, PARAM_AGI) : status_get_base_status(bl)->agi ) / 2; val3 |= cap_value(stat,0,0xFF)<<8;
+			stat = ( sd ? status_effective_base_stat(*sd, PARAM_VIT) : status_get_base_status(bl)->vit ) / 2; val3 |= cap_value(stat,0,0xFF);
+			stat = ( sd ? status_effective_base_stat(*sd, PARAM_INT): status_get_base_status(bl)->int_) / 2; val4 |= cap_value(stat,0,0xFF)<<16;
+			stat = ( sd ? status_effective_base_stat(*sd, PARAM_DEX) : status_get_base_status(bl)->dex ) / 2; val4 |= cap_value(stat,0,0xFF)<<8;
+			stat = ( sd ? status_effective_base_stat(*sd, PARAM_LUK) : status_get_base_status(bl)->luk ) / 2; val4 |= cap_value(stat,0,0xFF);
 			break;
 		}
 		case SC_MARIONETTE2:

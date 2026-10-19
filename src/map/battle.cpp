@@ -2304,7 +2304,7 @@ int64 battle_addmastery(map_session_data *sd,block_list *target,int64 dmg,int32 
 	if((skill = pc_checkskill(sd,HT_BEASTBANE)) > 0 && (status->race == RC_INSECT || status->race == RC_BRUTE || status->race == RC_PLAYER_DORAM) ) {
 		damage += (skill * 4);
 		if (sd->sc.getSCE(SC_SPIRIT) && sd->sc.getSCE(SC_SPIRIT)->val2 == SL_HUNTER)
-			damage += sd->status.str;
+			damage += status_effective_base_stat(*sd, PARAM_STR);
 	}
 
 #ifdef RENEWAL

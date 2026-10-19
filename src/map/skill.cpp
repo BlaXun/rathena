@@ -10344,7 +10344,7 @@ int32 skill_castfix(block_list *bl, uint16 skill_id, uint16 skill_lv) {
 
 		// Calculate base cast time (reduced by dex)
 		if (!(flag&1)) {
-			int32 scale = battle_config.castrate_dex_scale - status_get_dex(bl);
+			int32 scale = battle_config.castrate_dex_scale - status_cast_dex(bl); // a mod may hook it (cast_dex)
 
 			if (scale > 0)	// not instant cast
 				time = time * (float)scale / battle_config.castrate_dex_scale;
@@ -10581,7 +10581,7 @@ int32 skill_vfcastfix(block_list *bl, double time, uint16 skill_id, uint16 skill
 
 	// Apply Variable CastTime calculation by INT & DEX
 	if (!(flag&1))
-		time = time * (1 - sqrt(((float)(status_get_dex(bl) * 2 + status_get_int(bl)) / battle_config.vcast_stat_scale)));
+		time = time * (1 - sqrt(((float)(status_cast_dex(bl) * 2 + status_get_int(bl)) / battle_config.vcast_stat_scale))); // a mod may hook the DEX (cast_dex)
 
 	time = time * (1 - (float)min(reduce_cast_rate, 100) / 100);
 	time = max((int32)time, 0) + (1 - (float)min(fixcast_r, 100) / 100) * max(fixed, 0); //Underflow checking/capping
@@ -10634,7 +10634,7 @@ int32 skill_delayfix(block_list *bl, uint16 skill_id, uint16 skill_lv)
 #endif
 		default:
 			if (battle_config.delay_dependon_dex && !(delaynodex&1)) { // if skill delay is allowed to be reduced by dex
-				int32 scale = battle_config.castrate_dex_scale - status_get_dex(bl);
+				int32 scale = battle_config.castrate_dex_scale - status_cast_dex(bl); // a mod may hook it (cast_dex)
 
 				if (scale > 0)
 					time = time * scale / battle_config.castrate_dex_scale;
