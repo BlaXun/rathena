@@ -171,8 +171,8 @@ gef_fild08,54,101,5	script	Oscar#dk_start	4_ED_OSCAR,{
 
 // Leticia waits here after the last trial; the job change happens here.
 // Only players who beat her in the Dragon's Test can see her, and for them
-// fireflies dance over the field (EF_FIREFLY; the official effect is not
-// known).
+// fireflies dance over the field. The client doesn't draw EF_FIREFLY, so
+// another effect stands in for it: .firefly_ef, set in OnInit.
 gef_fild08	mapflag	loadevent
 
 gef_fild08,57,104,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
@@ -230,7 +230,7 @@ gef_fild08,57,104,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
 	specialeffect EF_M05;
 	specialeffect2 EF_DHOWL_STR;
 	sleep2 1000;
-	specialeffect2 EF_ANGEL;
+	specialeffect2 EF_RK_LUXANIMA;
 	specialeffect2 EF_LEVEL99_4;
 	sleep2 1000;
 	job_dk_4th = 0;
@@ -249,6 +249,7 @@ gef_fild08,57,104,2	script	Leticia#dk_end	4_4JOB_LETICIA,{
 	end;
 
 OnInit:
+	.firefly_ef = EF_SAKURA;
 	cloakonnpc;
 	end;
 
@@ -263,7 +264,7 @@ OnPCLoadMapEvent:
 OnFirefly:
 	if (strcharinfo(3) != "gef_fild08" || job_dk_4th != 1)
 		end;
-	specialeffect2 EF_FIREFLY, SELF;
+	specialeffect2 .firefly_ef, SELF;
 	addtimer 2000, strnpcinfo(3) + "::OnFirefly";
 	end;
 }

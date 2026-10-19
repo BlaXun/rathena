@@ -83,7 +83,7 @@ OnInstanceInit:
 	'dk_eggs = 0;
 	'dk_fails = 0;
 	// The rune circle around the shining healing stone.
-	'dk_circle_ef = EF_BOTTOM_SANC;
+	'dk_circle_ef = EF_LOCKON;
 	// Healing Stones (trial 2), in order.
 	setarray 'dk_fx[1], 19, 25, 43, 65, 65, 68, 78,110,133,136;
 	setarray 'dk_fy[1],100,126,141,152,181,208,231,232,242,271;
@@ -262,7 +262,7 @@ OnTouchNPC:
 OnShow:
 	enablenpc();
 	setnpcdisplay strnpcinfo(3), "Healing Stone", 3910, Size_Large;
-OnTimer3000:
+OnTimer2000:
 	specialeffect 'dk_circle_ef;
 	initnpctimer;
 	end;
