@@ -696,7 +696,6 @@ int32 lua_register_item(lua_State* state) {
 	return 0;
 }
 
-// const("SC_STUN") -> the number the server uses for it. Any script constant.
 // player({ priority = 5, base_stat = ..., cast_dex = ... })
 // Same chaining and priority rules as skill(); the hooks run for every player.
 int32 lua_register_player(lua_State* state) {
@@ -759,6 +758,7 @@ int32 lua_register_player(lua_State* state) {
 	return 0;
 }
 
+// const("SC_STUN") -> the number the server uses for it. Any script constant.
 int32 lua_constant(lua_State* state) {
 	const char* name = luaL_checkstring(state, 1);
 	int64 value;

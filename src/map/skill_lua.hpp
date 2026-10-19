@@ -132,8 +132,9 @@
  * Marionette Control, Beast Bane with the Hunter spirit, and the Vacuum
  * Extreme and Bind Trap resistances. Job, equipment and status bonuses are
  * added on top afterwards; allocation, resets and saving keep the raised
- * value. cast_dex decides the DEX the cast-time formula (and the skill-delay
- * one, with delay_dependon_dex) reads for a player. Both run while the
+ * value. cast_dex decides the DEX the cast-time formula reads for a player
+ * (pre-renewal's cast time; renewal's variable cast time, beside INT), and the
+ * skill-delay one with delay_dependon_dex. Both run while the
  * player's status is being worked out, so c.caster carries only id, name,
  * job, level, job_level and base_str .. base_luk -- no totals, no HP or SP --
  * and there is no c.target. The results are kept between 0 and 65535.
