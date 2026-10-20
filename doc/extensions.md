@@ -34,7 +34,13 @@ is the comment at the top of `src/map/skill_lua.hpp`. Every hook:
 | | `on_steal` | which drop `TF_STEAL` takes |
 | | `level`, `job_level` | the base or job level a skill's formula reads for a player |
 | | `heal` | what Heal, Highness Heal or Coluceo Heal restores |
+| | `custom`, `replace`, `stock_checks` | a skill of a mod's own, a stock one reworked on its id, the server's own checks for it off |
+| | `before_cast`, `on_cast`, `can_cast`, `cost`, `range`, `hits`, `critical` | when a skill may be used, what it costs, how far it reaches, its hits and criticals |
+| | `bonus`, `stats`, `on_attack`, `on_hit_taken`, `damage_dealt`, `damage_taken`, `on_kill`, `on_death`, `on_skill`, `tick`, `craft`, `on_craft`, `on_use` | a passive's effect, for every player who learned it |
 | `item(aegis, {...})` | `on_attack`, `on_hit_taken` | the wearer attacked, or was attacked |
+| | `on_use` | a consumable is used |
+| `status(name, {...})` | the passive hooks, `on_start`, `on_end` | a status of a mod's own: stacks, decay, an icon, `persist` |
+| `status("SC_...", {...})`, `status("*", {...})` | `on_start`, `on_end`, `chance` | a server status starts (its duration, or refused), ends, or rolls its chance |
 | `player({...})` | `base_stat` | what a player's base stat counts for (a soft cap, for instance) |
 | | `cast_dex` | the DEX the cast-time and skill-delay formulas read for a player |
 
