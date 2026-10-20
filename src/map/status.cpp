@@ -12291,8 +12291,8 @@ static bool status_change_start_post_delay(block_list* src, block_list* bl, sc_t
 				val2 += 750;
 			break;
 		case SC_PRESTIGE:
-			val2 = (status->int_ + status->luk) * val1 / 20 * status_get_lv(bl) / 200 + val1;	// Chance to evade magic damage.
-			val3 = ((val1 * 15) + (10 * (sd?pc_checkskill(sd,CR_DEFENDER):skill_get_max(CR_DEFENDER)))) * status_get_lv(bl) / 100; // Defence added
+			val2 = (status->int_ + status->luk) * val1 / 20 * status_get_lv_dmg(bl, LG_PRESTIGE) / 200 + val1;	// Chance to evade magic damage.
+			val3 = ((val1 * 15) + (10 * (sd?pc_checkskill(sd,CR_DEFENDER):skill_get_max(CR_DEFENDER)))) * status_get_lv_dmg(bl, LG_PRESTIGE) / 100; // Defence added
 			break;
 		case SC_SHIELDSPELL_HP:
 			val2 = 5; // 5% HP every 3 seconds

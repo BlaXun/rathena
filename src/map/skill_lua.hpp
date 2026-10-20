@@ -84,11 +84,14 @@
  * skill's output, also for skills with no class of their own. level:
  * RK_DRAGONBREATH, RK_DRAGONBREATH_WATER, RK_ENCHANTBLADE,
  * NC_SELFDESTRUCTION, SR_GATEOFHELL, SR_CRESCENTELBOW, AB_RENOVATIO,
- * LG_EXEEDBREAK, OB_ZANGETSU, KO_JYUMONJIKIRI, SJ_GRAVITYCONTROL, the
+ * LG_EXEEDBREAK, LG_PRESTIGE (its magic evasion and DEF), WL_FREEZE_SP (how
+ * many points the spellbooks hold), WM_LULLABY_DEEPSLEEP (its chance),
+ * OB_ZANGETSU, KO_JYUMONJIKIRI, SJ_GRAVITYCONTROL, the
  * Elemental Master's EM_EL_ skills (the master's level), and in pre-renewal
  * AL_HEAL, AB_HIGHNESSHEAL, PR_TURNUNDEAD; AL_DEMONBANE, SL_SMA,
  * TK_JUMPKICK, SG_SUN_ANGER, SG_MOON_ANGER, SG_STAR_ANGER. job_level:
- * RL_QD_SHOT, LG_EXEEDBREAK, MI_RUSH_WINDMILL, WA_MOONLIT_SERENADE.
+ * RL_QD_SHOT, LG_EXEEDBREAK, MI_RUSH_WINDMILL, WA_MOONLIT_SERENADE,
+ * WM_LULLABY_DEEPSLEEP.
  * `stock` is the real level. c.caster is the player; there is
  * no c.target and c.skill_lv is 0, so a hook that reads c.target fails and is
  * switched off. The result is kept between 0 and the server's level limit.

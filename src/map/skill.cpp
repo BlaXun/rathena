@@ -14010,7 +14010,7 @@ void skill_spellbook(map_session_data &sd, t_itemid nameid) {
 	uint16 points = spell->points;
 
 	if (sc && sc->getSCE(SC_FREEZE_SP)) {
-		if ((sc->getSCE(SC_FREEZE_SP)->val2 + points) > 8 * pc_checkskill(&sd, WL_FREEZE_SP) + status_get_int(&sd) / 10 + sd.status.base_level / 10) {
+		if ((sc->getSCE(SC_FREEZE_SP)->val2 + points) > 8 * pc_checkskill(&sd, WL_FREEZE_SP) + status_get_int(&sd) / 10 + status_get_lv_dmg(&sd, WL_FREEZE_SP) / 10) {
 			clif_skill_fail( sd, WL_READING_SB, USESKILL_FAIL_SPELLBOOK_PRESERVATION_POINT );
 			return;
 		}
