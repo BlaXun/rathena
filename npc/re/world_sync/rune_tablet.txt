@@ -15,7 +15,7 @@
 //= RT_SET[]/RT_CNT[] sets with runes and how many.
 //============================================================
 
-prontera,140,190,4	script	Rune Tablet#ws	4_F_JOB_BLACKSMITH,{
+prontera,193,189,4	script	Rune Tablet#ws	4_F_JOB_BLACKSMITH,{
 	mes "[Rune Tablet]";
 	mes "Register runes, build their sets and grow them stronger.";
 	while (1) {
