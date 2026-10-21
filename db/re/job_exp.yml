@@ -639,6 +639,7 @@ Body:
       Star_Emperor2: true
       Baby_Star_Emperor2: true
       Karnos: true
+      Baby_Karnos: true
     MaxBaseLevel: 200
     BaseExp:
       - Level: 1
@@ -1067,7 +1068,6 @@ Body:
       Hyper_Novice: true
       Spirit_Handler: true
       Sky_Emperor2: true
-      Baby_Karnos: true
       Alitea: true
     MaxBaseLevel: 275
     BaseExp:

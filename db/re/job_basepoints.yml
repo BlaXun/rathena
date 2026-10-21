@@ -19258,415 +19258,816 @@ Body:
         Sp: 1903
       - Level: 200
         Sp: 1915
-  - Jobs: #TODO: Unknown Values
-      Druid: true 
+  # Druid line, from kRO max HP/SP readings (kRO 2026 videos; INT/VIT, buffs and gear removed).
+  # Measured levels: 19, 32, 78, 86, 89, 94, 99 (Druid), 110, 156 (Karnos). Level 200 is an upper bound
+  # (gear not shown). Level 1 and every other level are linear interpolation between those points. [unverified]
+  - Jobs:
+      Druid: true
       Baby_Druid: true
       Karnos: true
       Baby_Karnos: true
+    BaseHp:
+      - Level: 1
+        Hp: 40 # [unverified] interpolated
+      - Level: 2
+        Hp: 55 # [unverified] interpolated
+      - Level: 3
+        Hp: 69 # [unverified] interpolated
+      - Level: 4
+        Hp: 84 # [unverified] interpolated
+      - Level: 5
+        Hp: 98 # [unverified] interpolated
+      - Level: 6
+        Hp: 113 # [unverified] interpolated
+      - Level: 7
+        Hp: 127 # [unverified] interpolated
+      - Level: 8
+        Hp: 142 # [unverified] interpolated
+      - Level: 9
+        Hp: 156 # [unverified] interpolated
+      - Level: 10
+        Hp: 171 # [unverified] interpolated
+      - Level: 11
+        Hp: 186 # [unverified] interpolated
+      - Level: 12
+        Hp: 200 # [unverified] interpolated
+      - Level: 13
+        Hp: 215 # [unverified] interpolated
+      - Level: 14
+        Hp: 229 # [unverified] interpolated
+      - Level: 15
+        Hp: 244 # [unverified] interpolated
+      - Level: 16
+        Hp: 258 # [unverified] interpolated
+      - Level: 17
+        Hp: 273 # [unverified] interpolated
+      - Level: 18
+        Hp: 287 # [unverified] interpolated
+      - Level: 19
+        Hp: 302
+      - Level: 20
+        Hp: 329 # [unverified] interpolated
+      - Level: 21
+        Hp: 357 # [unverified] interpolated
+      - Level: 22
+        Hp: 384 # [unverified] interpolated
+      - Level: 23
+        Hp: 411 # [unverified] interpolated
+      - Level: 24
+        Hp: 439 # [unverified] interpolated
+      - Level: 25
+        Hp: 466 # [unverified] interpolated
+      - Level: 26
+        Hp: 493 # [unverified] interpolated
+      - Level: 27
+        Hp: 520 # [unverified] interpolated
+      - Level: 28
+        Hp: 548 # [unverified] interpolated
+      - Level: 29
+        Hp: 575 # [unverified] interpolated
+      - Level: 30
+        Hp: 602 # [unverified] interpolated
+      - Level: 31
+        Hp: 630 # [unverified] interpolated
+      - Level: 32
+        Hp: 657
+      - Level: 33
+        Hp: 700 # [unverified] interpolated
+      - Level: 34
+        Hp: 742 # [unverified] interpolated
+      - Level: 35
+        Hp: 785 # [unverified] interpolated
+      - Level: 36
+        Hp: 827 # [unverified] interpolated
+      - Level: 37
+        Hp: 870 # [unverified] interpolated
+      - Level: 38
+        Hp: 912 # [unverified] interpolated
+      - Level: 39
+        Hp: 955 # [unverified] interpolated
+      - Level: 40
+        Hp: 997 # [unverified] interpolated
+      - Level: 41
+        Hp: 1040 # [unverified] interpolated
+      - Level: 42
+        Hp: 1082 # [unverified] interpolated
+      - Level: 43
+        Hp: 1125 # [unverified] interpolated
+      - Level: 44
+        Hp: 1167 # [unverified] interpolated
+      - Level: 45
+        Hp: 1210 # [unverified] interpolated
+      - Level: 46
+        Hp: 1252 # [unverified] interpolated
+      - Level: 47
+        Hp: 1295 # [unverified] interpolated
+      - Level: 48
+        Hp: 1337 # [unverified] interpolated
+      - Level: 49
+        Hp: 1380 # [unverified] interpolated
+      - Level: 50
+        Hp: 1422 # [unverified] interpolated
+      - Level: 51
+        Hp: 1465 # [unverified] interpolated
+      - Level: 52
+        Hp: 1507 # [unverified] interpolated
+      - Level: 53
+        Hp: 1550 # [unverified] interpolated
+      - Level: 54
+        Hp: 1592 # [unverified] interpolated
+      - Level: 55
+        Hp: 1635 # [unverified] interpolated
+      - Level: 56
+        Hp: 1678 # [unverified] interpolated
+      - Level: 57
+        Hp: 1720 # [unverified] interpolated
+      - Level: 58
+        Hp: 1763 # [unverified] interpolated
+      - Level: 59
+        Hp: 1805 # [unverified] interpolated
+      - Level: 60
+        Hp: 1848 # [unverified] interpolated
+      - Level: 61
+        Hp: 1890 # [unverified] interpolated
+      - Level: 62
+        Hp: 1933 # [unverified] interpolated
+      - Level: 63
+        Hp: 1975 # [unverified] interpolated
+      - Level: 64
+        Hp: 2018 # [unverified] interpolated
+      - Level: 65
+        Hp: 2060 # [unverified] interpolated
+      - Level: 66
+        Hp: 2103 # [unverified] interpolated
+      - Level: 67
+        Hp: 2145 # [unverified] interpolated
+      - Level: 68
+        Hp: 2188 # [unverified] interpolated
+      - Level: 69
+        Hp: 2230 # [unverified] interpolated
+      - Level: 70
+        Hp: 2273 # [unverified] interpolated
+      - Level: 71
+        Hp: 2315 # [unverified] interpolated
+      - Level: 72
+        Hp: 2358 # [unverified] interpolated
+      - Level: 73
+        Hp: 2400 # [unverified] interpolated
+      - Level: 74
+        Hp: 2443 # [unverified] interpolated
+      - Level: 75
+        Hp: 2485 # [unverified] interpolated
+      - Level: 76
+        Hp: 2528 # [unverified] interpolated
+      - Level: 77
+        Hp: 2570 # [unverified] interpolated
+      - Level: 78
+        Hp: 2613
+      - Level: 79
+        Hp: 2668 # [unverified] interpolated
+      - Level: 80
+        Hp: 2724 # [unverified] interpolated
+      - Level: 81
+        Hp: 2779 # [unverified] interpolated
+      - Level: 82
+        Hp: 2834 # [unverified] interpolated
+      - Level: 83
+        Hp: 2890 # [unverified] interpolated
+      - Level: 84
+        Hp: 2945 # [unverified] interpolated
+      - Level: 85
+        Hp: 3001 # [unverified] interpolated
+      - Level: 86
+        Hp: 3056
+      - Level: 87
+        Hp: 3076 # [unverified] interpolated
+      - Level: 88
+        Hp: 3097 # [unverified] interpolated
+      - Level: 89
+        Hp: 3117
+      - Level: 90
+        Hp: 3235 # [unverified] interpolated
+      - Level: 91
+        Hp: 3352 # [unverified] interpolated
+      - Level: 92
+        Hp: 3470 # [unverified] interpolated
+      - Level: 93
+        Hp: 3587 # [unverified] interpolated
+      - Level: 94
+        Hp: 3705
+      - Level: 95
+        Hp: 3839 # [unverified] interpolated
+      - Level: 96
+        Hp: 3973 # [unverified] interpolated
+      - Level: 97
+        Hp: 4107 # [unverified] interpolated
+      - Level: 98
+        Hp: 4241 # [unverified] interpolated
+      - Level: 99
+        Hp: 4375
+      - Level: 100
+        Hp: 4483 # [unverified] interpolated
+      - Level: 101
+        Hp: 4591 # [unverified] interpolated
+      - Level: 102
+        Hp: 4699 # [unverified] interpolated
+      - Level: 103
+        Hp: 4807 # [unverified] interpolated
+      - Level: 104
+        Hp: 4915 # [unverified] interpolated
+      - Level: 105
+        Hp: 5023 # [unverified] interpolated
+      - Level: 106
+        Hp: 5131 # [unverified] interpolated
+      - Level: 107
+        Hp: 5239 # [unverified] interpolated
+      - Level: 108
+        Hp: 5347 # [unverified] interpolated
+      - Level: 109
+        Hp: 5455 # [unverified] interpolated
+      - Level: 110
+        Hp: 5563
+      - Level: 111
+        Hp: 5686 # [unverified] interpolated
+      - Level: 112
+        Hp: 5810 # [unverified] interpolated
+      - Level: 113
+        Hp: 5933 # [unverified] interpolated
+      - Level: 114
+        Hp: 6056 # [unverified] interpolated
+      - Level: 115
+        Hp: 6179 # [unverified] interpolated
+      - Level: 116
+        Hp: 6303 # [unverified] interpolated
+      - Level: 117
+        Hp: 6426 # [unverified] interpolated
+      - Level: 118
+        Hp: 6549 # [unverified] interpolated
+      - Level: 119
+        Hp: 6672 # [unverified] interpolated
+      - Level: 120
+        Hp: 6796 # [unverified] interpolated
+      - Level: 121
+        Hp: 6919 # [unverified] interpolated
+      - Level: 122
+        Hp: 7042 # [unverified] interpolated
+      - Level: 123
+        Hp: 7165 # [unverified] interpolated
+      - Level: 124
+        Hp: 7289 # [unverified] interpolated
+      - Level: 125
+        Hp: 7412 # [unverified] interpolated
+      - Level: 126
+        Hp: 7535 # [unverified] interpolated
+      - Level: 127
+        Hp: 7658 # [unverified] interpolated
+      - Level: 128
+        Hp: 7782 # [unverified] interpolated
+      - Level: 129
+        Hp: 7905 # [unverified] interpolated
+      - Level: 130
+        Hp: 8028 # [unverified] interpolated
+      - Level: 131
+        Hp: 8151 # [unverified] interpolated
+      - Level: 132
+        Hp: 8275 # [unverified] interpolated
+      - Level: 133
+        Hp: 8398 # [unverified] interpolated
+      - Level: 134
+        Hp: 8521 # [unverified] interpolated
+      - Level: 135
+        Hp: 8645 # [unverified] interpolated
+      - Level: 136
+        Hp: 8768 # [unverified] interpolated
+      - Level: 137
+        Hp: 8891 # [unverified] interpolated
+      - Level: 138
+        Hp: 9014 # [unverified] interpolated
+      - Level: 139
+        Hp: 9138 # [unverified] interpolated
+      - Level: 140
+        Hp: 9261 # [unverified] interpolated
+      - Level: 141
+        Hp: 9384 # [unverified] interpolated
+      - Level: 142
+        Hp: 9507 # [unverified] interpolated
+      - Level: 143
+        Hp: 9631 # [unverified] interpolated
+      - Level: 144
+        Hp: 9754 # [unverified] interpolated
+      - Level: 145
+        Hp: 9877 # [unverified] interpolated
+      - Level: 146
+        Hp: 10000 # [unverified] interpolated
+      - Level: 147
+        Hp: 10124 # [unverified] interpolated
+      - Level: 148
+        Hp: 10247 # [unverified] interpolated
+      - Level: 149
+        Hp: 10370 # [unverified] interpolated
+      - Level: 150
+        Hp: 10493 # [unverified] interpolated
+      - Level: 151
+        Hp: 10617 # [unverified] interpolated
+      - Level: 152
+        Hp: 10740 # [unverified] interpolated
+      - Level: 153
+        Hp: 10863 # [unverified] interpolated
+      - Level: 154
+        Hp: 10986 # [unverified] interpolated
+      - Level: 155
+        Hp: 11110 # [unverified] interpolated
+      - Level: 156
+        Hp: 11233
+      - Level: 157
+        Hp: 11421 # [unverified] interpolated
+      - Level: 158
+        Hp: 11609 # [unverified] interpolated
+      - Level: 159
+        Hp: 11797 # [unverified] interpolated
+      - Level: 160
+        Hp: 11985 # [unverified] interpolated
+      - Level: 161
+        Hp: 12173 # [unverified] interpolated
+      - Level: 162
+        Hp: 12361 # [unverified] interpolated
+      - Level: 163
+        Hp: 12549 # [unverified] interpolated
+      - Level: 164
+        Hp: 12736 # [unverified] interpolated
+      - Level: 165
+        Hp: 12924 # [unverified] interpolated
+      - Level: 166
+        Hp: 13112 # [unverified] interpolated
+      - Level: 167
+        Hp: 13300 # [unverified] interpolated
+      - Level: 168
+        Hp: 13488 # [unverified] interpolated
+      - Level: 169
+        Hp: 13676 # [unverified] interpolated
+      - Level: 170
+        Hp: 13864 # [unverified] interpolated
+      - Level: 171
+        Hp: 14052 # [unverified] interpolated
+      - Level: 172
+        Hp: 14240 # [unverified] interpolated
+      - Level: 173
+        Hp: 14428 # [unverified] interpolated
+      - Level: 174
+        Hp: 14616 # [unverified] interpolated
+      - Level: 175
+        Hp: 14804 # [unverified] interpolated
+      - Level: 176
+        Hp: 14992 # [unverified] interpolated
+      - Level: 177
+        Hp: 15180 # [unverified] interpolated
+      - Level: 178
+        Hp: 15368 # [unverified] interpolated
+      - Level: 179
+        Hp: 15555 # [unverified] interpolated
+      - Level: 180
+        Hp: 15743 # [unverified] interpolated
+      - Level: 181
+        Hp: 15931 # [unverified] interpolated
+      - Level: 182
+        Hp: 16119 # [unverified] interpolated
+      - Level: 183
+        Hp: 16307 # [unverified] interpolated
+      - Level: 184
+        Hp: 16495 # [unverified] interpolated
+      - Level: 185
+        Hp: 16683 # [unverified] interpolated
+      - Level: 186
+        Hp: 16871 # [unverified] interpolated
+      - Level: 187
+        Hp: 17059 # [unverified] interpolated
+      - Level: 188
+        Hp: 17247 # [unverified] interpolated
+      - Level: 189
+        Hp: 17435 # [unverified] interpolated
+      - Level: 190
+        Hp: 17623 # [unverified] interpolated
+      - Level: 191
+        Hp: 17811 # [unverified] interpolated
+      - Level: 192
+        Hp: 17999 # [unverified] interpolated
+      - Level: 193
+        Hp: 18186 # [unverified] interpolated
+      - Level: 194
+        Hp: 18374 # [unverified] interpolated
+      - Level: 195
+        Hp: 18562 # [unverified] interpolated
+      - Level: 196
+        Hp: 18750 # [unverified] interpolated
+      - Level: 197
+        Hp: 18938 # [unverified] interpolated
+      - Level: 198
+        Hp: 19126 # [unverified] interpolated
+      - Level: 199
+        Hp: 19314 # [unverified] interpolated
+      - Level: 200
+        Hp: 19502
     BaseSp:
       - Level: 1
-        Sp: 12
+        Sp: 22 # [unverified] interpolated
       - Level: 2
-        Sp: 15
+        Sp: 29 # [unverified] interpolated
       - Level: 3
-        Sp: 18
+        Sp: 35 # [unverified] interpolated
       - Level: 4
-        Sp: 21
+        Sp: 42 # [unverified] interpolated
       - Level: 5
-        Sp: 24
+        Sp: 48 # [unverified] interpolated
       - Level: 6
-        Sp: 27
+        Sp: 55 # [unverified] interpolated
       - Level: 7
-        Sp: 30
+        Sp: 61 # [unverified] interpolated
       - Level: 8
-        Sp: 33
+        Sp: 68 # [unverified] interpolated
       - Level: 9
-        Sp: 36
+        Sp: 74 # [unverified] interpolated
       - Level: 10
-        Sp: 39
+        Sp: 81 # [unverified] interpolated
       - Level: 11
-        Sp: 42
+        Sp: 88 # [unverified] interpolated
       - Level: 12
-        Sp: 45
+        Sp: 94 # [unverified] interpolated
       - Level: 13
-        Sp: 48
+        Sp: 101 # [unverified] interpolated
       - Level: 14
-        Sp: 51
+        Sp: 107 # [unverified] interpolated
       - Level: 15
-        Sp: 54
+        Sp: 114 # [unverified] interpolated
       - Level: 16
-        Sp: 57
+        Sp: 120 # [unverified] interpolated
       - Level: 17
-        Sp: 61
+        Sp: 127 # [unverified] interpolated
       - Level: 18
-        Sp: 64
+        Sp: 133 # [unverified] interpolated
       - Level: 19
-        Sp: 67
+        Sp: 140
       - Level: 20
-        Sp: 70
+        Sp: 147 # [unverified] interpolated
       - Level: 21
-        Sp: 73
+        Sp: 154 # [unverified] interpolated
       - Level: 22
-        Sp: 76
+        Sp: 161 # [unverified] interpolated
       - Level: 23
-        Sp: 79
+        Sp: 167 # [unverified] interpolated
       - Level: 24
-        Sp: 82
+        Sp: 174 # [unverified] interpolated
       - Level: 25
-        Sp: 85
+        Sp: 181 # [unverified] interpolated
       - Level: 26
-        Sp: 89
+        Sp: 188 # [unverified] interpolated
       - Level: 27
-        Sp: 93
+        Sp: 195 # [unverified] interpolated
       - Level: 28
-        Sp: 97
+        Sp: 202 # [unverified] interpolated
       - Level: 29
-        Sp: 101
+        Sp: 208 # [unverified] interpolated
       - Level: 30
-        Sp: 105
+        Sp: 215 # [unverified] interpolated
       - Level: 31
-        Sp: 109
+        Sp: 222 # [unverified] interpolated
       - Level: 32
-        Sp: 113
+        Sp: 229
       - Level: 33
-        Sp: 117
+        Sp: 236 # [unverified] interpolated
       - Level: 34
-        Sp: 121
+        Sp: 242 # [unverified] interpolated
       - Level: 35
-        Sp: 125
+        Sp: 248 # [unverified] interpolated
       - Level: 36
-        Sp: 129
+        Sp: 255 # [unverified] interpolated
       - Level: 37
-        Sp: 131
+        Sp: 262 # [unverified] interpolated
       - Level: 38
-        Sp: 135
+        Sp: 268 # [unverified] interpolated
       - Level: 39
-        Sp: 139
+        Sp: 274 # [unverified] interpolated
       - Level: 40
-        Sp: 141
+        Sp: 281 # [unverified] interpolated
       - Level: 41
-        Sp: 145
+        Sp: 288 # [unverified] interpolated
       - Level: 42
-        Sp: 149
+        Sp: 294 # [unverified] interpolated
       - Level: 43
-        Sp: 153
+        Sp: 300 # [unverified] interpolated
       - Level: 44
-        Sp: 157
+        Sp: 307 # [unverified] interpolated
       - Level: 45
-        Sp: 161
+        Sp: 314 # [unverified] interpolated
       - Level: 46
-        Sp: 165
+        Sp: 320 # [unverified] interpolated
       - Level: 47
-        Sp: 169
+        Sp: 326 # [unverified] interpolated
       - Level: 48
-        Sp: 173
+        Sp: 333 # [unverified] interpolated
       - Level: 49
-        Sp: 177
+        Sp: 340 # [unverified] interpolated
       - Level: 50
-        Sp: 181
+        Sp: 346 # [unverified] interpolated
       - Level: 51
-        Sp: 186
+        Sp: 352 # [unverified] interpolated
       - Level: 52
-        Sp: 191
+        Sp: 359 # [unverified] interpolated
       - Level: 53
-        Sp: 196
+        Sp: 366 # [unverified] interpolated
       - Level: 54
-        Sp: 201
+        Sp: 372 # [unverified] interpolated
       - Level: 55
-        Sp: 206
+        Sp: 378 # [unverified] interpolated
       - Level: 56
-        Sp: 211
+        Sp: 385 # [unverified] interpolated
       - Level: 57
-        Sp: 216
+        Sp: 392 # [unverified] interpolated
       - Level: 58
-        Sp: 221
+        Sp: 398 # [unverified] interpolated
       - Level: 59
-        Sp: 226
+        Sp: 404 # [unverified] interpolated
       - Level: 60
-        Sp: 231
+        Sp: 411 # [unverified] interpolated
       - Level: 61
-        Sp: 236
+        Sp: 418 # [unverified] interpolated
       - Level: 62
-        Sp: 241
+        Sp: 424 # [unverified] interpolated
       - Level: 63
-        Sp: 246
+        Sp: 430 # [unverified] interpolated
       - Level: 64
-        Sp: 251
+        Sp: 437 # [unverified] interpolated
       - Level: 65
-        Sp: 256
+        Sp: 444 # [unverified] interpolated
       - Level: 66
-        Sp: 261
+        Sp: 450 # [unverified] interpolated
       - Level: 67
-        Sp: 266
+        Sp: 456 # [unverified] interpolated
       - Level: 68
-        Sp: 271
+        Sp: 463 # [unverified] interpolated
       - Level: 69
-        Sp: 276
+        Sp: 470 # [unverified] interpolated
       - Level: 70
-        Sp: 281
+        Sp: 476 # [unverified] interpolated
       - Level: 71
-        Sp: 286
+        Sp: 482 # [unverified] interpolated
       - Level: 72
-        Sp: 291
+        Sp: 489 # [unverified] interpolated
       - Level: 73
-        Sp: 296
+        Sp: 496 # [unverified] interpolated
       - Level: 74
-        Sp: 301
+        Sp: 502 # [unverified] interpolated
       - Level: 75
-        Sp: 306
+        Sp: 508 # [unverified] interpolated
       - Level: 76
-        Sp: 312
+        Sp: 515 # [unverified] interpolated
       - Level: 77
-        Sp: 318
+        Sp: 522 # [unverified] interpolated
       - Level: 78
-        Sp: 324
-      - Level: 79
-        Sp: 336
-      - Level: 80
-        Sp: 342
-      - Level: 81
-        Sp: 348
-      - Level: 82
-        Sp: 354
-      - Level: 83
-        Sp: 360
-      - Level: 84
-        Sp: 366
-      - Level: 85
-        Sp: 372
-      - Level: 86
-        Sp: 378
-      - Level: 87
-        Sp: 384
-      - Level: 88
-        Sp: 390
-      - Level: 89
-        Sp: 396
-      - Level: 90
-        Sp: 402
-      - Level: 91
-        Sp: 408
-      - Level: 92
-        Sp: 414
-      - Level: 93
-        Sp: 420
-      - Level: 94
-        Sp: 426
-      - Level: 95
-        Sp: 432
-      - Level: 96
-        Sp: 438
-      - Level: 97
-        Sp: 444
-      - Level: 98
-        Sp: 450
-      - Level: 99
-        Sp: 456
-      - Level: 100
-        Sp: 462
-      - Level: 101
-        Sp: 468
-      - Level: 102
-        Sp: 474
-      - Level: 103
-        Sp: 480
-      - Level: 104
-        Sp: 486
-      - Level: 105
-        Sp: 492
-      - Level: 106
-        Sp: 498
-      - Level: 107
-        Sp: 504
-      - Level: 108
-        Sp: 510
-      - Level: 109
-        Sp: 516
-      - Level: 110
-        Sp: 522
-      - Level: 111
         Sp: 528
+      - Level: 79
+        Sp: 534 # [unverified] interpolated
+      - Level: 80
+        Sp: 541 # [unverified] interpolated
+      - Level: 81
+        Sp: 547 # [unverified] interpolated
+      - Level: 82
+        Sp: 554 # [unverified] interpolated
+      - Level: 83
+        Sp: 560 # [unverified] interpolated
+      - Level: 84
+        Sp: 566 # [unverified] interpolated
+      - Level: 85
+        Sp: 573 # [unverified] interpolated
+      - Level: 86
+        Sp: 579
+      - Level: 87
+        Sp: 583 # [unverified] interpolated
+      - Level: 88
+        Sp: 586 # [unverified] interpolated
+      - Level: 89
+        Sp: 590
+      - Level: 90
+        Sp: 601 # [unverified] interpolated
+      - Level: 91
+        Sp: 612 # [unverified] interpolated
+      - Level: 92
+        Sp: 624 # [unverified] interpolated
+      - Level: 93
+        Sp: 635 # [unverified] interpolated
+      - Level: 94
+        Sp: 646
+      - Level: 95
+        Sp: 657 # [unverified] interpolated
+      - Level: 96
+        Sp: 667 # [unverified] interpolated
+      - Level: 97
+        Sp: 678 # [unverified] interpolated
+      - Level: 98
+        Sp: 688 # [unverified] interpolated
+      - Level: 99
+        Sp: 699
+      - Level: 100
+        Sp: 709 # [unverified] interpolated
+      - Level: 101
+        Sp: 718 # [unverified] interpolated
+      - Level: 102
+        Sp: 728 # [unverified] interpolated
+      - Level: 103
+        Sp: 738 # [unverified] interpolated
+      - Level: 104
+        Sp: 747 # [unverified] interpolated
+      - Level: 105
+        Sp: 757 # [unverified] interpolated
+      - Level: 106
+        Sp: 766 # [unverified] interpolated
+      - Level: 107
+        Sp: 776 # [unverified] interpolated
+      - Level: 108
+        Sp: 786 # [unverified] interpolated
+      - Level: 109
+        Sp: 795 # [unverified] interpolated
+      - Level: 110
+        Sp: 805
+      - Level: 111
+        Sp: 818 # [unverified] interpolated
       - Level: 112
-        Sp: 534
+        Sp: 832 # [unverified] interpolated
       - Level: 113
-        Sp: 540
+        Sp: 845 # [unverified] interpolated
       - Level: 114
-        Sp: 546
+        Sp: 858 # [unverified] interpolated
       - Level: 115
-        Sp: 552
+        Sp: 871 # [unverified] interpolated
       - Level: 116
-        Sp: 558
+        Sp: 885 # [unverified] interpolated
       - Level: 117
-        Sp: 564
+        Sp: 898 # [unverified] interpolated
       - Level: 118
-        Sp: 570
+        Sp: 911 # [unverified] interpolated
       - Level: 119
-        Sp: 576
+        Sp: 925 # [unverified] interpolated
       - Level: 120
-        Sp: 582
+        Sp: 938 # [unverified] interpolated
       - Level: 121
-        Sp: 588
+        Sp: 951 # [unverified] interpolated
       - Level: 122
-        Sp: 594
+        Sp: 964 # [unverified] interpolated
       - Level: 123
-        Sp: 600
+        Sp: 978 # [unverified] interpolated
       - Level: 124
-        Sp: 606
+        Sp: 991 # [unverified] interpolated
       - Level: 125
-        Sp: 612
+        Sp: 1004 # [unverified] interpolated
       - Level: 126
-        Sp: 618
+        Sp: 1018 # [unverified] interpolated
       - Level: 127
-        Sp: 624
+        Sp: 1031 # [unverified] interpolated
       - Level: 128
-        Sp: 630
+        Sp: 1044 # [unverified] interpolated
       - Level: 129
-        Sp: 636
+        Sp: 1057 # [unverified] interpolated
       - Level: 130
-        Sp: 642
+        Sp: 1071 # [unverified] interpolated
       - Level: 131
-        Sp: 648
+        Sp: 1084 # [unverified] interpolated
       - Level: 132
-        Sp: 654
+        Sp: 1097 # [unverified] interpolated
       - Level: 133
-        Sp: 660
+        Sp: 1110 # [unverified] interpolated
       - Level: 134
-        Sp: 666
+        Sp: 1124 # [unverified] interpolated
       - Level: 135
-        Sp: 672
+        Sp: 1137 # [unverified] interpolated
       - Level: 136
-        Sp: 678
+        Sp: 1150 # [unverified] interpolated
       - Level: 137
-        Sp: 684
+        Sp: 1164 # [unverified] interpolated
       - Level: 138
-        Sp: 690
+        Sp: 1177 # [unverified] interpolated
       - Level: 139
-        Sp: 696
+        Sp: 1190 # [unverified] interpolated
       - Level: 140
-        Sp: 702
+        Sp: 1203 # [unverified] interpolated
       - Level: 141
-        Sp: 708
+        Sp: 1217 # [unverified] interpolated
       - Level: 142
-        Sp: 714
+        Sp: 1230 # [unverified] interpolated
       - Level: 143
-        Sp: 720
+        Sp: 1243 # [unverified] interpolated
       - Level: 144
-        Sp: 726
+        Sp: 1257 # [unverified] interpolated
       - Level: 145
-        Sp: 732
+        Sp: 1270 # [unverified] interpolated
       - Level: 146
-        Sp: 738
+        Sp: 1283 # [unverified] interpolated
       - Level: 147
-        Sp: 744
+        Sp: 1296 # [unverified] interpolated
       - Level: 148
-        Sp: 750
+        Sp: 1310 # [unverified] interpolated
       - Level: 149
-        Sp: 756
+        Sp: 1323 # [unverified] interpolated
       - Level: 150
-        Sp: 762
+        Sp: 1336 # [unverified] interpolated
       - Level: 151
-        Sp: 768
+        Sp: 1350 # [unverified] interpolated
       - Level: 152
-        Sp: 774
+        Sp: 1363 # [unverified] interpolated
       - Level: 153
-        Sp: 780
+        Sp: 1376 # [unverified] interpolated
       - Level: 154
-        Sp: 786
+        Sp: 1389 # [unverified] interpolated
       - Level: 155
-        Sp: 792
+        Sp: 1403 # [unverified] interpolated
       - Level: 156
-        Sp: 798
+        Sp: 1416
       - Level: 157
-        Sp: 804
+        Sp: 1428 # [unverified] interpolated
       - Level: 158
-        Sp: 810
+        Sp: 1439 # [unverified] interpolated
       - Level: 159
-        Sp: 816
+        Sp: 1451 # [unverified] interpolated
       - Level: 160
-        Sp: 822
+        Sp: 1463 # [unverified] interpolated
       - Level: 161
-        Sp: 828
+        Sp: 1474 # [unverified] interpolated
       - Level: 162
-        Sp: 834
+        Sp: 1486 # [unverified] interpolated
       - Level: 163
-        Sp: 840
+        Sp: 1498 # [unverified] interpolated
       - Level: 164
-        Sp: 846
+        Sp: 1509 # [unverified] interpolated
       - Level: 165
-        Sp: 852
+        Sp: 1521 # [unverified] interpolated
       - Level: 166
-        Sp: 858
+        Sp: 1533 # [unverified] interpolated
       - Level: 167
-        Sp: 864
+        Sp: 1544 # [unverified] interpolated
       - Level: 168
-        Sp: 870
+        Sp: 1556 # [unverified] interpolated
       - Level: 169
-        Sp: 876
+        Sp: 1568 # [unverified] interpolated
       - Level: 170
-        Sp: 882
+        Sp: 1580 # [unverified] interpolated
       - Level: 171
-        Sp: 888
+        Sp: 1591 # [unverified] interpolated
       - Level: 172
-        Sp: 894
+        Sp: 1603 # [unverified] interpolated
       - Level: 173
-        Sp: 900
+        Sp: 1615 # [unverified] interpolated
       - Level: 174
-        Sp: 906
+        Sp: 1626 # [unverified] interpolated
       - Level: 175
-        Sp: 912
+        Sp: 1638 # [unverified] interpolated
       - Level: 176
-        Sp: 918
+        Sp: 1650 # [unverified] interpolated
       - Level: 177
-        Sp: 924
+        Sp: 1661 # [unverified] interpolated
       - Level: 178
-        Sp: 930
+        Sp: 1673 # [unverified] interpolated
       - Level: 179
-        Sp: 936
+        Sp: 1685 # [unverified] interpolated
       - Level: 180
-        Sp: 942
+        Sp: 1696 # [unverified] interpolated
       - Level: 181
-        Sp: 948
+        Sp: 1708 # [unverified] interpolated
       - Level: 182
-        Sp: 954
+        Sp: 1720 # [unverified] interpolated
       - Level: 183
-        Sp: 960
+        Sp: 1731 # [unverified] interpolated
       - Level: 184
-        Sp: 966
+        Sp: 1743 # [unverified] interpolated
       - Level: 185
-        Sp: 972
+        Sp: 1755 # [unverified] interpolated
       - Level: 186
-        Sp: 978
+        Sp: 1766 # [unverified] interpolated
       - Level: 187
-        Sp: 984
+        Sp: 1778 # [unverified] interpolated
       - Level: 188
-        Sp: 990
+        Sp: 1790 # [unverified] interpolated
       - Level: 189
-        Sp: 996
+        Sp: 1802 # [unverified] interpolated
       - Level: 190
-        Sp: 1002
+        Sp: 1813 # [unverified] interpolated
       - Level: 191
-        Sp: 1008
+        Sp: 1825 # [unverified] interpolated
       - Level: 192
-        Sp: 1014
+        Sp: 1837 # [unverified] interpolated
       - Level: 193
-        Sp: 1020
+        Sp: 1848 # [unverified] interpolated
       - Level: 194
-        Sp: 1026
+        Sp: 1860 # [unverified] interpolated
       - Level: 195
-        Sp: 1032
+        Sp: 1872 # [unverified] interpolated
       - Level: 196
-        Sp: 1038
+        Sp: 1883 # [unverified] interpolated
       - Level: 197
-        Sp: 1044
+        Sp: 1895 # [unverified] interpolated
       - Level: 198
-        Sp: 1050
+        Sp: 1907 # [unverified] interpolated
       - Level: 199
-        Sp: 1056
+        Sp: 1918 # [unverified] interpolated
       - Level: 200
-        Sp: 1062
-      # -----------------------------------------------------------------
-      # Levels 176-200 SP Data End
-      # -----------------------------------------------------------------
+        Sp: 1930
   - Jobs:
       Dragon_Knight: true
       Dragon_Knight2: true
@@ -19847,3 +20248,314 @@ Body:
         Ap: 200
       - Level: 275
         Ap: 200
+  # Alitea, from one kRO reading at 200 right after the job change (same character as Karnos 200, with
+  # the same gear: SP x1.24, HP x1.58 over Karnos). Levels 201-275 continue at Karnos 156-200 growth
+  # times those ratios (SP +15, HP +297 per level), within the bounds of a gear-heavy reading at 210. [unverified]
+  - Jobs:
+      Alitea: true
+    BaseHp:
+      - Level: 200
+        Hp: 30919 # [unverified]
+      - Level: 201
+        Hp: 31216 # [unverified]
+      - Level: 202
+        Hp: 31513 # [unverified]
+      - Level: 203
+        Hp: 31810 # [unverified]
+      - Level: 204
+        Hp: 32107 # [unverified]
+      - Level: 205
+        Hp: 32404 # [unverified]
+      - Level: 206
+        Hp: 32701 # [unverified]
+      - Level: 207
+        Hp: 32998 # [unverified]
+      - Level: 208
+        Hp: 33295 # [unverified]
+      - Level: 209
+        Hp: 33592 # [unverified]
+      - Level: 210
+        Hp: 33889 # [unverified]
+      - Level: 211
+        Hp: 34186 # [unverified]
+      - Level: 212
+        Hp: 34483 # [unverified]
+      - Level: 213
+        Hp: 34780 # [unverified]
+      - Level: 214
+        Hp: 35077 # [unverified]
+      - Level: 215
+        Hp: 35374 # [unverified]
+      - Level: 216
+        Hp: 35671 # [unverified]
+      - Level: 217
+        Hp: 35968 # [unverified]
+      - Level: 218
+        Hp: 36265 # [unverified]
+      - Level: 219
+        Hp: 36562 # [unverified]
+      - Level: 220
+        Hp: 36859 # [unverified]
+      - Level: 221
+        Hp: 37156 # [unverified]
+      - Level: 222
+        Hp: 37453 # [unverified]
+      - Level: 223
+        Hp: 37750 # [unverified]
+      - Level: 224
+        Hp: 38047 # [unverified]
+      - Level: 225
+        Hp: 38344 # [unverified]
+      - Level: 226
+        Hp: 38641 # [unverified]
+      - Level: 227
+        Hp: 38938 # [unverified]
+      - Level: 228
+        Hp: 39235 # [unverified]
+      - Level: 229
+        Hp: 39532 # [unverified]
+      - Level: 230
+        Hp: 39829 # [unverified]
+      - Level: 231
+        Hp: 40126 # [unverified]
+      - Level: 232
+        Hp: 40423 # [unverified]
+      - Level: 233
+        Hp: 40720 # [unverified]
+      - Level: 234
+        Hp: 41017 # [unverified]
+      - Level: 235
+        Hp: 41314 # [unverified]
+      - Level: 236
+        Hp: 41611 # [unverified]
+      - Level: 237
+        Hp: 41908 # [unverified]
+      - Level: 238
+        Hp: 42205 # [unverified]
+      - Level: 239
+        Hp: 42502 # [unverified]
+      - Level: 240
+        Hp: 42799 # [unverified]
+      - Level: 241
+        Hp: 43096 # [unverified]
+      - Level: 242
+        Hp: 43393 # [unverified]
+      - Level: 243
+        Hp: 43690 # [unverified]
+      - Level: 244
+        Hp: 43987 # [unverified]
+      - Level: 245
+        Hp: 44284 # [unverified]
+      - Level: 246
+        Hp: 44581 # [unverified]
+      - Level: 247
+        Hp: 44878 # [unverified]
+      - Level: 248
+        Hp: 45175 # [unverified]
+      - Level: 249
+        Hp: 45472 # [unverified]
+      - Level: 250
+        Hp: 45769 # [unverified]
+      - Level: 251
+        Hp: 46066 # [unverified]
+      - Level: 252
+        Hp: 46363 # [unverified]
+      - Level: 253
+        Hp: 46660 # [unverified]
+      - Level: 254
+        Hp: 46957 # [unverified]
+      - Level: 255
+        Hp: 47254 # [unverified]
+      - Level: 256
+        Hp: 47551 # [unverified]
+      - Level: 257
+        Hp: 47848 # [unverified]
+      - Level: 258
+        Hp: 48145 # [unverified]
+      - Level: 259
+        Hp: 48442 # [unverified]
+      - Level: 260
+        Hp: 48739 # [unverified]
+      - Level: 261
+        Hp: 49036 # [unverified]
+      - Level: 262
+        Hp: 49333 # [unverified]
+      - Level: 263
+        Hp: 49630 # [unverified]
+      - Level: 264
+        Hp: 49927 # [unverified]
+      - Level: 265
+        Hp: 50224 # [unverified]
+      - Level: 266
+        Hp: 50521 # [unverified]
+      - Level: 267
+        Hp: 50818 # [unverified]
+      - Level: 268
+        Hp: 51115 # [unverified]
+      - Level: 269
+        Hp: 51412 # [unverified]
+      - Level: 270
+        Hp: 51709 # [unverified]
+      - Level: 271
+        Hp: 52006 # [unverified]
+      - Level: 272
+        Hp: 52303 # [unverified]
+      - Level: 273
+        Hp: 52600 # [unverified]
+      - Level: 274
+        Hp: 52897 # [unverified]
+      - Level: 275
+        Hp: 53194 # [unverified]
+    BaseSp:
+      - Level: 200
+        Sp: 2401 # [unverified]
+      - Level: 201
+        Sp: 2416 # [unverified]
+      - Level: 202
+        Sp: 2431 # [unverified]
+      - Level: 203
+        Sp: 2446 # [unverified]
+      - Level: 204
+        Sp: 2461 # [unverified]
+      - Level: 205
+        Sp: 2476 # [unverified]
+      - Level: 206
+        Sp: 2491 # [unverified]
+      - Level: 207
+        Sp: 2506 # [unverified]
+      - Level: 208
+        Sp: 2521 # [unverified]
+      - Level: 209
+        Sp: 2536 # [unverified]
+      - Level: 210
+        Sp: 2551 # [unverified]
+      - Level: 211
+        Sp: 2566 # [unverified]
+      - Level: 212
+        Sp: 2581 # [unverified]
+      - Level: 213
+        Sp: 2596 # [unverified]
+      - Level: 214
+        Sp: 2611 # [unverified]
+      - Level: 215
+        Sp: 2626 # [unverified]
+      - Level: 216
+        Sp: 2641 # [unverified]
+      - Level: 217
+        Sp: 2656 # [unverified]
+      - Level: 218
+        Sp: 2671 # [unverified]
+      - Level: 219
+        Sp: 2686 # [unverified]
+      - Level: 220
+        Sp: 2701 # [unverified]
+      - Level: 221
+        Sp: 2716 # [unverified]
+      - Level: 222
+        Sp: 2731 # [unverified]
+      - Level: 223
+        Sp: 2746 # [unverified]
+      - Level: 224
+        Sp: 2761 # [unverified]
+      - Level: 225
+        Sp: 2776 # [unverified]
+      - Level: 226
+        Sp: 2791 # [unverified]
+      - Level: 227
+        Sp: 2806 # [unverified]
+      - Level: 228
+        Sp: 2821 # [unverified]
+      - Level: 229
+        Sp: 2836 # [unverified]
+      - Level: 230
+        Sp: 2851 # [unverified]
+      - Level: 231
+        Sp: 2866 # [unverified]
+      - Level: 232
+        Sp: 2881 # [unverified]
+      - Level: 233
+        Sp: 2896 # [unverified]
+      - Level: 234
+        Sp: 2911 # [unverified]
+      - Level: 235
+        Sp: 2926 # [unverified]
+      - Level: 236
+        Sp: 2941 # [unverified]
+      - Level: 237
+        Sp: 2956 # [unverified]
+      - Level: 238
+        Sp: 2971 # [unverified]
+      - Level: 239
+        Sp: 2986 # [unverified]
+      - Level: 240
+        Sp: 3001 # [unverified]
+      - Level: 241
+        Sp: 3016 # [unverified]
+      - Level: 242
+        Sp: 3031 # [unverified]
+      - Level: 243
+        Sp: 3046 # [unverified]
+      - Level: 244
+        Sp: 3061 # [unverified]
+      - Level: 245
+        Sp: 3076 # [unverified]
+      - Level: 246
+        Sp: 3091 # [unverified]
+      - Level: 247
+        Sp: 3106 # [unverified]
+      - Level: 248
+        Sp: 3121 # [unverified]
+      - Level: 249
+        Sp: 3136 # [unverified]
+      - Level: 250
+        Sp: 3151 # [unverified]
+      - Level: 251
+        Sp: 3166 # [unverified]
+      - Level: 252
+        Sp: 3181 # [unverified]
+      - Level: 253
+        Sp: 3196 # [unverified]
+      - Level: 254
+        Sp: 3211 # [unverified]
+      - Level: 255
+        Sp: 3226 # [unverified]
+      - Level: 256
+        Sp: 3241 # [unverified]
+      - Level: 257
+        Sp: 3256 # [unverified]
+      - Level: 258
+        Sp: 3271 # [unverified]
+      - Level: 259
+        Sp: 3286 # [unverified]
+      - Level: 260
+        Sp: 3301 # [unverified]
+      - Level: 261
+        Sp: 3316 # [unverified]
+      - Level: 262
+        Sp: 3331 # [unverified]
+      - Level: 263
+        Sp: 3346 # [unverified]
+      - Level: 264
+        Sp: 3361 # [unverified]
+      - Level: 265
+        Sp: 3376 # [unverified]
+      - Level: 266
+        Sp: 3391 # [unverified]
+      - Level: 267
+        Sp: 3406 # [unverified]
+      - Level: 268
+        Sp: 3421 # [unverified]
+      - Level: 269
+        Sp: 3436 # [unverified]
+      - Level: 270
+        Sp: 3451 # [unverified]
+      - Level: 271
+        Sp: 3466 # [unverified]
+      - Level: 272
+        Sp: 3481 # [unverified]
+      - Level: 273
+        Sp: 3496 # [unverified]
+      - Level: 274
+        Sp: 3511 # [unverified]
+      - Level: 275
+        Sp: 3526 # [unverified]
