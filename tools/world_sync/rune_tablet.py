@@ -197,8 +197,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('rune_dir', help="the client's SystemEN/Rune folder (ROenglishRE)")
     ap.add_argument('--rathena', default=os.path.join(HERE, '..', '..'))
-    ap.add_argument('--x', type=int, default=140)
-    ap.add_argument('--y', type=int, default=190)
+    ap.add_argument('--x', type=int, default=193)
+    ap.add_argument('--y', type=int, default=189)
     a = ap.parse_args()
     root = os.path.abspath(a.rathena)
     R = a.rune_dir

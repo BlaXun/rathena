@@ -11,8 +11,11 @@ so they are solved from renewal's monster formulas:
     ATK  = Str + Level + Attack  * [0.8, 1.2]
     MATK = Int + Level + Attack2 * [0.7, 1.3]
 WalkSpeed and the attack timings come from the formulas fitted against
-monsters rAthena already has (see CALIBRATION). Drops whose item the item db
-doesn't know are left out and listed in the report.
+monsters rAthena already has (see CALIBRATION). What a record doesn't show
+(HP, EXP, stats, attack ranges, speeds) is estimated: each missing value is the
+median of the NEIGHBORS complete records of the same class (normal, boss, MVP)
+nearest in level and HP (see fill_gaps). Drops whose item the item db doesn't
+know are left out and listed in the report.
 
 db/mob_db.yml imports mob_db_world.yml before db/re/mob_db.yml, so an
 official entry for the same monster always wins; prune.py then drops ours.
@@ -22,8 +25,10 @@ import argparse
 import collections
 import glob
 import json
+import math
 import os
 import re
+import statistics
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -180,27 +185,83 @@ FILL = ('str', 'agi', 'vit', 'int', 'dex', 'luk', 'def', 'mDef', 'res', 'mRes', 
         'magicAttackRange', 'health', 'baseExperience', 'jobExperience', 'speed', 'attackSpeed', 'range')
 
 
-def family(d):
-    return str(d.get('spriteName') or '').upper().split('_')[0]
+NEIGHBORS = 7       # complete records of the same class nearest in level that a missing value comes from
+
+
+def mob_class(d):
+    """'mvp', 'boss' or 'normal', as convert() decides."""
+    t = str(d.get('type', '')).lower()
+    if d.get('mvpDrops') or t == 'mvp':
+        return 'mvp'
+    return 'boss' if t == 'boss' else 'normal'
 
 
 def complete(d):
     return all(d.get(k) for k in ('str', 'health', 'attackRange', 'baseExperience', 'speed', 'attackSpeed'))
 
 
+def shown(k, v):
+    """Whether a record really shows a value. Some attack ranges are backwards ("323 - 232" for
+    Liamette and 19 other monsters of level 272-275), which solve to an Attack of 0."""
+    if v in (None, '', 0):
+        return False
+    if k in ('attackRange', 'magicAttackRange'):
+        m = re.match(r'\s*(\d+)\s*-\s*(\d+)', re.sub(r'[.,]', '', str(v)))
+        return bool(m) and int(m.group(1)) <= int(m.group(2))
+    return True
+
+
+def median_of(k, vals):
+    """The median of one field's values: "min - max" ranges by their ends, speeds kept fractional."""
+    if not vals:
+        return None
+    if k in ('attackRange', 'magicAttackRange'):
+        ends = [re.match(r'\s*(\d+)\s*-\s*(\d+)', re.sub(r'[.,]', '', str(v))) for v in vals]
+        return '%d - %d' % (rnd(statistics.median(int(m.group(1)) for m in ends)),
+                            rnd(statistics.median(int(m.group(2)) for m in ends)))
+    if k in ('speed', 'attackSpeed'):
+        return round(statistics.median(float(v) for v in vals), 2)
+    return rnd(statistics.median(float(v) for v in vals))
+
+
 def fill_gaps(d, pool):
-    """Copy what Divine Pride doesn't show from the nearest-level complete record of the same family
-    (EP21_, CH1_, ...), else of any family. Returns (donor AegisName, fields copied)."""
-    gaps = [k for k in FILL if d.get(k) in (None, '', 0) and k not in ('res', 'mRes')]
+    """Estimate what Divine Pride doesn't show: each missing value is the median of the NEIGHBORS
+    complete records of the same class (normal, boss, MVP) that show it and are nearest in level,
+    and once the HP is known (shown, or first estimated from level alone) nearest in HP too:
+    10 levels count like twice the HP. At one level HP spans hundreds of times over (level 275:
+    Violen 25 million, Chapter 1's elites 600 million and more), and the ATK, EXP and stats go
+    with it. Copying one similar monster's values instead gave normal monsters a boss's HP:
+    Yorker Worker got the Snowstorm Angel's 207,606,917. Returns (where they come from, fields)."""
+    gaps = [k for k in FILL if k not in ('res', 'mRes') and not shown(k, d.get(k))]
     if not gaps or not pool:
         return None, []
     lv = int(d.get('level') or 1)
-    same = [p for p in pool if family(p) == family(d)] or pool
-    donor = min(same, key=lambda p: abs(int(p.get('level') or 1) - lv))
-    got = [k for k in gaps if donor.get(k)]
-    for k in got:
-        d[k] = donor[k]
-    return str(donor.get('spriteName') or donor.get('id')).upper(), got
+    cls = mob_class(d)
+    same = [p for p in pool if mob_class(p) == cls] or pool
+
+    def lv_off(p):
+        return abs(int(p.get('level') or 1) - lv)
+
+    got, lvs = [], []
+    for k in sorted(gaps, key=lambda k: k != 'health'):     # the HP first: the rest go by it
+        hp = int(d.get('health') or 0) if k != 'health' else 0
+        if hp > 0:
+            def dist(p):
+                return (lv_off(p) / 10.0 + abs(math.log2(hp / float(p.get('health') or 1))), int(p.get('id') or 0))
+        else:
+            def dist(p):
+                return (lv_off(p), int(p.get('id') or 0))
+        near = sorted((p for p in same if shown(k, p.get(k))), key=dist)[:NEIGHBORS]
+        v = median_of(k, [p[k] for p in near])
+        if v not in (None, '', 0):
+            d[k] = v
+            got.append(k)
+            lvs += [int(p.get('level') or 1) for p in near]
+    if not got:
+        return None, []
+    got.sort(key=FILL.index)
+    span = ('level %d' % lvs[0]) if min(lvs) == max(lvs) else ('levels %d-%d' % (min(lvs), max(lvs)))
+    return 'medians of the %d %s monsters nearest in level and HP that show them (%s)' % (NEIGHBORS, cls, span), got
 
 
 def convert(mid, d, nv, items, report, pool=()):
@@ -249,8 +310,8 @@ def convert(mid, d, nv, items, report, pool=()):
 
     L = ['  - Id: %d' % mid, '    AegisName: %s' % aegis, '    Name: %s' % yq(name)]
     if filled:
-        L.append('    # Divine Pride shows no %s; copied from %s' % (', '.join(filled), donor))
-        report['monsters with values copied from a similar monster'].append('%d %s <- %s' % (mid, aegis, donor))
+        L.append('    # Divine Pride shows no %s; %s' % (', '.join(filled), donor))
+        report['monsters with values estimated from similar ones'].append('%d %s: %s' % (mid, aegis, donor))
     L += [
          '    Level: %d' % lv, '    Hp: %d' % int(d.get('health') or 1)]
     for f, k in (('BaseExp', 'baseExperience'), ('JobExp', 'jobExperience')):
@@ -436,7 +497,7 @@ def main():
     have = mob_db(root)
     report = {k: [] for k in ('no record', 'already in the monster db', 'no AegisName (skipped)',
                               'AegisName already used (skipped)', 'no English name (AegisName used)',
-                              'monsters with values copied from a similar monster',
+                              'monsters with values estimated from similar ones',
                               'drop chances estimated (Divine Pride shows none)',
                               'names shortened to 23 characters',
                               'skill rows whose skill the skill db lacks (left out)',
