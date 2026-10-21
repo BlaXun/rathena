@@ -2920,9 +2920,9 @@ int32 lua_register_status(lua_State* state) {
 			if (lua_isinteger(state, -1))
 				icon = lua_tointeger(state, -1);
 			else if (lua_type(state, -1) != LUA_TSTRING || !script_get_constant(lua_tostring(state, -1), &icon))
-				return luaL_error(state, "status %s: icon must be a status icon, like \"EFST_TOXIN\"", name);
-			if (icon < EFST_BLANK || icon >= EFST_MAX)
-				return luaL_error(state, "status %s: %d is not a status icon", name, static_cast<int32>(icon));
+				return luaL_error(state, "status %s: icon must be a status icon, like \"EFST_TOXIN\", or a mod's own (%d to %d)", name, EFST_MOD_FIRST, EFST_MOD_LAST);
+			if ((icon < EFST_BLANK || icon >= EFST_MAX) && (icon < EFST_MOD_FIRST || icon > EFST_MOD_LAST))
+				return luaL_error(state, "status %s: %d is not a status icon, nor a mod's own (%d to %d)", name, static_cast<int32>(icon), EFST_MOD_FIRST, EFST_MOD_LAST);
 			def.icon = static_cast<int32>(icon);
 		} else if (strcmp(key, "duration") == 0) {
 			def.duration = status_int(state, name, key, 0, 86400000);
@@ -3479,8 +3479,21 @@ int32 stack_cap(const block_list& bl, const s_lua_status& def) {
 	return def.max_stacks;
 }
 
+/// Send a status icon of `bl`. A mod's own icon (EFST_MOD_FIRST..LAST) is
+/// one the server has no table for: it goes to the same players
+/// clif_status_change would choose, for any kind of unit.
+void send_icon(block_list& bl, int32 icon, int32 flag, t_tick tick, int32 stacks) {
+	if (icon < EFST_MOD_FIRST || icon > EFST_MOD_LAST) {
+		clif_status_change(&bl, icon, flag, tick, stacks, 0, 0);
+		return;
+	}
+	const map_session_data* sd = BL_CAST(BL_PC, &bl);
+
+	clif_status_change_sub(&bl, bl.id, icon, flag, tick, stacks, 0, 0, sd ? (pc_isinvisible(sd) ? SELF : AREA) : AREA_WOS);
+}
+
 /// The icon of `def` on `bl` as it now is: the stacks of every instance, the
-/// longest time left. clif_status_change sends it to whoever it concerns.
+/// longest time left. send_icon sends it to whoever it concerns.
 void show_icon(block_list& bl, const s_lua_status& def) {
 	if (def.icon == EFST_BLANK)
 		return;
@@ -3501,9 +3514,9 @@ void show_icon(block_list& bl, const s_lua_status& def) {
 		}
 	}
 	if (stacks == 0)
-		clif_status_change(&bl, def.icon, 0, 0, 0, 0, 0);
+		send_icon(bl, def.icon, 0, 0, 0);
 	else
-		clif_status_change(&bl, def.icon, 1, forever ? INFINITE_TICK : left, stacks, 0, 0);
+		send_icon(bl, def.icon, 1, forever ? INFINITE_TICK : left, stacks);
 }
 
 /// Recalculate what `def`'s bonus and stats hooks give `bl`, and tell a

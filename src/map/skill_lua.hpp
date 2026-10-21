@@ -258,7 +258,15 @@
  * unit is gone), c.stacks and c.remaining (ms; -1 for no end). persist =
  * true keeps a player's over a logout and a restart, with its stacks and
  * time left, in the char store of the mod that defined it (_statuses); it
- * goes on when they are back, without on_start. status() with a server status's name
+ * goes on when they are back, without on_start.
+ *
+ * icon is a status icon the client has ("EFST_TOXIN", or its number), or one
+ * of a mod's own: a number from EFST_MOD_FIRST to EFST_MOD_LAST (20000 to
+ * 29999), which the server sends as it is, for players and monsters alike.
+ * The client knows such an icon only from the mod's client tables (efstids,
+ * stateiconimginfo, stateiconinfo); a mod keeps to a block of the range.
+ *
+ * status() with a server status's name
  * (SC_HIDING) takes on_start and on_end only: on_start may return a new
  * duration in ms, or false to refuse the status.
  *
@@ -315,6 +323,12 @@
 
 struct block_list;
 class map_session_data;
+
+/// The status icons kept for mods' own statuses: the server sends these
+/// numbers as they are, and a mod's client tables give them names, pictures
+/// and tooltips. rAthena's own icons stay below EFST_MAX.
+constexpr int32 EFST_MOD_FIRST = 20000;
+constexpr int32 EFST_MOD_LAST = 29999;
 struct Damage;
 struct s_skill_condition;
 
