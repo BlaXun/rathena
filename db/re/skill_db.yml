@@ -48107,13 +48107,13 @@ Body:
     Requires:
       SpCost:
         - Level: 1
-          Amount: 25
+          Amount: 33
         - Level: 2
-          Amount: 30
+          Amount: 36
         - Level: 3
-          Amount: 35
+          Amount: 39
         - Level: 4
-          Amount: 40
+          Amount: 42
         - Level: 5
           Amount: 45
       Status:
@@ -48139,13 +48139,13 @@ Body:
     Requires:
       SpCost:
         - Level: 1
-          Amount: 30
+          Amount: 38
         - Level: 2
-          Amount: 35
+          Amount: 41
         - Level: 3
-          Amount: 40
+          Amount: 44
         - Level: 4
-          Amount: 45
+          Amount: 47
         - Level: 5
           Amount: 50
       Status:
@@ -48171,13 +48171,13 @@ Body:
     Requires:
       SpCost:
         - Level: 1
-          Amount: 35
+          Amount: 39
         - Level: 2
-          Amount: 40
+          Amount: 43
         - Level: 3
-          Amount: 45
+          Amount: 47
         - Level: 4
-          Amount: 50
+          Amount: 51
         - Level: 5
           Amount: 55
       Status:
@@ -48417,23 +48417,23 @@ Body:
     Requires:
       SpCost:
         - Level: 1
-          Amount: 30
+          Amount: 39
         - Level: 2
-          Amount: 35
+          Amount: 43
         - Level: 3
-          Amount: 40
+          Amount: 47
         - Level: 4
-          Amount: 45
+          Amount: 51
         - Level: 5
-          Amount: 50
-        - Level: 6
           Amount: 55
+        - Level: 6
+          Amount: 59
         - Level: 7
-          Amount: 60
+          Amount: 63
         - Level: 8
-          Amount: 65
+          Amount: 67
         - Level: 9
-          Amount: 70
+          Amount: 71
         - Level: 10
           Amount: 75
       Status:
@@ -48479,23 +48479,23 @@ Body:
     Requires:
       SpCost:
         - Level: 1
-          Amount: 30
+          Amount: 39
         - Level: 2
-          Amount: 35
+          Amount: 43
         - Level: 3
-          Amount: 40
+          Amount: 47
         - Level: 4
-          Amount: 45
+          Amount: 51
         - Level: 5
-          Amount: 50
-        - Level: 6
           Amount: 55
+        - Level: 6
+          Amount: 59
         - Level: 7
-          Amount: 60
+          Amount: 63
         - Level: 8
-          Amount: 65
+          Amount: 67
         - Level: 9
-          Amount: 70
+          Amount: 71
         - Level: 10
           Amount: 75
   - Id: 6590
@@ -48572,17 +48572,7 @@ Body:
           Amount: 48
         - Level: 5
           Amount: 50
-      ApCost:
-        - Level: 1
-          Amount: 40
-        - Level: 2
-          Amount: 38
-        - Level: 3
-          Amount: 36
-        - Level: 4
-          Amount: 33
-        - Level: 5
-          Amount: 30
+      ApCost: 30
       Status:
         Wereraptor: true
         Flip_Flap: true
@@ -49271,15 +49261,15 @@ Body:
           Amount: 150
       ApCost:
         - Level: 1
-          Amount: 100
+          Amount: 40
         - Level: 2
-          Amount: 95
+          Amount: 38
         - Level: 3
-          Amount: 90
+          Amount: 36
         - Level: 4
-          Amount: 85
+          Amount: 33
         - Level: 5
-          Amount: 80
+          Amount: 30
     Status: Stop
   - Id: 6606
     Name: AT_NATURE_AID
