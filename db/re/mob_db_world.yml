@@ -7499,6 +7499,7 @@ Body:
     AegisName: EP21_SCALLEG
     Name: Scalleg
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-245)
+    # Divine Pride shows no drop chance for aegis_1001640; estimated from drops of the same item type
     Level: 237
     Hp: 34273200
     BaseExp: 625452
@@ -7527,7 +7528,7 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001640
-        Rate: 1
+        Rate: 500
       - Item: Scalleg_Card
         Rate: 1
         StealProtected: true
@@ -7535,6 +7536,7 @@ Body:
     AegisName: EP21_VELELLING
     Name: Velelling
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 227-244)
+    # Divine Pride shows no drop chance for aegis_1001643; estimated from drops of the same item type
     Level: 235
     Hp: 25262330
     BaseExp: 513505
@@ -7563,7 +7565,7 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001643
-        Rate: 1
+        Rate: 500
       - Item: Velelling_Card
         Rate: 1
         StealProtected: true
@@ -7571,6 +7573,7 @@ Body:
     AegisName: EP21_LETTERSTER
     Name: Letterster
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-244)
+    # Divine Pride shows no drop chance for aegis_1001645; estimated from drops of the same item type
     Level: 236
     Hp: 30620560
     BaseExp: 593294
@@ -7599,7 +7602,7 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001645
-        Rate: 1
+        Rate: 500
       - Item: Letterster_Card
         Rate: 1
         StealProtected: true
@@ -7675,6 +7678,7 @@ Body:
     AegisName: EP21_SKIPSKIPPER
     Name: Skipskipper
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-245)
+    # Divine Pride shows no drop chance for aegis_1001644; estimated from drops of the same item type
     Level: 238
     Hp: 31425500
     BaseExp: 604691
@@ -7703,7 +7707,7 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001644
-        Rate: 1
+        Rate: 500
       - Item: Skipskipper_Card
         Rate: 1
         StealProtected: true
@@ -8359,6 +8363,7 @@ Body:
     AegisName: VIOLEN
     Name: Violen
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-265)
+    # Divine Pride shows no drop chance for Golden_Jewel, Hot_Water_Drop_Gem, Shining_Crystal, Small_Sewing_Box; estimated from drops of the same item type
     Level: 273
     Hp: 25126600
     BaseExp: 3414800
@@ -8387,17 +8392,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Golden_Jewel
-        Rate: 1
+        Rate: 500
       - Item: Hot_Water_Drop_Gem
-        Rate: 1
+        Rate: 500
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Small_Sewing_Box
-        Rate: 1
+        Rate: 500
   - Id: 22384
     AegisName: CP_VIOLEN
     Name: Strong Violen
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Shining_Crystal, Small_Sewing_Box, Etel_Stone; estimated from drops of the same item type
     Level: 273
     Hp: 55293200
     BaseExp: 10244398
@@ -8426,15 +8432,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Small_Sewing_Box
-        Rate: 1
+        Rate: 500
       - Item: Etel_Stone
-        Rate: 1
+        Rate: 500
   - Id: 22385
     AegisName: SPIDING
     Name: Spiding
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 254-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Congealed_Poison, Firm_Land_Crystal, Ectoplasmic_Stone; estimated from drops of the same item type
     Level: 273
     Hp: 23018500
     BaseExp: 3385982
@@ -8463,17 +8470,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Congealed_Poison
-        Rate: 1
+        Rate: 500
       - Item: Firm_Land_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Ectoplasmic_Stone
-        Rate: 1
+        Rate: 500
   - Id: 22386
     AegisName: CP_SPIDING
     Name: Strong Spiding
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Congealed_Poison, Firm_Land_Crystal, Shadowdecon; estimated from drops of the same item type
     Level: 273
     Hp: 50648900
     BaseExp: 10157948
@@ -8502,11 +8510,11 @@ Body:
     Ai: 04
     Drops:
       - Item: Congealed_Poison
-        Rate: 1
+        Rate: 500
       - Item: Firm_Land_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22387
     AegisName: GARLING
     Name: Garling
@@ -8571,6 +8579,7 @@ Body:
     AegisName: JACKONETTE
     Name: Jackonette
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 254-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Ice_Water_Drop_Gem, Small_Sewing_Box, Evil_Minded_Ruby, Etel_Dust, Amber; estimated from drops of the same item type
     Level: 274
     Hp: 22990300
     BaseExp: 3463024
@@ -8599,21 +8608,22 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Ice_Water_Drop_Gem
-        Rate: 1
+        Rate: 500
       - Item: Small_Sewing_Box
-        Rate: 1
+        Rate: 500
       - Item: Evil_Minded_Ruby
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Amber
-        Rate: 1
+        Rate: 500
   - Id: 22390
     AegisName: CP_JACKONETTE
     Name: Strong Jackonette
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Evil_Minded_Ruby, Small_Sewing_Box, Ice_Water_Drop_Gem; estimated from drops of the same item type
     Level: 274
     Hp: 50588600
     BaseExp: 10389072
@@ -8642,15 +8652,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Evil_Minded_Ruby
-        Rate: 1
+        Rate: 500
       - Item: Small_Sewing_Box
-        Rate: 1
+        Rate: 500
       - Item: Ice_Water_Drop_Gem
-        Rate: 1
+        Rate: 500
   - Id: 22391
     AegisName: LIAMETTE
     Name: Liamette
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Blue_Flame_Heart_Gem, Evil_Minded_Ruby, Heavy_Chain, Etel_Dust, Etel_Stone, Zelunium, Violet_Jewel; estimated from drops of the same item type
     Level: 275
     Hp: 29946400
     BaseExp: 3521528
@@ -8679,23 +8690,24 @@ Body:
     Ai: 04
     Drops:
       - Item: Blue_Flame_Heart_Gem
-        Rate: 1
+        Rate: 500
       - Item: Evil_Minded_Ruby
-        Rate: 1
+        Rate: 500
       - Item: Heavy_Chain
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Etel_Stone
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Violet_Jewel
-        Rate: 1
+        Rate: 500
   - Id: 22392
     AegisName: CP_LIAMETTE
     Name: Strong Liamette
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Violet_Jewel, Zelunium, Etel_Dust, Evil_Minded_Ruby, Heavy_Chain, Blue_Flame_Heart_Gem; estimated from drops of the same item type
     Level: 275
     Hp: 65891020
     BaseExp: 10564584
@@ -8724,17 +8736,17 @@ Body:
     Ai: 04
     Drops:
       - Item: Violet_Jewel
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Evil_Minded_Ruby
-        Rate: 1
+        Rate: 500
       - Item: Heavy_Chain
-        Rate: 1
+        Rate: 500
       - Item: Blue_Flame_Heart_Gem
-        Rate: 1
+        Rate: 500
   - Id: 22394
     AegisName: NIGHTMARE_PIAMETTE
     Name: Nightmare Piamette
@@ -8771,6 +8783,7 @@ Body:
     AegisName: MEDJED
     Name: Medjed
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 254-265)
+    # Divine Pride shows no drop chance for Turn_Yellow_Leaf, Whittling, Amber, Golden_Jewel; estimated from drops of the same item type
     Level: 272
     Hp: 23535500
     BaseExp: 3367462
@@ -8799,17 +8812,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Turn_Yellow_Leaf
-        Rate: 1
+        Rate: 500
       - Item: Whittling
-        Rate: 1
+        Rate: 500
       - Item: Amber
-        Rate: 1
+        Rate: 500
       - Item: Golden_Jewel
-        Rate: 1
+        Rate: 500
   - Id: 22396
     AegisName: CP_MEDJED
     Name: Strong Medjed
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Whittling, Turn_Yellow_Leaf, Blue_Flame_Heart_Gem; estimated from drops of the same item type
     Level: 272
     Hp: 51788960
     BaseExp: 10102388
@@ -8838,15 +8852,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Whittling
-        Rate: 1
+        Rate: 500
       - Item: Turn_Yellow_Leaf
-        Rate: 1
+        Rate: 500
       - Item: Blue_Flame_Heart_Gem
-        Rate: 1
+        Rate: 500
   - Id: 22397
     AegisName: MEDJAY
     Name: Medjay
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-276)
+    # Divine Pride shows no drop chance for Red_Flame_Heart_Gem, Blaze_Stone, Evil_Minded_Ruby, Amber; estimated from drops of the same item type
     Level: 274
     Hp: 26708750
     BaseExp: 3484274
@@ -8875,17 +8890,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Red_Flame_Heart_Gem
-        Rate: 1
+        Rate: 500
       - Item: Blaze_Stone
-        Rate: 1
+        Rate: 500
       - Item: Evil_Minded_Ruby
-        Rate: 1
+        Rate: 500
       - Item: Amber
-        Rate: 1
+        Rate: 500
   - Id: 22398
     AegisName: CP_MEDJAY
     Name: Strong Medjay
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Etel_Dust, Evil_Minded_Ruby, Blaze_Stone; estimated from drops of the same item type
     Level: 274
     Hp: 58768350
     BaseExp: 10452822
@@ -8914,15 +8930,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Evil_Minded_Ruby
-        Rate: 1
+        Rate: 500
       - Item: Blaze_Stone
-        Rate: 1
+        Rate: 500
   - Id: 22399
     AegisName: OPHOIS
     Name: Ophois
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-277)
+    # Divine Pride shows no drop chance for Congealed_Poison, Dry_Wind_Leaf_Gem, Evil_Black_Bid, Violet_Jewel; estimated from drops of the same item type
     Level: 275
     Hp: 27228250
     BaseExp: 3521528
@@ -8951,17 +8968,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Congealed_Poison
-        Rate: 1
+        Rate: 500
       - Item: Dry_Wind_Leaf_Gem
-        Rate: 1
+        Rate: 500
       - Item: Evil_Black_Bid
-        Rate: 1
+        Rate: 500
       - Item: Violet_Jewel
-        Rate: 1
+        Rate: 500
   - Id: 22400
     AegisName: CP_OPHOIS
     Name: Strong Ophois
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Congealed_Poison; estimated from drops of the same item type
     Level: 275
     Hp: 60011470
     BaseExp: 10564584
@@ -8990,11 +9008,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Congealed_Poison
-        Rate: 1
+        Rate: 500
   - Id: 22401
     AegisName: HEKA
     Name: Heka
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 254-265)
+    # Divine Pride shows no drop chance for Slicky_Fluid, Shining_Crystal, Shadowdecon; estimated from drops of the same item type
     Level: 273
     Hp: 23207890
     BaseExp: 3411768
@@ -9023,15 +9042,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Slicky_Fluid
-        Rate: 1
+        Rate: 500
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22402
     AegisName: CP_HEKA
     Name: Strong Heka
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Shining_Crystal, Slicky_Fluid; estimated from drops of the same item type
     Level: 273
     Hp: 51101790
     BaseExp: 10235304
@@ -9060,9 +9080,9 @@ Body:
     Ai: 04
     Drops:
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Slicky_Fluid
-        Rate: 1
+        Rate: 500
   - Id: 22404
     AegisName: GUIDE_OF_DEAD
     Name: Guide of Dead
@@ -9099,6 +9119,7 @@ Body:
     AegisName: EP21_YORTUS_A_H
     Name: Awakened Yortus Bishop
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-274)
+    # Divine Pride shows no drop chance for Yorscalp_Spirit, Shining_Crystal, aegis_1001638, Etel_Dust; estimated from drops of the same item type
     Level: 265
     Hp: 26428044
     BaseExp: 1065428
@@ -9127,17 +9148,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Yorscalp_Spirit
-        Rate: 1
+        Rate: 500
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001638
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22413
     AegisName: EP21_YORTUS_B_H
     Name: Awakened Yortus Shaman
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, aegis_1001639, Shining_Crystal, Shadowdecon_Ore; estimated from drops of the same item type
     Level: 265
     Hp: 32222557
     BaseExp: 1039283
@@ -9166,17 +9188,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001639
-        Rate: 1
+        Rate: 500
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22414
     AegisName: EP21_YORDOS_C_H
     Name: Yordos Executor
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 252-254)
+    # Divine Pride shows no drop chance for Shadowdecon_Ore, Zelunium_Ore, aegis_1001637, Evil_Black_Bid; estimated from drops of the same item type
     Level: 253
     Hp: 21424383
     BaseExp: 1332273
@@ -9205,17 +9228,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon_Ore
-        Rate: 1
+        Rate: 500
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001637
-        Rate: 1
+        Rate: 500
       - Item: Evil_Black_Bid
-        Rate: 1
+        Rate: 500
   - Id: 22415
     AegisName: EP21_YORDOS_B_H
     Name: Awakened Yordos Judge
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 252-254)
+    # Divine Pride shows no drop chance for Whittling, aegis_1001629; estimated from drops of the same item type
     Level: 253
     Hp: 17854432
     BaseExp: 1332273
@@ -9244,13 +9268,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Whittling
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001629
-        Rate: 1
+        Rate: 500
   - Id: 22416
     AegisName: EP21_YORDOS_A_H
     Name: Yordos Interrogator
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 252-254)
+    # Divine Pride shows no drop chance for aegis_1001635, Evil_Minded_Ruby, Zelunium_Ore; estimated from drops of the same item type
     Level: 253
     Hp: 18679789
     BaseExp: 1332273
@@ -9279,15 +9304,16 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001635
-        Rate: 1
+        Rate: 500
       - Item: Evil_Minded_Ruby
-        Rate: 1
+        Rate: 500
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22417
     AegisName: EP21_YORMI_A_H
     Name: Awakened Yormi
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-252)
+    # Divine Pride shows no drop chance for Zelunium_Ore, aegis_1001634, aegis_1001633, aegis_1001628, Etel_Dust; estimated from drops of the same item type
     Level: 245
     Hp: 16060874
     BaseExp: 1253098
@@ -9316,19 +9342,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001634
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001633
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001628
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22418
     AegisName: EP21_YORMI_B_H
     Name: Yormi Evangelist
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-252)
+    # Divine Pride shows no drop chance for Etel_Dust, aegis_1001629, aegis_1001633, aegis_1001634; estimated from drops of the same item type
     Level: 246
     Hp: 15574933
     BaseExp: 1316733
@@ -9357,17 +9384,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001629
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001633
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001634
-        Rate: 1
+        Rate: 500
   - Id: 22419
     AegisName: EP21_YOSCOPUS_A_H
     Name: Yoscopus Guardian
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for aegis_1001636, Congealed_Poison; estimated from drops of the same item type
     Level: 264
     Hp: 42369774
     BaseExp: 1039283
@@ -9396,13 +9424,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001636
-        Rate: 1
+        Rate: 500
       - Item: Congealed_Poison
-        Rate: 1
+        Rate: 500
   - Id: 22420
     AegisName: EP21_YOSCOPUS_B_H
     Name: Yoscopus Shaman
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Congealed_Poison, aegis_1001636, Etel_Dust, Yorscalp_Spirit; estimated from drops of the same item type
     Level: 264
     Hp: 36578292
     BaseExp: 1039283
@@ -9431,13 +9460,13 @@ Body:
     Ai: 04
     Drops:
       - Item: Congealed_Poison
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001636
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Yorscalp_Spirit
-        Rate: 1
+        Rate: 500
   - Id: 22421
     AegisName: EP21_B_YORTUS_A_H
     Name: Awakened Yortus Judge
@@ -9506,6 +9535,7 @@ Body:
     AegisName: TATSI
     Name: Tatsi
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-276)
+    # Divine Pride shows no drop chance for Skyblue_Jewel, Hard_Ice, Ice_Water_Drop_Gem, Slicky_Fluid, Cool_Liquid, Etel_Dust, Etel_Stone; estimated from drops of the same item type
     Level: 274
     Hp: 29462600
     BaseExp: 3463024
@@ -9534,23 +9564,24 @@ Body:
     Ai: 04
     Drops:
       - Item: Skyblue_Jewel
-        Rate: 1
+        Rate: 500
       - Item: Hard_Ice
-        Rate: 1
+        Rate: 500
       - Item: Ice_Water_Drop_Gem
-        Rate: 1
+        Rate: 500
       - Item: Slicky_Fluid
-        Rate: 1
+        Rate: 500
       - Item: Cool_Liquid
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Etel_Stone
-        Rate: 1
+        Rate: 500
   - Id: 22433
     AegisName: CP_TATSI
     Name: Strong Tatsi
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Etel_Dust, Slicky_Fluid, Ice_Water_Drop_Gem, Hard_Ice, Skyblue_Jewel, Zelunium; estimated from drops of the same item type
     Level: 274
     Hp: 64824100
     BaseExp: 10389072
@@ -9579,21 +9610,22 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Slicky_Fluid
-        Rate: 1
+        Rate: 500
       - Item: Ice_Water_Drop_Gem
-        Rate: 1
+        Rate: 500
       - Item: Hard_Ice
-        Rate: 1
+        Rate: 500
       - Item: Skyblue_Jewel
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
   - Id: 22434
     AegisName: GUERRERO
     Name: Guerrero
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-277)
+    # Divine Pride shows no drop chance for Shadowdecon, Skyblue_Jewel, Blue_Flame_Heart_Gem, Green_Crystal_Fragment, Cool_Liquid, Etel_Dust; estimated from drops of the same item type
     Level: 275
     Hp: 27228000
     BaseExp: 3463024
@@ -9622,21 +9654,22 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Skyblue_Jewel
-        Rate: 1
+        Rate: 500
       - Item: Blue_Flame_Heart_Gem
-        Rate: 1
+        Rate: 500
       - Item: Green_Crystal_Fragment
-        Rate: 1
+        Rate: 500
       - Item: Cool_Liquid
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22435
     AegisName: HANOM
     Name: Hanom
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-274)
+    # Divine Pride shows no drop chance for Cool_Liquid, Weird_Tentacle, Green_Land_Crystal, Violet_Jewel, Zelunium; estimated from drops of the same item type
     Level: 272
     Hp: 24504900
     BaseExp: 3414800
@@ -9665,19 +9698,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Cool_Liquid
-        Rate: 1
+        Rate: 500
       - Item: Weird_Tentacle
-        Rate: 1
+        Rate: 500
       - Item: Green_Land_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Violet_Jewel
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
   - Id: 22436
     AegisName: SIRENA
     Name: Sirena
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-275)
+    # Divine Pride shows no drop chance for Shadowdecon, Hot_Water_Drop_Gem, Blaze_Stone, Aromatic_Flower, Amber, Etel_Dust, Etel_Stone; estimated from drops of the same item type
     Level: 273
     Hp: 27270700
     BaseExp: 3414800
@@ -9706,23 +9740,24 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Hot_Water_Drop_Gem
-        Rate: 1
+        Rate: 500
       - Item: Blaze_Stone
-        Rate: 1
+        Rate: 500
       - Item: Aromatic_Flower
-        Rate: 1
+        Rate: 500
       - Item: Amber
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Etel_Stone
-        Rate: 1
+        Rate: 500
   - Id: 22437
     AegisName: DIOSA
     Name: Diosa
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-276)
+    # Divine Pride shows no drop chance for Etel_Dust, Shining_Crystal, Cool_Liquid, Storm_Wind_Leaf_Gem, Zelunium, Golden_Jewel; estimated from drops of the same item type
     Level: 274
     Hp: 25100000
     BaseExp: 3426154
@@ -9751,17 +9786,17 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Cool_Liquid
-        Rate: 1
+        Rate: 500
       - Item: Storm_Wind_Leaf_Gem
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Golden_Jewel
-        Rate: 1
+        Rate: 500
   - Id: 22438
     AegisName: PESKA
     Name: Peska
@@ -9796,6 +9831,7 @@ Body:
     AegisName: CP_GUERRERO
     Name: Strong Guerrero
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Skyblue_Jewel, Shadowdecon, Blue_Flame_Heart_Gem, Cool_Liquid, Green_Crystal_Fragment; estimated from drops of the same item type
     Level: 275
     Hp: 54890000
     BaseExp: 10389072
@@ -9824,19 +9860,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Skyblue_Jewel
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Blue_Flame_Heart_Gem
-        Rate: 1
+        Rate: 500
       - Item: Cool_Liquid
-        Rate: 1
+        Rate: 500
       - Item: Green_Crystal_Fragment
-        Rate: 1
+        Rate: 500
   - Id: 22440
     AegisName: CP_HANOM
     Name: Strong Hanom
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Cool_Liquid, Weird_Tentacle, Green_Land_Crystal, Etel_Dust, Etel_Stone, Zelunium, Violet_Jewel; estimated from drops of the same item type
     Level: 272
     Hp: 53921600
     BaseExp: 10244398
@@ -9865,23 +9902,24 @@ Body:
     Ai: 04
     Drops:
       - Item: Cool_Liquid
-        Rate: 1
+        Rate: 500
       - Item: Weird_Tentacle
-        Rate: 1
+        Rate: 500
       - Item: Green_Land_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Etel_Stone
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Violet_Jewel
-        Rate: 1
+        Rate: 500
   - Id: 22441
     AegisName: CP_SIRENA
     Name: Strong Sirena
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Etel_Dust, Hot_Water_Drop_Gem, Blaze_Stone, Aromatic_Flower; estimated from drops of the same item type
     Level: 273
     Hp: 60017700
     BaseExp: 10244398
@@ -9910,17 +9948,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Hot_Water_Drop_Gem
-        Rate: 1
+        Rate: 500
       - Item: Blaze_Stone
-        Rate: 1
+        Rate: 500
       - Item: Aromatic_Flower
-        Rate: 1
+        Rate: 500
   - Id: 22442
     AegisName: CP_DIOSA
     Name: Strong Diosa
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Shining_Crystal, Cool_Liquid, Storm_Wind_Leaf_Gem; estimated from drops of the same item type
     Level: 274
     Hp: 55229000
     BaseExp: 10278462
@@ -9949,15 +9988,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: Cool_Liquid
-        Rate: 1
+        Rate: 500
       - Item: Storm_Wind_Leaf_Gem
-        Rate: 1
+        Rate: 500
   - Id: 22443
     AegisName: CH1_YGGRING
     Name: Eggring
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 197-213)
+    # Divine Pride shows no drop chance for aegis_1002021; estimated from drops of the same item type
     Level: 205
     Hp: 11200900
     BaseExp: 558984
@@ -9986,7 +10026,7 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002021
-        Rate: 1
+        Rate: 500
       - Item: aegis_300633
         Rate: 1
         StealProtected: true
@@ -9994,6 +10034,7 @@ Body:
     AegisName: CH1_LEAFEING
     Name: Iparing
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 197-213)
+    # Divine Pride shows no drop chance for aegis_1002021; estimated from drops of the same item type
     Level: 205
     Hp: 10788940
     BaseExp: 553394
@@ -10022,7 +10063,7 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002021
-        Rate: 1
+        Rate: 500
       - Item: aegis_300634
         Rate: 1
         StealProtected: true
@@ -10030,6 +10071,7 @@ Body:
     AegisName: CH1_CHARCOARING
     Name: Charcoalring
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 198-220)
+    # Divine Pride shows no drop chance for aegis_1001989, aegis_1001977, Coal; estimated from drops of the same item type
     Level: 209
     Hp: 12028875
     BaseExp: 623780
@@ -10058,11 +10100,11 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001989
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001977
-        Rate: 1
+        Rate: 500
       - Item: Coal
-        Rate: 1
+        Rate: 500
       - Item: aegis_300635
         Rate: 1
         StealProtected: true
@@ -10070,6 +10112,7 @@ Body:
     AegisName: CH1_VULRING
     Name: Bullring
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 198-220)
+    # Divine Pride shows no drop chance for Live_Coal, aegis_1001977, aegis_1002048; estimated from drops of the same item type
     Level: 210
     Hp: 10990750
     BaseExp: 630594
@@ -10098,11 +10141,11 @@ Body:
     Ai: 04
     Drops:
       - Item: Live_Coal
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001977
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002048
-        Rate: 1
+        Rate: 500
       - Item: aegis_300636
         Rate: 1
         StealProtected: true
@@ -10110,6 +10153,7 @@ Body:
     AegisName: CH1_FIRELOOP
     Name: Ring of Fire
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for aegis_1001977, aegis_1001990, Solid_Shell; estimated from drops of the same item type
     Level: 211
     Hp: 11220870
     BaseExp: 645840
@@ -10138,11 +10182,11 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001977
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001990
-        Rate: 1
+        Rate: 500
       - Item: Solid_Shell
-        Rate: 1
+        Rate: 500
       - Item: aegis_300637
         Rate: 1
         StealProtected: true
@@ -10150,6 +10194,7 @@ Body:
     AegisName: CH1_FIRAFFLESIA
     Name: Firecracker
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Blossom_Of_Maneater, aegis_1001977, aegis_1001987; estimated from drops of the same item type
     Level: 210
     Hp: 12377030
     BaseExp: 631658
@@ -10178,11 +10223,11 @@ Body:
     Ai: 04
     Drops:
       - Item: Blossom_Of_Maneater
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001977
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001987
-        Rate: 1
+        Rate: 500
       - Item: aegis_300638
         Rate: 1
         StealProtected: true
@@ -10190,6 +10235,7 @@ Body:
     AegisName: CH1_VOLIMPET
     Name: Volcanic Clam
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 198-220)
+    # Divine Pride shows no drop chance for aegis_1001977, aegis_1002048, Flesh_Of_Clam; estimated from drops of the same item type
     Level: 209
     Hp: 11655470
     BaseExp: 625416
@@ -10218,11 +10264,11 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001977
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002048
-        Rate: 1
+        Rate: 500
       - Item: Flesh_Of_Clam
-        Rate: 1
+        Rate: 500
       - Item: aegis_300639
         Rate: 1
         StealProtected: true
@@ -10230,6 +10276,7 @@ Body:
     AegisName: CH1_FIRE_FLOWER
     Name: Blaze
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Root_Of_Maneater, aegis_1001977; estimated from drops of the same item type
     Level: 212
     Hp: 13358880
     BaseExp: 626676
@@ -10258,9 +10305,9 @@ Body:
     Ai: 04
     Drops:
       - Item: Root_Of_Maneater
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001977
-        Rate: 1
+        Rate: 500
       - Item: aegis_300640
         Rate: 1
         StealProtected: true
@@ -10268,6 +10315,7 @@ Body:
     AegisName: CH1_PEEPING
     Name: "King's Eye"
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for aegis_1002020, Sticky_Poison; estimated from drops of the same item type
     Level: 213
     Hp: 11849250
     BaseExp: 683600
@@ -10296,9 +10344,9 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002020
-        Rate: 1
+        Rate: 500
       - Item: Sticky_Poison
-        Rate: 1
+        Rate: 500
       - Item: aegis_300641
         Rate: 1
         StealProtected: true
@@ -10340,6 +10388,7 @@ Body:
     AegisName: CH1_SILK_SNAIL
     Name: Contaminated Silk Snail
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Shell; estimated from drops of the same item type
     Level: 213
     Hp: 14278820
     BaseExp: 676032
@@ -10368,7 +10417,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Shell
-        Rate: 1
+        Rate: 500
       - Item: aegis_300643
         Rate: 1
         StealProtected: true
@@ -10376,6 +10425,7 @@ Body:
     AegisName: CH1_EX_ROBOT
     Name: Exploration Robot
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Iron, Steel, Mystery_Piece, Screw, Etel_Dust; estimated from drops of the same item type
     Level: 215
     Hp: 12582870
     BaseExp: 721076
@@ -10404,15 +10454,15 @@ Body:
     Ai: 04
     Drops:
       - Item: Iron
-        Rate: 1
+        Rate: 500
       - Item: Steel
-        Rate: 1
+        Rate: 500
       - Item: Mystery_Piece
-        Rate: 1
+        Rate: 500
       - Item: Screw
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_300644
         Rate: 1
         StealProtected: true
@@ -10420,6 +10470,7 @@ Body:
     AegisName: CH1_REPAIR_ROBOT
     Name: Encroached Repair Robot
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Screw, Mystery_Piece, Coal, Sword_Mace; estimated from drops of the same item type
     Level: 214
     Hp: 13601860
     BaseExp: 696838
@@ -10448,13 +10499,13 @@ Body:
     Ai: 04
     Drops:
       - Item: Screw
-        Rate: 1
+        Rate: 500
       - Item: Mystery_Piece
-        Rate: 1
+        Rate: 500
       - Item: Coal
-        Rate: 1
+        Rate: 500
       - Item: Sword_Mace
-        Rate: 1
+        Rate: 3
       - Item: aegis_300645
         Rate: 1
         StealProtected: true
@@ -10462,6 +10513,7 @@ Body:
     AegisName: CH1_DIMIC_1
     Name: Encroached Dimik
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Steel, Screw, Old_Steel_Plate; estimated from drops of the same item type
     Level: 213
     Hp: 13455880
     BaseExp: 696312
@@ -10490,11 +10542,11 @@ Body:
     Ai: 04
     Drops:
       - Item: Steel
-        Rate: 1
+        Rate: 500
       - Item: Screw
-        Rate: 1
+        Rate: 500
       - Item: Old_Steel_Plate
-        Rate: 1
+        Rate: 500
       - Item: aegis_300646
         Rate: 1
         StealProtected: true
@@ -10502,6 +10554,7 @@ Body:
     AegisName: CH1_DIMIC_2
     Name: Encroached Dimik
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Screw, Old_Steel_Plate; estimated from drops of the same item type
     Level: 213
     Hp: 13505500
     BaseExp: 696312
@@ -10530,9 +10583,9 @@ Body:
     Ai: 04
     Drops:
       - Item: Screw
-        Rate: 1
+        Rate: 500
       - Item: Old_Steel_Plate
-        Rate: 1
+        Rate: 500
       - Item: aegis_300646
         Rate: 1
         StealProtected: true
@@ -10540,6 +10593,7 @@ Body:
     AegisName: CH1_DIMIC_3
     Name: Encroached Dimik
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Screw, Old_Steel_Plate; estimated from drops of the same item type
     Level: 213
     Hp: 13505500
     BaseExp: 696312
@@ -10568,9 +10622,9 @@ Body:
     Ai: 04
     Drops:
       - Item: Screw
-        Rate: 1
+        Rate: 500
       - Item: Old_Steel_Plate
-        Rate: 1
+        Rate: 500
       - Item: aegis_300646
         Rate: 1
         StealProtected: true
@@ -10578,6 +10632,7 @@ Body:
     AegisName: CH1_DIMIC_4
     Name: Encroached Dimik
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Screw; estimated from drops of the same item type
     Level: 213
     Hp: 13505500
     BaseExp: 696312
@@ -10606,7 +10661,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Screw
-        Rate: 1
+        Rate: 500
       - Item: aegis_300646
         Rate: 1
         StealProtected: true
@@ -10614,6 +10669,7 @@ Body:
     AegisName: CH1_IMMORTAL_CORPS1
     Name: Meat Cleaver Soldier
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Transparent_Cloth; estimated from drops of the same item type
     Level: 214
     Hp: 13505500
     BaseExp: 698664
@@ -10642,11 +10698,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Transparent_Cloth
-        Rate: 1
+        Rate: 500
   - Id: 22461
     AegisName: CH1_IMMORTAL_CORPS2
     Name: Hatred Scythe Soldier
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Transparent_Cloth; estimated from drops of the same item type
     Level: 214
     Hp: 13826790
     BaseExp: 696312
@@ -10675,11 +10732,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Transparent_Cloth
-        Rate: 1
+        Rate: 500
   - Id: 22462
     AegisName: CH1_IMMORTAL_CORPS3
     Name: Immortal Plow Soldier
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for Transparent_Cloth; estimated from drops of the same item type
     Level: 214
     Hp: 12956880
     BaseExp: 697946
@@ -10708,11 +10766,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Transparent_Cloth
-        Rate: 1
+        Rate: 500
   - Id: 22463
     AegisName: CH1_NYAISE
     Name: Nyaze
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 220-224)
+    # Divine Pride shows no drop chance for Mystery_Piece, Etel_Dust, aegis_1001992; estimated from drops of the same item type
     Level: 222
     Hp: 17785280
     BaseExp: 818236
@@ -10741,11 +10800,11 @@ Body:
     Ai: 04
     Drops:
       - Item: Mystery_Piece
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: aegis_300647
         Rate: 1
         StealProtected: true
@@ -10753,6 +10812,7 @@ Body:
     AegisName: CH1_SHADOW_JAILER
     Name: Shadow Warden
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 222-225)
+    # Divine Pride shows no drop chance for aegis_1001992, Zelunium_Ore, Mystery_Piece; estimated from drops of the same item type
     Level: 224
     Hp: 19075670
     BaseExp: 852876
@@ -10781,11 +10841,11 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
       - Item: Mystery_Piece
-        Rate: 1
+        Rate: 500
       - Item: aegis_300648
         Rate: 1
         StealProtected: true
@@ -10793,6 +10853,7 @@ Body:
     AegisName: CH1_TULIP
     Name: Tulip
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 222-225)
+    # Divine Pride shows no drop chance for Shadowdecon_Ore, aegis_1001992, aegis_1001975, aegis_1001994; estimated from drops of the same item type
     Level: 223
     Hp: 19479950
     BaseExp: 836772
@@ -10821,13 +10882,13 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon_Ore
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001975
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001994
-        Rate: 1
+        Rate: 500
       - Item: aegis_300649
         Rate: 1
         StealProtected: true
@@ -10835,6 +10896,7 @@ Body:
     AegisName: CH1_CALENDULA
     Name: Calendula
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 220-222)
+    # Divine Pride shows no drop chance for aegis_1001975, aegis_1001995, aegis_1001992, Zelunium_Ore; estimated from drops of the same item type
     Level: 221
     Hp: 18505900
     BaseExp: 807872
@@ -10863,13 +10925,13 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001975
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001995
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
       - Item: aegis_300650
         Rate: 1
         StealProtected: true
@@ -10877,6 +10939,7 @@ Body:
     AegisName: CH1_SCABIOSA
     Name: Scabiosa
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 220-222)
+    # Divine Pride shows no drop chance for aegis_1001992, aegis_1002017; estimated from drops of the same item type
     Level: 220
     Hp: 16938980
     BaseExp: 793172
@@ -10905,9 +10968,9 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002017
-        Rate: 1
+        Rate: 500
       - Item: aegis_300651
         Rate: 1
         StealProtected: true
@@ -10915,6 +10978,7 @@ Body:
     AegisName: CH1_LOBELIA
     Name: Lobelia
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-253)
+    # Divine Pride shows no drop chance for aegis_1002019, aegis_1001992, Shadowdecon_Ore; estimated from drops of the same item type
     Level: 244
     Hp: 34034400
     BaseExp: 1231852
@@ -10943,11 +11007,11 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002019
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon_Ore
-        Rate: 1
+        Rate: 500
       - Item: aegis_300652
         Rate: 1
         StealProtected: true
@@ -10955,6 +11019,7 @@ Body:
     AegisName: CH1_MYOSOTIS
     Name: Myosotis
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-253)
+    # Divine Pride shows no drop chance for Etel_Dust, aegis_1001992, aegis_1002018; estimated from drops of the same item type
     Level: 245
     Hp: 32995900
     BaseExp: 1253098
@@ -10983,11 +11048,11 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002018
-        Rate: 1
+        Rate: 500
       - Item: aegis_300653
         Rate: 1
         StealProtected: true
@@ -10995,6 +11060,7 @@ Body:
     AegisName: CH1_ANEMONE
     Name: Anemone
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-252)
+    # Divine Pride shows no drop chance for aegis_1001992, aegis_1001993, Shadowdecon_Ore, Violet_Jewel; estimated from drops of the same item type
     Level: 242
     Hp: 32098750
     BaseExp: 1208318
@@ -11023,13 +11089,13 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001992
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001993
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon_Ore
-        Rate: 1
+        Rate: 500
       - Item: Violet_Jewel
-        Rate: 1
+        Rate: 500
       - Item: aegis_300654
         Rate: 1
         StealProtected: true
@@ -11037,6 +11103,7 @@ Body:
     AegisName: CH1_SKOGL
     Name: Bizarre Scogle
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-253)
+    # Divine Pride shows no drop chance for Rouge, aegis_1001986; estimated from drops of the same item type
     Level: 245
     Hp: 147241850
     BaseExp: 2290594
@@ -11065,9 +11132,9 @@ Body:
     Ai: 04
     Drops:
       - Item: Rouge
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001986
-        Rate: 1
+        Rate: 500
       - Item: aegis_300655
         Rate: 1
         StealProtected: true
@@ -11075,6 +11142,7 @@ Body:
     AegisName: CH1_FRUS
     Name: Bizarre Prus
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-253)
+    # Divine Pride shows no drop chance for Rune_Of_Darkness; estimated from drops of the same item type
     Level: 245
     Hp: 156692580
     BaseExp: 2294442
@@ -11103,7 +11171,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Rune_Of_Darkness
-        Rate: 1
+        Rate: 500
       - Item: aegis_300656
         Rate: 1
         StealProtected: true
@@ -11111,6 +11179,7 @@ Body:
     AegisName: CH1_LISTENER
     Name: Ghost Hunter
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-253)
+    # Divine Pride shows no drop chance for aegis_1001988; estimated from drops of the same item type
     Level: 245
     Hp: 171098800
     BaseExp: 2275908
@@ -11139,7 +11208,7 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001988
-        Rate: 1
+        Rate: 500
       - Item: aegis_300657
         Rate: 1
         StealProtected: true
@@ -11147,6 +11216,7 @@ Body:
     AegisName: CH1_IMMORTAL_OFFICER1
     Name: Immortal Legion Officer
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-253)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 243
     Hp: 163696350
     BaseExp: 2190000
@@ -11175,7 +11245,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Moving_Black_Things
-        Rate: 1
+        Rate: 500
       - Item: aegis_300658
         Rate: 1
         StealProtected: true
@@ -11183,6 +11253,7 @@ Body:
     AegisName: CH1_IMMORTAL_OFFICER2
     Name: Immortal Legion Officer
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-253)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 244
     Hp: 168453750
     BaseExp: 2236308
@@ -11211,7 +11282,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Moving_Black_Things
-        Rate: 1
+        Rate: 500
       - Item: aegis_300658
         Rate: 1
         StealProtected: true
@@ -11283,6 +11354,7 @@ Body:
     AegisName: CH1_LUNARINA
     Name: Lunarina
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 275
     Hp: 581066244
     BaseExp: 4644516
@@ -11311,7 +11383,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Moving_Black_Things
-        Rate: 1
+        Rate: 500
       - Item: aegis_300660
         Rate: 1
         StealProtected: true
@@ -11477,6 +11549,7 @@ Body:
     AegisName: CH1_SUCCUBUS
     Name: High Succubus
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Fruit_Of_Mastela, Shining_Crystal; estimated from drops of the same item type
     Level: 275
     Hp: 593797482
     BaseExp: 4629510
@@ -11505,9 +11578,9 @@ Body:
     Ai: 04
     Drops:
       - Item: Fruit_Of_Mastela
-        Rate: 1
+        Rate: 2750
       - Item: Shining_Crystal
-        Rate: 1
+        Rate: 500
       - Item: aegis_300663
         Rate: 1
         StealProtected: true
@@ -11609,6 +11682,7 @@ Body:
     AegisName: CH1_ABYSS_KNIGHT
     Name: Abyss Knight Commander
     # Divine Pride shows no magicAttackRange, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 278
     Hp: 671843520
     BaseExp: 4853708
@@ -11637,7 +11711,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Yggdrasilberry
-        Rate: 1
+        Rate: 2750
       - Item: aegis_300665
         Rate: 1
         StealProtected: true
@@ -11743,6 +11817,7 @@ Body:
     AegisName: CH1_RK
     Name: M.RK-4480
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Chaotic_Rune_Ore; estimated from drops of the same item type
     Level: 272
     Hp: 129374115
     BaseExp: 17784980
@@ -11771,13 +11846,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22508
     AegisName: CH1_MC_M
     Name: M.MC.M-5407
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Chaotic_Rune_Ore, Encroached_Mace, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 271
     Hp: 145889584
     BaseExp: 17946918
@@ -11806,15 +11882,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Mace
-        Rate: 1
+        Rate: 3
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22509
     AegisName: CH1_SC
     Name: M.SC-3941
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Disparate_Rune_Ore, Encroached_Dagger, Chaotic_Rune_Ore; estimated from drops of the same item type
     Level: 270
     Hp: 113920556
     BaseExp: 11964612
@@ -11843,17 +11920,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Disparate_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Dagger
-        Rate: 1
+        Rate: 3
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22510
     AegisName: CH1_RA
     Name: M.RA-4152
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Tiem_SpellScroll, Encroached_Bow, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 271
     Hp: 121732891
     BaseExp: 11964612
@@ -11882,15 +11960,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Tiem_SpellScroll
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Bow
-        Rate: 1
+        Rate: 3
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22511
     AegisName: CH1_SO
     Name: M.SO-4206
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Encroached_Foxtail, Pure_SpellScoll; estimated from drops of the same item type
     Level: 272
     Hp: 111349046
     BaseExp: 11964612
@@ -11919,15 +11998,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Foxtail
-        Rate: 1
+        Rate: 3
       - Item: Pure_SpellScoll
-        Rate: 1
+        Rate: 500
   - Id: 22512
     AegisName: CH1_AB
     Name: M.AB-4084
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Encroached_Staff, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 272
     Hp: 129371365
     BaseExp: 17784980
@@ -11956,13 +12036,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Encroached_Staff
-        Rate: 1
+        Rate: 3
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22513
     AegisName: CH1_MI_D
     Name: M.MI.D-5794
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 270
     Hp: 136834190
     BaseExp: 17843100
@@ -11991,11 +12072,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22514
     AegisName: CH1_GC_D
     Name: M.GC.D-4402
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Encroached_Humma; estimated from drops of the same item type
     Level: 272
     Hp: 118476711
     BaseExp: 11964612
@@ -12024,13 +12106,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Humma
-        Rate: 1
+        Rate: 3
   - Id: 22516
     AegisName: CH1_RG
     Name: M.RG-5520
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Chaotic_Rune_Ore, Frontier_Magic_Dust, Encroached_Spear; estimated from drops of the same item type
     Level: 272
     Hp: 145696328
     BaseExp: 17946918
@@ -12059,15 +12142,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Spear
-        Rate: 1
+        Rate: 3
   - Id: 22517
     AegisName: CH1_MC
     Name: M.MC-4593
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Chaotic_Rune_Ore; estimated from drops of the same item type
     Level: 272
     Hp: 129371365
     BaseExp: 17784980
@@ -12096,13 +12180,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22518
     AegisName: CH1_GN
     Name: M.GN-6059
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Chaotic_Rune_Ore, Frontier_Magic_Dust, Encroached_Book; estimated from drops of the same item type
     Level: 271
     Hp: 126869897
     BaseExp: 12500736
@@ -12131,15 +12216,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Book
-        Rate: 1
+        Rate: 3
   - Id: 22519
     AegisName: CH1_GC
     Name: M.GC-5848
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Chaotic_Rune, Frontier_Magic_Dust, Chaotic_Rune_Ore, Encroached_Katar, Chaotic_Essence; estimated from drops of the same item type
     Level: 272
     Hp: 118473799
     BaseExp: 11964612
@@ -12168,19 +12254,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Katar
-        Rate: 1
+        Rate: 3
       - Item: Chaotic_Essence
-        Rate: 1
+        Rate: 500
   - Id: 22520
     AegisName: CH1_MI
     Name: M.MI-4419
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Chaotic_Rune_Ore, Frontier_Magic_Dust, Chaotic_Rune, Encroached_Rifle; estimated from drops of the same item type
     Level: 270
     Hp: 119364856
     BaseExp: 11964612
@@ -12209,17 +12296,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
       - Item: Encroached_Rifle
-        Rate: 1
+        Rate: 3
   - Id: 22521
     AegisName: CH1_SR
     Name: M.SR-5916
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Chaotic_Rune_Ore; estimated from drops of the same item type
     Level: 271
     Hp: 145889584
     BaseExp: 17946918
@@ -12248,13 +12336,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22522
     AegisName: CH1_WL
     Name: M.WL-5581
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Chaotic_Rune_Ore, Chaotic_Essence, Frontier_Magic_Dust, Chaotic_Rune; estimated from drops of the same item type
     Level: 272
     Hp: 111349046
     BaseExp: 11964612
@@ -12283,17 +12372,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Essence
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
   - Id: 22523
     AegisName: CH1_WA
     Name: M.WA-5598
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Chaotic_Rune, Frontier_Magic_Dust, Chaotic_Rune_Ore; estimated from drops of the same item type
     Level: 270
     Hp: 124407240
     BaseExp: 12042818
@@ -12322,11 +12412,11 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22525
     AegisName: CH1_RK_1
     Name: M.RK-0001
@@ -12901,6 +12991,7 @@ Body:
     AegisName: CH2_FLAMEBULL
     Name: Flamebull
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-234)
+    # Divine Pride shows no drop chance for aegis_1002679, Chain_Mail_; estimated from drops of the same item type
     Level: 231
     Hp: 23646022
     BaseExp: 465590
@@ -12929,9 +13020,9 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002679
-        Rate: 1
+        Rate: 500
       - Item: Chain_Mail_
-        Rate: 1
+        Rate: 50
   - Id: 22686
     AegisName: CH2_UROCHS
     Name: Urochs
@@ -12966,6 +13057,7 @@ Body:
     AegisName: CH2_LOGIDOGI
     Name: Logidogi
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-234)
+    # Divine Pride shows no drop chance for aegis_1001980, aegis_1002681, Shadowdecon; estimated from drops of the same item type
     Level: 232
     Hp: 20633929
     BaseExp: 465590
@@ -12994,15 +13086,16 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001980
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002681
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22688
     AegisName: CH2_FIRECOTTON
     Name: Firecotton
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-234)
+    # Divine Pride shows no drop chance for aegis_1002683, aegis_1001981; estimated from drops of the same item type
     Level: 231
     Hp: 20028309
     BaseExp: 465590
@@ -13031,13 +13124,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002683
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001981
-        Rate: 1
+        Rate: 500
   - Id: 22689
     AegisName: CH2_NAMUNSE
     Name: Namunse
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 224-234)
+    # Divine Pride shows no drop chance for aegis_1002682, aegis_1001982; estimated from drops of the same item type
     Level: 232
     Hp: 18520744
     BaseExp: 465590
@@ -13066,13 +13160,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002682
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001982
-        Rate: 1
+        Rate: 500
   - Id: 22690
     AegisName: CH2_NAMUNI
     Name: Namuni
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 225-243)
+    # Divine Pride shows no drop chance for aegis_1002686, aegis_1001983, Etel_Dust; estimated from drops of the same item type
     Level: 234
     Hp: 22959321
     BaseExp: 465590
@@ -13101,15 +13196,16 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002686
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001983
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22691
     AegisName: CH2_DUDULSON
     Name: Dudulson
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 225-243)
+    # Divine Pride shows no drop chance for Etel_Dust, aegis_1001983, aegis_1002687; estimated from drops of the same item type
     Level: 233
     Hp: 23850387
     BaseExp: 465590
@@ -13138,15 +13234,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001983
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002687
-        Rate: 1
+        Rate: 500
   - Id: 22692
     AegisName: CH2_GARAKSON
     Name: Garakson
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 227-244)
+    # Divine Pride shows no drop chance for aegis_1002688, aegis_1001982; estimated from drops of the same item type
     Level: 235
     Hp: 25017350
     BaseExp: 513505
@@ -13175,13 +13272,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002688
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001982
-        Rate: 1
+        Rate: 500
   - Id: 22693
     AegisName: CH2_TUKTAKSON
     Name: Tuktakson
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 225-244)
+    # Divine Pride shows no drop chance for aegis_1002689, aegis_1001981, Etel_Dust, Shadowdecon; estimated from drops of the same item type
     Level: 235
     Hp: 23992392
     BaseExp: 513505
@@ -13210,17 +13308,18 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002689
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001981
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22694
     AegisName: CH2_PARUSON
     Name: Paruson
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 228-244)
+    # Divine Pride shows no drop chance for aegis_1002690, aegis_1001980; estimated from drops of the same item type
     Level: 237
     Hp: 26225839
     BaseExp: 593294
@@ -13249,13 +13348,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002690
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001980
-        Rate: 1
+        Rate: 500
   - Id: 22695
     AegisName: CH2_MORBANG
     Name: Morbang
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-245)
+    # Divine Pride shows no drop chance for aegis_1002691, aegis_1001979; estimated from drops of the same item type
     Level: 239
     Hp: 26351233
     BaseExp: 604691
@@ -13284,13 +13384,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002691
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001979
-        Rate: 1
+        Rate: 500
   - Id: 22696
     AegisName: CH2_FIRECLAW
     Name: Fireclaw
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-245)
+    # Divine Pride shows no drop chance for aegis_1001978, aegis_1002685; estimated from drops of the same item type
     Level: 239
     Hp: 27476823
     BaseExp: 604691
@@ -13319,9 +13420,9 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001978
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002685
-        Rate: 1
+        Rate: 500
   - Id: 22697
     AegisName: CH2_FLAMEANIMA
     Name: Flameanima
@@ -13386,6 +13487,7 @@ Body:
     AegisName: CH2_ALPURING
     Name: Alpuring
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-230)
+    # Divine Pride shows no drop chance for aegis_1002695, Shadowdecon, Cold_Ice; estimated from drops of the same item type
     Level: 229
     Hp: 19797425
     BaseExp: 451624
@@ -13414,15 +13516,16 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002695
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Cold_Ice
-        Rate: 1
+        Rate: 500
   - Id: 22700
     AegisName: CH2_ICYBLAST
     Name: Icyblast
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-234)
+    # Divine Pride shows no drop chance for Ice_Piece, aegis_1002693; estimated from drops of the same item type
     Level: 231
     Hp: 21212916
     BaseExp: 465590
@@ -13451,13 +13554,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Ice_Piece
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002693
-        Rate: 1
+        Rate: 500
   - Id: 22701
     AegisName: CH2_ICENEEDLE
     Name: Iceneedle
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-234)
+    # Divine Pride shows no drop chance for aegis_1002694, Etel_Dust, Ice_Heart, End_Sektura; estimated from drops of the same item type
     Level: 232
     Hp: 22656314
     BaseExp: 465590
@@ -13486,17 +13590,18 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002694
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Ice_Heart
-        Rate: 1
+        Rate: 500
       - Item: End_Sektura
-        Rate: 1
+        Rate: 3
   - Id: 22702
     AegisName: CH2_FOLNIR_NILF
     Name: Folnir Nilf
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-245)
+    # Divine Pride shows no drop chance for aegis_1002696, aegis_1002697; estimated from drops of the same item type
     Level: 240
     Hp: 28116571
     BaseExp: 604691
@@ -13525,13 +13630,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002696
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002697
-        Rate: 1
+        Rate: 500
   - Id: 22703
     AegisName: CH2_FOLNIR_MYRK
     Name: Folnir Myrk
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-245)
+    # Divine Pride shows no drop chance for aegis_1002697, aegis_1002696; estimated from drops of the same item type
     Level: 240
     Hp: 26965597
     BaseExp: 604691
@@ -13560,13 +13666,14 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002697
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002696
-        Rate: 1
+        Rate: 500
   - Id: 22704
     AegisName: CH2_FOLNIR_HRE
     Name: Folnir Hre
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-252)
+    # Divine Pride shows no drop chance for aegis_1002696, aegis_1002697, Etel_Dust; estimated from drops of the same item type
     Level: 240
     Hp: 31961071
     BaseExp: 619701
@@ -13595,11 +13702,11 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002696
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002697
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22705
     AegisName: CH2_FEEOS
     Name: Feeos
@@ -13634,6 +13741,7 @@ Body:
     AegisName: ABI_FLAMEBULL
     Name: Flamebull
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, aegis_1002679, aegis_1002842, ABI_Lava_Rune_Ore, Frontier_Magic_Dust, ABI_Lava_Essence; estimated from drops of the same item type
     Level: 278
     Hp: 112259438
     BaseExp: 12370438
@@ -13662,24 +13770,25 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002679
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002842
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Essence
-        Rate: 1
+        Rate: 500
         StealProtected: true
   - Id: 22715
     AegisName: CP_ABI_FLAMEBULL
     Name: Flamebull
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Lava_Essence, Frontier_Magic_Dust, ABI_Lava_Rune_Ore, aegis_1002679, Shadowdecon, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 278
     Hp: 196466785
     BaseExp: 18555658
@@ -13708,23 +13817,24 @@ Body:
     Ai: 04
     Drops:
       - Item: ABI_Lava_Essence
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002679
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
   - Id: 22716
     AegisName: ABI_FIRELOOP
     Name: Fireloop
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, Chaotic_Rune, Frontier_Magic_Dust, aegis_1001990, ABI_Lava_Rune_Ore, ABI_Lava_Essence; estimated from drops of the same item type
     Level: 276
     Hp: 99103404
     BaseExp: 13435058
@@ -13753,24 +13863,25 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_1001990
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Essence
-        Rate: 1
+        Rate: 500
         StealProtected: true
   - Id: 22717
     AegisName: CP_ABI_FIRELOOP
     Name: Fireloop
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for aegis_1001990, Zelunium, Etel_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 187899707
     BaseExp: 20152588
@@ -13799,15 +13910,16 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1001990
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22718
     AegisName: ABI_FULBUK
     Name: Fulbuk
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Frontier_Magic_Dust, ABI_Lava_Rune_Ore, BurningSkin, ABI_Lava_Essence; estimated from drops of the same item type
     Level: 277
     Hp: 103135128
     BaseExp: 13644968
@@ -13836,19 +13948,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: BurningSkin
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Essence
-        Rate: 1
+        Rate: 500
   - Id: 22719
     AegisName: CP_ABI_FULBUK
     Name: Fulbuk
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Lava_Essence, BurningSkin, ABI_Lava_Rune_Ore, Frontier_Magic_Dust, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 277
     Hp: 180498300
     BaseExp: 20467452
@@ -13877,21 +13990,22 @@ Body:
     Ai: 04
     Drops:
       - Item: ABI_Lava_Essence
-        Rate: 1
+        Rate: 500
       - Item: BurningSkin
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
   - Id: 22720
     AegisName: ABI_LOGIDOGI
     Name: Logidogi
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Frontier_Magic_Dust, aegis_1002681, ABI_Lava_Rune_Ore, ABI_Lava_Essence; estimated from drops of the same item type
     Level: 280
     Hp: 103498795
     BaseExp: 12660856
@@ -13920,19 +14034,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: aegis_1002681
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Essence
-        Rate: 1
+        Rate: 500
   - Id: 22721
     AegisName: CP_ABI_LOGIDOGI
     Name: Logidogi
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for aegis_1002681, Frontier_Magic_Dust, ABI_Lava_Rune_Ore, Shadowdecon, Etel_Dust; estimated from drops of the same item type
     Level: 280
     Hp: 181132235
     BaseExp: 18991286
@@ -13961,19 +14076,20 @@ Body:
     Ai: 04
     Drops:
       - Item: aegis_1002681
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: ABI_Lava_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22724
     AegisName: ABI_HODE
     Name: Hode
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Earthworm_Peeling; estimated from drops of the same item type
     Level: 277
     Hp: 101093942
     BaseExp: 12050574
@@ -14002,11 +14118,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Earthworm_Peeling
-        Rate: 1
+        Rate: 500
   - Id: 22725
     AegisName: CP_ABI_HODE
     Name: Hode
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Ground_Rune_Ore, Chaotic_Essence, Etel_Dust, Earthworm_Peeling; estimated from drops of the same item type
     Level: 277
     Hp: 176924142
     BaseExp: 18075860
@@ -14035,17 +14152,18 @@ Body:
     Ai: 04
     Drops:
       - Item: ABI_Ground_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Essence
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Earthworm_Peeling
-        Rate: 1
+        Rate: 500
   - Id: 22728
     AegisName: ABI_RAKEHAND
     Name: Rakehand
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Sticky_Mucus, ABI_Ground_Rune_Ore, ABI_Ground_Essence, Dimension_Energy_BL, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 92742610
     BaseExp: 11691082
@@ -14074,15 +14192,15 @@ Body:
     Ai: 04
     Drops:
       - Item: Sticky_Mucus
-        Rate: 1
+        Rate: 500
       - Item: ABI_Ground_Rune_Ore
-        Rate: 1
+        Rate: 500
       - Item: ABI_Ground_Essence
-        Rate: 1
+        Rate: 500
       - Item: Dimension_Energy_BL
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22729
     AegisName: CP_ABI_RAKEHAND
     Name: Rakehand
@@ -14117,6 +14235,7 @@ Body:
     AegisName: ABI_GOAT
     Name: Goat
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Goat's_Horn; estimated from drops of the same item type
     Level: 279
     Hp: 125832359
     BaseExp: 12500736
@@ -14145,11 +14264,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Goat's_Horn
-        Rate: 1
+        Rate: 500
   - Id: 22731
     AegisName: CP_ABI_GOAT
     Name: Goat
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Goat's_Horn; estimated from drops of the same item type
     Level: 279
     Hp: 220218982
     BaseExp: 18751106
@@ -14178,11 +14298,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Goat's_Horn
-        Rate: 1
+        Rate: 500
   - Id: 22732
     AegisName: ABI_LETTERSTER
     Name: Letterster
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Ground_Rune_Ore; estimated from drops of the same item type
     Level: 278
     Hp: 109642576
     BaseExp: 12249046
@@ -14211,7 +14332,7 @@ Body:
     Ai: 04
     Drops:
       - Item: ABI_Ground_Rune_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22733
     AegisName: CP_ABI_LETTERSTER
     Name: Letterster
@@ -14726,6 +14847,7 @@ Body:
     AegisName: VR_COPO
     Name: Vr Copo
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 220-223)
+    # Divine Pride shows no drop chance for Zelunium_Ore; estimated from drops of the same item type
     Level: 220
     Hp: 19425587
     BaseExp: 386607
@@ -14754,7 +14876,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22772
     AegisName: VR_ICEEGG
     Name: Vr Iceegg
@@ -14789,6 +14911,7 @@ Body:
     AegisName: VR_ICEWIND2
     Name: Vr Icewind2
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 222-225)
+    # Divine Pride shows no drop chance for Zelunium_Ore; estimated from drops of the same item type
     Level: 224
     Hp: 20343787
     BaseExp: 420481
@@ -14817,7 +14940,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22774
     AegisName: VR_ICEWIND1
     Name: Vr Icewind1
@@ -14912,6 +15035,7 @@ Body:
     AegisName: VR_MELIBE_ICESLUG
     Name: Vr Melibe Iceslug
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 222-225)
+    # Divine Pride shows no drop chance for Zelunium_Ore; estimated from drops of the same item type
     Level: 223
     Hp: 19897135
     BaseExp: 420481
@@ -14940,7 +15064,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22778
     AegisName: VR_UNF_FLOWER
     Name: Vr Unf Flower
@@ -14975,6 +15099,7 @@ Body:
     AegisName: VR_CALMARING
     Name: Vr Calmaring
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-228)
+    # Divine Pride shows no drop chance for Etel_Dust, Zelunium_Ore; estimated from drops of the same item type
     Level: 224
     Hp: 22934162
     BaseExp: 439231
@@ -15003,13 +15128,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22780
     AegisName: VR_LIMACINA
     Name: Vr Limacina
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-227)
+    # Divine Pride shows no drop chance for Shadowdecon_Ore; estimated from drops of the same item type
     Level: 224
     Hp: 22076003
     BaseExp: 439231
@@ -15038,11 +15164,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22781
     AegisName: VR_ICE_STRAW
     Name: Vr Ice Straw
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 220-223)
+    # Divine Pride shows no drop chance for Zelunium_Ore; estimated from drops of the same item type
     Level: 221
     Hp: 23755239
     BaseExp: 416930
@@ -15071,11 +15198,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22782
     AegisName: VR_ICE_GANGU
     Name: Vr Ice Gangu
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 220-223)
+    # Divine Pride shows no drop chance for Etel_Dust; estimated from drops of the same item type
     Level: 221
     Hp: 22118306
     BaseExp: 416930
@@ -15104,11 +15232,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22783
     AegisName: VR_ICEBEAR
     Name: Vr Icebear
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 222-225)
+    # Divine Pride shows no drop chance for Zelunium_Ore; estimated from drops of the same item type
     Level: 223
     Hp: 22008718
     BaseExp: 420481
@@ -15137,11 +15266,12 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22784
     AegisName: VR_S_SEAWEED
     Name: Vr S Seaweed
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, health, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 220-224)
+    # Divine Pride shows no drop chance for Shadowdecon_Ore; estimated from drops of the same item type
     Level: 222
     Hp: 17847680
     BaseExp: 412612
@@ -15170,7 +15300,7 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon_Ore
-        Rate: 1
+        Rate: 500
   - Id: 22785
     AegisName: VR_CST_PORING
     Name: Vr Cst Poring
@@ -15445,6 +15575,7 @@ Body:
     AegisName: ABI_WRAITH_DEAD
     Name: Wraith Dead
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, Zelunium, Transparent_Cloth; estimated from drops of the same item type
     Level: 278
     Hp: 99690724
     BaseExp: 12149298
@@ -15473,17 +15604,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Transparent_Cloth
-        Rate: 1
+        Rate: 500
   - Id: 22798
     AegisName: CP_ABI_WRAITH_DEAD
     Name: Wraith Dead
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Transparent_Cloth, Shadowdecon, Etel_Dust; estimated from drops of the same item type
     Level: 278
     Hp: 174472901
     BaseExp: 18223946
@@ -15512,15 +15644,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Transparent_Cloth
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22799
     AegisName: ABI_EVIL_DRUID
     Name: Evil Druid
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, Zelunium, Rotten_Bandage; estimated from drops of the same item type
     Level: 279
     Hp: 95464589
     BaseExp: 12305394
@@ -15549,17 +15682,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Rotten_Bandage
-        Rate: 1
+        Rate: 500
   - Id: 22800
     AegisName: CP_ABI_EVIL_DRUID
     Name: Evil Druid
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Rotten_Bandage, Shadowdecon, Etel_Dust; estimated from drops of the same item type
     Level: 279
     Hp: 167075987
     BaseExp: 18458092
@@ -15588,15 +15722,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Rotten_Bandage
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22801
     AegisName: ABI_BURNING_KNIGHT
     Name: Burning Knight
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Dimension_Energy_YL, Etel_Dust, Blaze_Stone, Shadowdecon, Zelunium; estimated from drops of the same item type
     Level: 276
     Hp: 98975591
     BaseExp: 11964612
@@ -15625,19 +15760,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Dimension_Energy_YL
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Blaze_Stone
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
   - Id: 22802
     AegisName: CP_ABI_BURNING_KNIGHT
     Name: Burning Knight
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Zelunium, Blaze_Stone, Etel_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 173222271
     BaseExp: 17946918
@@ -15666,15 +15802,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Blaze_Stone
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22803
     AegisName: ABI_DARK_FRAME
     Name: Dark Frame
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Etel_Dust, Shadowdecon, Brigan; estimated from drops of the same item type
     Level: 277
     Hp: 85937115
     BaseExp: 12059946
@@ -15703,17 +15840,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Brigan
-        Rate: 1
+        Rate: 500
   - Id: 22804
     AegisName: CP_ABI_DARK_FRAME
     Name: Dark Frame
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Brigan, Etel_Dust, Frontier_Magic_Dust, Chaotic_Rune; estimated from drops of the same item type
     Level: 277
     Hp: 150397489
     BaseExp: 18089920
@@ -15742,17 +15880,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Brigan
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
   - Id: 22805
     AegisName: ABI_PLASMA_ARCH
     Name: Plasma Arch
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Zelunium, Shadowdecon, Soft_Feather, Etel_Dust, Chaotic_Rune; estimated from drops of the same item type
     Level: 276
     Hp: 91498589
     BaseExp: 11856654
@@ -15781,20 +15920,21 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Soft_Feather
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
         StealProtected: true
   - Id: 22806
     AegisName: CP_ABI_PLASMA_ARCH
     Name: Plasma Arch
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Soft_Feather; estimated from drops of the same item type
     Level: 276
     Hp: 160143372
     BaseExp: 17784980
@@ -15823,13 +15963,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Soft_Feather
-        Rate: 1
+        Rate: 500
   - Id: 22807
     AegisName: ABI_SANARE1
     Name: Sanare1
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, CrudeAmmo, Etel_Dust, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 278
     Hp: 99678888
     BaseExp: 12348794
@@ -15858,17 +15999,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: CrudeAmmo
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22808
     AegisName: CP_ABI_SANARE1
     Name: Sanare1
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Etel_Dust, Zelunium, CrudeAmmo, Shadowdecon; estimated from drops of the same item type
     Level: 278
     Hp: 174449082
     BaseExp: 18523190
@@ -15897,19 +16039,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: CrudeAmmo
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22809
     AegisName: ABI_HAPPY_GIVER
     Name: Happy Giver
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Soft_Feather, Zelunium, Etel_Dust, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 277
     Hp: 84167266
     BaseExp: 12149268
@@ -15938,19 +16081,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Soft_Feather
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22810
     AegisName: CP_ABI_HAPPY_GIVER
     Name: Happy Giver
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Zelunium, Soft_Feather; estimated from drops of the same item type
     Level: 277
     Hp: 147303033
     BaseExp: 18223902
@@ -15979,15 +16123,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Soft_Feather
-        Rate: 1
+        Rate: 500
   - Id: 22811
     AegisName: ABI_ACIDUS
     Name: Acidus
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Zelunium, Dragon_Canine, Etel_Dust; estimated from drops of the same item type
     Level: 277
     Hp: 100860329
     BaseExp: 12339196
@@ -16016,15 +16161,16 @@ Body:
     Ai: 04
     Drops:
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Dragon_Canine
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
   - Id: 22812
     AegisName: CP_ABI_ACIDUS
     Name: Acidus
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Frontier_Magic_Dust, Dragon_Canine, Zelunium, Shadowdecon; estimated from drops of the same item type
     Level: 277
     Hp: 176515360
     BaseExp: 18508792
@@ -16053,19 +16199,20 @@ Body:
     Ai: 04
     Drops:
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
       - Item: Dragon_Canine
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22813
     AegisName: ABI_HELL_POODLE
     Name: Hell Poodle
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Zelunium, Etel_Dust, Skel_Bone; estimated from drops of the same item type
     Level: 278
     Hp: 96339309
     BaseExp: 12237450
@@ -16094,17 +16241,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Skel_Bone
-        Rate: 1
+        Rate: 500
   - Id: 22814
     AegisName: CP_ABI_HELL_POODLE
     Name: Hell Poodle
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Skel_Bone, Etel_Dust, Zelunium, Shadowdecon; estimated from drops of the same item type
     Level: 278
     Hp: 168601534
     BaseExp: 18356174
@@ -16133,17 +16281,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Skel_Bone
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22815
     AegisName: ABI_ZOMBIE_SLAUGHTER
     Name: Zombie Slaughter
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Clattering_Skull, Zelunium, Etel_Dust, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 277
     Hp: 121156931
     BaseExp: 12042818
@@ -16172,20 +16321,21 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Clattering_Skull
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
         StealProtected: true
   - Id: 22816
     AegisName: CP_ABI_ZOMBIE_SLAUGHTER
     Name: Zombie Slaughter
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Clattering_Skull, Shadowdecon; estimated from drops of the same item type
     Level: 277
     Hp: 212036576
     BaseExp: 18064226
@@ -16214,13 +16364,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Clattering_Skull
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22817
     AegisName: ABI_DARK_PRIEST
     Name: Dark Priest
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Etel_Dust, Zelunium, Skull, Dimension_Energy_BL, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 100641904
     BaseExp: 11856654
@@ -16249,22 +16400,23 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Skull
-        Rate: 1
+        Rate: 500
       - Item: Dimension_Energy_BL
-        Rate: 1
+        Rate: 500
       - Item: Frontier_Magic_Dust
-        Rate: 1
+        Rate: 500
         StealProtected: true
   - Id: 22818
     AegisName: CP_ABI_DARK_PRIEST
     Name: Dark Priest
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Skull, Zelunium, Etel_Dust, Shadowdecon; estimated from drops of the same item type
     Level: 276
     Hp: 176133994
     BaseExp: 17784980
@@ -16293,17 +16445,18 @@ Body:
     Ai: 04
     Drops:
       - Item: Skull
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
   - Id: 22819
     AegisName: ABI_NECROMANCER
     Name: Necromancer
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Rent_Spell_Book; estimated from drops of the same item type
     Level: 279
     Hp: 104986731
     BaseExp: 12305394
@@ -16332,13 +16485,14 @@ Body:
     Ai: 04
     Drops:
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Rent_Spell_Book
-        Rate: 1
+        Rate: 500
   - Id: 22820
     AegisName: CP_ABI_NECROMANCER
     Name: Necromancer
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Chaotic_Rune, Rent_Spell_Book, Shadowdecon, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 279
     Hp: 183734647
     BaseExp: 18458092
@@ -16367,15 +16521,15 @@ Body:
     Ai: 04
     Drops:
       - Item: Chaotic_Rune
-        Rate: 1
+        Rate: 500
       - Item: Rent_Spell_Book
-        Rate: 1
+        Rate: 500
       - Item: Shadowdecon
-        Rate: 1
+        Rate: 500
       - Item: Etel_Dust
-        Rate: 1
+        Rate: 500
       - Item: Zelunium
-        Rate: 1
+        Rate: 500
   - Id: 22824
     AegisName: VR_BLOODY_KNIGHT
     Name: Vr Bloody Knight

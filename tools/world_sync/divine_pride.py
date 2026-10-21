@@ -22,6 +22,7 @@ official entry for the same monster always wins; prune.py then drops ours.
 Rerun generate.py afterwards: the new monsters then get their spawns.
 """
 import argparse
+import collections
 import glob
 import json
 import math
@@ -74,6 +75,41 @@ def item_names(root):
         for i, a in re.findall(r'^  - Id: (\d+)\n    AegisName: (\S+)', open(f, encoding='utf-8').read(), re.M):
             out.setdefault(int(i), a)
     return out
+
+
+ITEM_TYPES = {}
+DROP_ESTIMATE = {}
+
+
+def item_types(root):
+    out = {}
+    for f in glob.glob(os.path.join(root, 'db', 're', 'item_db*.yml')):
+        for e in re.split(r'\n(?=  - Id: )', open(f, encoding='utf-8').read()):
+            m = re.match(r'  - Id: (\d+)', e)
+            if m:
+                t = re.search(r'\n    Type: (\S+)', e)
+                out.setdefault(int(m.group(1)), t.group(1) if t else 'Etc')
+    return out
+
+
+def drop_estimates(records):
+    """Median known drop chance per (item type, level band) over every record: what a drop
+    whose chance Divine Pride doesn't show is given instead of the 0.01% floor."""
+    known = collections.defaultdict(list)
+    for d in records:
+        band = 'hi' if (d.get('level') or 1) >= 200 else 'lo'
+        for x in (d.get('drops') or []) + (d.get('mvpDrops') or []):
+            t = ITEM_TYPES.get(x.get('itemId'))
+            if x.get('probability') is not None and t:
+                known[(t, band)].append(float(x['probability']))
+                known[(t, None)].append(float(x['probability']))
+    return {k: sorted(v)[len(v) // 2] for k, v in known.items() if len(v) >= 5}
+
+
+def estimated_chance(item_id, level):
+    t = ITEM_TYPES.get(item_id, 'Etc')
+    band = 'hi' if level >= 200 else 'lo'
+    return DROP_ESTIMATE.get((t, band)) or DROP_ESTIMATE.get((t, None)) or DROP_ESTIMATE.get(('Etc', None), 0.01)
 
 
 def mob_db(root):
@@ -308,6 +344,8 @@ def convert(mid, d, nv, items, report, pool=()):
     if boss:
         L.append('    Class: Boss')
 
+    estimated = []
+
     def drops(rows, label):
         out = []
         for r in rows or []:
@@ -315,7 +353,14 @@ def convert(mid, d, nv, items, report, pool=()):
             if not a:
                 report['drops whose item the item db lacks (left out)'].append('%d item %s' % (mid, r.get('itemId')))
                 continue
-            rate = max(1, min(10000, rnd(float(r.get('probability') or 0) * 10000)))
+            chance = r.get('probability')
+            if chance is None:
+                # Divine Pride doesn't show this chance: the median of the known drops of the
+                # same item type for monsters of this level band (see drop_estimates)
+                chance = estimated_chance(int(r['itemId']), lv)
+                estimated.append(a)
+                report['drop chances estimated (Divine Pride shows none)'].append('%d %s' % (mid, a))
+            rate = max(1, min(10000, rnd(float(chance) * 10000)))
             e = ['      - Item: %s' % a, '        Rate: %d' % rate]
             if r.get('isStealProtected'):
                 e.append('        StealProtected: true')
@@ -323,6 +368,10 @@ def convert(mid, d, nv, items, report, pool=()):
         return ['    %s:' % label] + out if out else []
     L += drops(d.get('mvpDrops'), 'MvpDrops')
     L += drops(d.get('drops'), 'Drops')
+    if estimated:
+        at = next(i for i, l in enumerate(L) if l.startswith('    Level:'))
+        L.insert(at, '    # Divine Pride shows no drop chance for %s; estimated from drops of the same item type'
+                 % ', '.join(estimated))
     return '\n'.join(L), skills(mid, aegis, d, report)
 
 
@@ -442,12 +491,14 @@ def main():
     ids = ids['missing'] if isinstance(ids, dict) else ids
     nv = navi_mobs([(p, e) for p, e in ((a.iro_navi, 'latin-1'), (a.kro_navi, 'cp949')) if p])
     items = item_names(root)
+    ITEM_TYPES.update(item_types(root))
     SKILL_NAMES.update(skill_names(root))
     EN_NAMES.update(english_names(a.navi_en))
     have = mob_db(root)
     report = {k: [] for k in ('no record', 'already in the monster db', 'no AegisName (skipped)',
                               'AegisName already used (skipped)', 'no English name (AegisName used)',
                               'monsters with values estimated from similar ones',
+                              'drop chances estimated (Divine Pride shows none)',
                               'names shortened to 23 characters',
                               'skill rows whose skill the skill db lacks (left out)',
                               'drops whose item the item db lacks (left out)',
@@ -457,6 +508,7 @@ def main():
     ours = os.path.join(root, 'db', 're', 'mob_db_world.yml')
     entries, skill_rows = [], []
     pool = [json.load(open(p)) for p in glob.glob(os.path.join(a.records, '*.json'))]
+    DROP_ESTIMATE.update(drop_estimates(pool))
     pool = [d for d in pool if complete(d)]
     for mid in sorted(set(ids)):
         if mid in have:
