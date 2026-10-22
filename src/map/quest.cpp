@@ -107,11 +107,6 @@ uint64 QuestDatabase::parseBodyNode(const ryml::NodeRef& node) {
 		const auto& targets = node["Targets"];
 
 		for (const auto& targetNode : targets) {
-			if (quest->objectives.size() >= MAX_QUEST_OBJECTIVES) {
-				this->invalidWarning(targetNode, "Targets list exceeds the maximum of %d, skipping.\n", MAX_QUEST_OBJECTIVES);
-				return 0;
-			}
-
 			if (!this->nodeExists(targetNode, "Mob") && !this->nodeExists(targetNode, "Id")) {
 				this->invalidWarning(targetNode, "Missing Target 'Mob' or 'Id', skipping.\n");
 				return 0;
@@ -164,6 +159,13 @@ uint64 QuestDatabase::parseBodyNode(const ryml::NodeRef& node) {
 			bool targetExists = target != nullptr;
 
 			if (!targetExists) {
+				// Only a new target counts towards the limit: one an import file
+				// declares again is updated in place.
+				if (quest->objectives.size() >= MAX_QUEST_OBJECTIVES) {
+					this->invalidWarning(targetNode, "Targets list exceeds the maximum of %d, skipping.\n", MAX_QUEST_OBJECTIVES);
+					return 0;
+				}
+
 				if (!this->nodeExists(targetNode, "Count")) {
 					this->invalidWarning(targetNode["Count"], "Targets has no Count value specified, skipping.\n");
 					return 0;
@@ -339,7 +341,8 @@ uint64 QuestDatabase::parseBodyNode(const ryml::NodeRef& node) {
 				target->count = count;
 			}
 
-			quest->objectives.push_back(target);
+			if (!targetExists)
+				quest->objectives.push_back(target);
 		}
 	}
 
@@ -435,7 +438,8 @@ uint64 QuestDatabase::parseBodyNode(const ryml::NodeRef& node) {
 				target->rate = rate;
 			}
 
-			quest->dropitem.push_back(target);
+			if (!targetExists)
+				quest->dropitem.push_back(target);
 		}
 	}
 
