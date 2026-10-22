@@ -262,7 +262,7 @@
  *
  * icon is a status icon the client has ("EFST_TOXIN", or its number), or one
  * of a mod's own: a number from EFST_MOD_FIRST to EFST_MOD_LAST (20000 to
- * 29999), which the server sends as it is, for players and monsters alike.
+ * 22999), which the server sends as it is, for players and monsters alike.
  * The client knows such an icon only from the mod's client tables (efstids,
  * stateiconimginfo, stateiconinfo); a mod keeps to a block of the range.
  *
@@ -328,7 +328,7 @@ class map_session_data;
 /// numbers as they are, and a mod's client tables give them names, pictures
 /// and tooltips. rAthena's own icons stay below EFST_MAX.
 constexpr int32 EFST_MOD_FIRST = 20000;
-constexpr int32 EFST_MOD_LAST = 29999;
+constexpr int32 EFST_MOD_LAST = 22999;
 struct Damage;
 struct s_skill_condition;
 
