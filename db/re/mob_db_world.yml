@@ -7465,6 +7465,7 @@ Body:
     AegisName: EP21_SEAWIND
     Name: Seawind
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 228-244)
+    # Divine Pride shows no drop chance for aegis_1001645; estimated from drops of the same item type
     Level: 236
     Hp: 28803605
     BaseExp: 593294
@@ -7491,10 +7492,13 @@ Body:
     AttackMotion: 1075
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_LETTERSTER's
     Drops:
       - Item: Sea_Wind_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001645
+        Rate: 500
   - Id: 22314
     AegisName: EP21_SCALLEG
     Name: Scalleg
@@ -7610,6 +7614,7 @@ Body:
     AegisName: EP21_ROCKSTRIKER
     Name: Rockstriker
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-244)
+    # Divine Pride shows no drop chance for aegis_1001640; estimated from drops of the same item type
     Level: 237
     Hp: 28974600
     BaseExp: 593294
@@ -7636,14 +7641,18 @@ Body:
     AttackMotion: 769
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_SCALLEG's
     Drops:
       - Item: Rock_Striker_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001640
+        Rate: 500
   - Id: 22318
     AegisName: EP21_ICESEAHORSE
     Name: Ice Seahorse
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-253)
+    # Divine Pride shows no drop chance for aegis_1001644; estimated from drops of the same item type
     Level: 240
     Hp: 34156500
     BaseExp: 625452
@@ -7670,10 +7679,13 @@ Body:
     AttackMotion: 1020
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_SKIPSKIPPER's
     Drops:
       - Item: Ice_Seahorse_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001644
+        Rate: 500
   - Id: 22319
     AegisName: EP21_SKIPSKIPPER
     Name: Skipskipper
@@ -7715,6 +7727,7 @@ Body:
     AegisName: EP21_CLIOLIMA
     Name: Cliolima
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 230-245)
+    # Divine Pride shows no drop chance for aegis_1001644; estimated from drops of the same item type
     Level: 238
     Hp: 32321990
     BaseExp: 619701
@@ -7741,14 +7754,18 @@ Body:
     AttackMotion: 1000
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_SKIPSKIPPER's
     Drops:
       - Item: Cliolima_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001644
+        Rate: 500
   - Id: 22321
     AegisName: EP21_YORKER_A
     Name: Yorker Worker
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 228-244)
+    # Divine Pride shows no drop chance for aegis_1001645; estimated from drops of the same item type
     Level: 236
     Hp: 27752300
     BaseExp: 586912
@@ -7775,10 +7792,15 @@ Body:
     AttackMotion: 1010
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_LETTERSTER's
+    Drops:
+      - Item: aegis_1001645
+        Rate: 500
   - Id: 22322
     AegisName: EP21_YORKER_B
     Name: Yorker Religious Worker
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 227-244)
+    # Divine Pride shows no drop chance for aegis_1001643; estimated from drops of the same item type
     Level: 235
     Hp: 25609178
     BaseExp: 513505
@@ -7805,10 +7827,15 @@ Body:
     AttackMotion: 1010
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_VELELLING's
+    Drops:
+      - Item: aegis_1001643
+        Rate: 500
   - Id: 22323
     AegisName: EP21_YOSTER_A
     Name: Yoster Cleaner
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-252)
+    # Divine Pride shows no drop chance for aegis_1001640; estimated from drops of the same item type
     Level: 241
     Hp: 32900300
     BaseExp: 619701
@@ -7835,10 +7862,13 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_SCALLEG's
     Drops:
       - Item: Yoster_Cleaner_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001640
+        Rate: 500
   - Id: 22324
     AegisName: EP21_YOSTER_B
     Name: Yoster Fixer
@@ -7869,14 +7899,24 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP20_ARMOERDCOPO's
     Drops:
       - Item: Yoster_Fixer_Card
         Rate: 1
         StealProtected: true
+      - Item: Ep20_Copo_Egg_Shell
+        Rate: 1500
+      - Item: Ep20_Copo_Head_F
+        Rate: 1250
+      - Item: Bill_Of_Birds
+        Rate: 2500
+      - Item: Piece_Of_Egg_Shell
+        Rate: 2500
   - Id: 22325
     AegisName: EP21_YOSTER_C
     Name: Yoster Collector
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-253)
+    # Divine Pride shows no drop chance for aegis_1001640; estimated from drops of the same item type
     Level: 242
     Hp: 33905550
     BaseExp: 625452
@@ -7903,10 +7943,13 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_SCALLEG's
     Drops:
       - Item: Yoster_Collect_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001640
+        Rate: 500
   - Id: 22326
     AegisName: EP21_YOSTER_D
     Name: Yoster Negotiator
@@ -7937,14 +7980,24 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP20_ARMOERDCOPO's
     Drops:
       - Item: Yoster_Nego_Card
         Rate: 1
         StealProtected: true
+      - Item: Ep20_Copo_Egg_Shell
+        Rate: 1500
+      - Item: Ep20_Copo_Head_F
+        Rate: 1250
+      - Item: Bill_Of_Birds
+        Rate: 2500
+      - Item: Piece_Of_Egg_Shell
+        Rate: 2500
   - Id: 22327
     AegisName: EP21_YOSTER_E
     Name: Yoster Cooker
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-252)
+    # Divine Pride shows no drop chance for aegis_1001640; estimated from drops of the same item type
     Level: 241
     Hp: 30105830
     BaseExp: 619701
@@ -7971,14 +8024,18 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_SCALLEG's
     Drops:
       - Item: Yoster_Cooker_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001640
+        Rate: 500
   - Id: 22353
     AegisName: EP21_YORMI_A
     Name: Yormi
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-252)
+    # Divine Pride shows no drop chance for aegis_1002696, aegis_1002697, Etel_Dust; estimated from drops of the same item type
     Level: 241
     Hp: 31128830
     BaseExp: 619701
@@ -8005,14 +8062,22 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH2_FOLNIR_HRE's
     Drops:
       - Item: Yormi_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1002696
+        Rate: 500
+      - Item: aegis_1002697
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22354
     AegisName: EP21_YORMI_B
     Name: Yormi Evangelist
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 234-252)
+    # Divine Pride shows no drop chance for aegis_1001992, aegis_1001993, Shadowdecon_Ore, Violet_Jewel; estimated from drops of the same item type
     Level: 242
     Hp: 31885750
     BaseExp: 619701
@@ -8039,14 +8104,24 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ANEMONE's
     Drops:
       - Item: Yormi_M_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001992
+        Rate: 500
+      - Item: aegis_1001993
+        Rate: 500
+      - Item: Shadowdecon_Ore
+        Rate: 500
+      - Item: Violet_Jewel
+        Rate: 500
   - Id: 22355
     AegisName: EP21_YORDOS_A
     Name: Yordos Interrogator
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 242-252)
+    # Divine Pride shows no drop chance for aegis_1001992, aegis_1001993, Shadowdecon_Ore, Violet_Jewel; estimated from drops of the same item type
     Level: 243
     Hp: 31485880
     BaseExp: 619701
@@ -8073,6 +8148,16 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ANEMONE's
+    Drops:
+      - Item: aegis_1001992
+        Rate: 500
+      - Item: aegis_1001993
+        Rate: 500
+      - Item: Shadowdecon_Ore
+        Rate: 500
+      - Item: Violet_Jewel
+        Rate: 500
   - Id: 22356
     AegisName: EP21_YORDOS_B
     Name: Yordos Judge
@@ -8103,6 +8188,16 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP20_ARMOERDCOPO's
+    Drops:
+      - Item: Ep20_Copo_Egg_Shell
+        Rate: 1500
+      - Item: Ep20_Copo_Head_F
+        Rate: 1250
+      - Item: Bill_Of_Birds
+        Rate: 2500
+      - Item: Piece_Of_Egg_Shell
+        Rate: 2500
   - Id: 22357
     AegisName: EP21_YORDOS_C
     Name: Yordos Executor
@@ -8133,14 +8228,24 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP20_ARMOERDCOPO's
     Drops:
       - Item: Yordos_Execute_Card
         Rate: 1
         StealProtected: true
+      - Item: Ep20_Copo_Egg_Shell
+        Rate: 1500
+      - Item: Ep20_Copo_Head_F
+        Rate: 1250
+      - Item: Bill_Of_Birds
+        Rate: 2500
+      - Item: Piece_Of_Egg_Shell
+        Rate: 2500
   - Id: 22358
     AegisName: EP21_YOSCOPUS_A
     Name: Yoscopus Guardian
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 242-253)
+    # Divine Pride shows no drop chance for aegis_1002019, aegis_1001992, Shadowdecon_Ore; estimated from drops of the same item type
     Level: 244
     Hp: 34628630
     BaseExp: 625452
@@ -8167,14 +8272,22 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LOBELIA's
     Drops:
       - Item: Yoscopus_G_Cards
         Rate: 1
         StealProtected: true
+      - Item: aegis_1002019
+        Rate: 500
+      - Item: aegis_1001992
+        Rate: 500
+      - Item: Shadowdecon_Ore
+        Rate: 500
   - Id: 22359
     AegisName: EP21_YOSCOPUS_B
     Name: Yoscopus Shaman
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 242-253)
+    # Divine Pride shows no drop chance for aegis_1002019, aegis_1001992, Shadowdecon_Ore; estimated from drops of the same item type
     Level: 244
     Hp: 32897250
     BaseExp: 625452
@@ -8201,10 +8314,17 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LOBELIA's
     Drops:
       - Item: Yoscopus_S_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1002019
+        Rate: 500
+      - Item: aegis_1001992
+        Rate: 500
+      - Item: Shadowdecon_Ore
+        Rate: 500
   - Id: 22360
     AegisName: EP21_YORTUS_A
     Name: Yortus Bishop
@@ -8235,6 +8355,14 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP20_JORGAN_CLEANER's
+    Drops:
+      - Item: Ep20_Fluor_Cell_Sweet
+        Rate: 1200
+      - Item: Ep20_Fluor_Cell_Salty
+        Rate: 1200
+      - Item: EP19_Unknown_Cell
+        Rate: 750
   - Id: 22361
     AegisName: EP21_YORTUS_B
     Name: Yortus Shaman
@@ -8265,10 +8393,19 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP20_JORGAN_CLEANER's
+    Drops:
+      - Item: Ep20_Fluor_Cell_Sweet
+        Rate: 1200
+      - Item: Ep20_Fluor_Cell_Salty
+        Rate: 1200
+      - Item: EP19_Unknown_Cell
+        Rate: 750
   - Id: 22362
     AegisName: EP21_ICEHORN
     Name: Ice Horn
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for aegis_1001644; estimated from drops of the same item type
     Level: 265
     Hp: 47189684
     BaseExp: 1039283
@@ -8295,10 +8432,13 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are EP21_SKIPSKIPPER's
     Drops:
       - Item: Ice_Horn_Card
         Rate: 1
         StealProtected: true
+      - Item: aegis_1001644
+        Rate: 500
   - Id: 22363
     AegisName: EP21_B_YORTUS_A
     Name: Yortus Judge
@@ -8329,6 +8469,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are TIMBERS's
+    Drops:
+      - Item: Whittling
+        Rate: 2250
+      - Item: Resin
+        Rate: 2000
+      - Item: Wooden_Block
+        Rate: 1500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22364
     AegisName: EP21_B_YORTUS_B
     Name: Yortus Executor
@@ -8359,6 +8515,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are TIMBERS's
+    Drops:
+      - Item: Whittling
+        Rate: 2250
+      - Item: Resin
+        Rate: 2000
+      - Item: Wooden_Block
+        Rate: 1500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22383
     AegisName: VIOLEN
     Name: Violen
@@ -8519,6 +8691,7 @@ Body:
     AegisName: GARLING
     Name: Garling
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 255-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Ice_Water_Drop_Gem, Small_Sewing_Box, Evil_Minded_Ruby, Etel_Dust, Amber; estimated from drops of the same item type
     Level: 274
     Hp: 24468900
     BaseExp: 3426154
@@ -8545,10 +8718,25 @@ Body:
     AttackMotion: 360
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are JACKONETTE's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Ice_Water_Drop_Gem
+        Rate: 500
+      - Item: Small_Sewing_Box
+        Rate: 500
+      - Item: Evil_Minded_Ruby
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Amber
+        Rate: 500
   - Id: 22388
     AegisName: CP_GARLING
     Name: Strong Garling
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Shadowdecon, Ice_Water_Drop_Gem, Small_Sewing_Box, Evil_Minded_Ruby, Etel_Dust, Amber; estimated from drops of the same item type
     Level: 274
     Hp: 53843500
     BaseExp: 10278462
@@ -8575,6 +8763,20 @@ Body:
     AttackMotion: 360
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are JACKONETTE's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Ice_Water_Drop_Gem
+        Rate: 500
+      - Item: Small_Sewing_Box
+        Rate: 500
+      - Item: Evil_Minded_Ruby
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Amber
+        Rate: 500
   - Id: 22389
     AegisName: JACKONETTE
     Name: Jackonette
@@ -8751,6 +8953,7 @@ Body:
     AegisName: NIGHTMARE_PIAMETTE
     Name: Nightmare Piamette
     # Divine Pride shows no attackRange, magicAttackRange, speed, attackSpeed, range; medians of the 7 mvp monsters nearest in level and HP that show them (levels 260-275)
+    # Divine Pride shows no drop chance for Blue_Flame_Heart_Gem, Evil_Minded_Ruby, Heavy_Chain, Etel_Dust, Etel_Stone, Zelunium, Violet_Jewel; estimated from drops of the same item type
     Level: 275
     Hp: 754280400
     BaseExp: 45014318
@@ -8779,6 +8982,22 @@ Body:
     DamageMotion: 480
     Ai: 21
     Class: Boss
+    # Divine Pride shows no drops but the card: the others are LIAMETTE's
+    Drops:
+      - Item: Blue_Flame_Heart_Gem
+        Rate: 500
+      - Item: Evil_Minded_Ruby
+        Rate: 500
+      - Item: Heavy_Chain
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Etel_Stone
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Violet_Jewel
+        Rate: 500
   - Id: 22395
     AegisName: MEDJED
     Name: Medjed
@@ -9087,6 +9306,7 @@ Body:
     AegisName: GUIDE_OF_DEAD
     Name: Guide of Dead
     # Divine Pride shows no attackRange, magicAttackRange, range; medians of the 7 mvp monsters nearest in level and HP that show them (levels 260-270)
+    # Divine Pride shows no drop chance for Congealed_Poison, Dry_Wind_Leaf_Gem, Evil_Black_Bid, Violet_Jewel; estimated from drops of the same item type
     Level: 275
     Hp: 776870690
     BaseExp: 45014318
@@ -9115,6 +9335,16 @@ Body:
     DamageMotion: 480
     Ai: 21
     Class: Boss
+    # Divine Pride shows no drops but the card: the others are OPHOIS's
+    Drops:
+      - Item: Congealed_Poison
+        Rate: 500
+      - Item: Dry_Wind_Leaf_Gem
+        Rate: 500
+      - Item: Evil_Black_Bid
+        Rate: 500
+      - Item: Violet_Jewel
+        Rate: 500
   - Id: 22412
     AegisName: EP21_YORTUS_A_H
     Name: Awakened Yortus Bishop
@@ -9471,6 +9701,7 @@ Body:
     AegisName: EP21_B_YORTUS_A_H
     Name: Awakened Yortus Judge
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, speed, attackSpeed, range; medians of the 7 mvp monsters nearest in level and HP that show them (levels 260-275)
+    # Divine Pride shows no drop chance for Shadowdecon_Ore, Zelunium_Ore, aegis_1001637, Evil_Black_Bid; estimated from drops of the same item type
     Level: 275
     Hp: 523575000
     BaseExp: 7479643
@@ -9499,10 +9730,21 @@ Body:
     DamageMotion: 480
     Ai: 21
     Class: Boss
+    # Divine Pride shows no drops but the card: the others are EP21_YORDOS_C_H's
+    Drops:
+      - Item: Shadowdecon_Ore
+        Rate: 500
+      - Item: Zelunium_Ore
+        Rate: 500
+      - Item: aegis_1001637
+        Rate: 500
+      - Item: Evil_Black_Bid
+        Rate: 500
   - Id: 22422
     AegisName: EP21_B_YORTUS_B_H
     Name: Yortus Executor
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, speed, attackSpeed, range; medians of the 7 mvp monsters nearest in level and HP that show them (levels 260-275)
+    # Divine Pride shows no drop chance for Yorscalp_Spirit, Shining_Crystal, aegis_1001638, Etel_Dust; estimated from drops of the same item type
     Level: 275
     Hp: 523575000
     BaseExp: 7479643
@@ -9531,6 +9773,16 @@ Body:
     DamageMotion: 480
     Ai: 21
     Class: Boss
+    # Divine Pride shows no drops but the card: the others are EP21_YORTUS_A_H's
+    Drops:
+      - Item: Yorscalp_Spirit
+        Rate: 500
+      - Item: Shining_Crystal
+        Rate: 500
+      - Item: aegis_1001638
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22431
     AegisName: TATSI
     Name: Tatsi
@@ -9801,6 +10053,7 @@ Body:
     AegisName: PESKA
     Name: Peska
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, health, baseExperience, jobExperience, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Shadowdecon, Skyblue_Jewel, Blue_Flame_Heart_Gem, Green_Crystal_Fragment, Cool_Liquid, Etel_Dust; estimated from drops of the same item type
     Level: 275
     Hp: 60011470
     BaseExp: 10389072
@@ -9827,6 +10080,20 @@ Body:
     AttackMotion: 505
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are GUERRERO's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Skyblue_Jewel
+        Rate: 500
+      - Item: Blue_Flame_Heart_Gem
+        Rate: 500
+      - Item: Green_Crystal_Fragment
+        Rate: 500
+      - Item: Cool_Liquid
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22439
     AegisName: CP_GUERRERO
     Name: Strong Guerrero
@@ -10354,6 +10621,7 @@ Body:
     AegisName: CH1_SILK_FROG
     Name: Contaminated Silk Frog
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 210-222)
+    # Divine Pride shows no drop chance for aegis_1002020, Sticky_Poison; estimated from drops of the same item type
     Level: 212
     Hp: 13928395
     BaseExp: 669750
@@ -10380,10 +10648,15 @@ Body:
     AttackMotion: 671
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_PEEPING's
     Drops:
       - Item: aegis_300642
         Rate: 1
         StealProtected: true
+      - Item: aegis_1002020
+        Rate: 500
+      - Item: Sticky_Poison
+        Rate: 500
   - Id: 22453
     AegisName: CH1_SILK_SNAIL
     Name: Contaminated Silk Snail
@@ -11290,6 +11563,7 @@ Body:
     AegisName: CH1_TOXIT
     Name: Toxit
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 274
     Hp: 568512900
     BaseExp: 4576122
@@ -11316,14 +11590,18 @@ Body:
     AttackMotion: 769
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
     Drops:
       - Item: aegis_300659
         Rate: 1
         StealProtected: true
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22477
     AegisName: CP_CH1_TOXIT
     Name: Strong Toxit
     # Divine Pride shows no magicAttackRange, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 274
     Hp: 997528320
     BaseExp: 6864182
@@ -11350,6 +11628,10 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
+    Drops:
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22478
     AegisName: CH1_LUNARINA
     Name: Lunarina
@@ -11391,6 +11673,7 @@ Body:
     AegisName: CP_CH1_LUNARINA
     Name: Strong Lunarina
     # Divine Pride shows no magicAttackRange, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 275
     Hp: 1016800128
     BaseExp: 6966774
@@ -11417,10 +11700,15 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
+    Drops:
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22480
     AegisName: CH1_BLOODY_SLASHER
     Name: Bloody Slasher
     # Divine Pride shows no magicAttackRange, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 273
     Hp: 585701874
     BaseExp: 4467740
@@ -11447,14 +11735,18 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
     Drops:
       - Item: aegis_300661
         Rate: 1
         StealProtected: true
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22481
     AegisName: CP_CH1_BLOODY_SLASHER
     Name: Strong Bloody Slasher
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 273
     Hp: 1022199228
     BaseExp: 6701612
@@ -11481,10 +11773,15 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
+    Drops:
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22482
     AegisName: CH1_SHADIEST
     Name: Shadyist
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 274
     Hp: 600796440
     BaseExp: 4497842
@@ -11511,14 +11808,18 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
     Drops:
       - Item: aegis_300662
         Rate: 1
         StealProtected: true
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22483
     AegisName: CP_CH1_SHADIEST
     Name: Strong Shadyist
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 274
     Hp: 1052741610
     BaseExp: 6746762
@@ -11545,6 +11846,10 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
+    Drops:
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22484
     AegisName: CH1_SUCCUBUS
     Name: High Succubus
@@ -11588,6 +11893,7 @@ Body:
     AegisName: CP_CH1_SUCCUBUS
     Name: Strong High Succubus
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Fruit_Of_Mastela, Shining_Crystal; estimated from drops of the same item type
     Level: 275
     Hp: 1058869602
     BaseExp: 6701612
@@ -11614,10 +11920,17 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_SUCCUBUS's
+    Drops:
+      - Item: Fruit_Of_Mastela
+        Rate: 2750
+      - Item: Shining_Crystal
+        Rate: 500
   - Id: 22486
     AegisName: CH1_INCCUBUS
     Name: High Incubus
     # Divine Pride shows no str, agi, vit, int, dex, luk, def, mDef, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 276
     Hp: 592310700
     BaseExp: 4644516
@@ -11644,14 +11957,18 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
     Drops:
       - Item: aegis_300664
         Rate: 1
         StealProtected: true
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22487
     AegisName: CP_CH1_INCCUBUS
     Name: Strong High Incubus
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Moving_Black_Things; estimated from drops of the same item type
     Level: 276
     Hp: 1036645128
     BaseExp: 7070364
@@ -11678,6 +11995,10 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_LUNARINA's
+    Drops:
+      - Item: Moving_Black_Things
+        Rate: 500
   - Id: 22488
     AegisName: CH1_ABYSS_KNIGHT
     Name: Abyss Knight Commander
@@ -11719,6 +12040,7 @@ Body:
     AegisName: CP_CH1_ABYSS_KNIGHT
     Name: Abyss Knight Commander
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 278
     Hp: 1175825502
     BaseExp: 7280562
@@ -11745,10 +12067,15 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22494
     AegisName: CH1_BULGASARI
     Name: Starfish
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 243-274)
+    # Divine Pride shows no drop chance for Root_Of_Maneater, aegis_1001977; estimated from drops of the same item type
     Level: 250
     Hp: 490171350
     BaseExp: 18802850
@@ -11775,14 +12102,20 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_FIRE_FLOWER's
     Drops:
       - Item: aegis_300666
         Rate: 1
         StealProtected: true
+      - Item: Root_Of_Maneater
+        Rate: 500
+      - Item: aegis_1001977
+        Rate: 500
   - Id: 22495
     AegisName: CH1_GLUTTO
     Name: Glutton
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Etel_Dust, aegis_1001992, aegis_1002018; estimated from drops of the same item type
     Level: 265
     Hp: 733828670
     BaseExp: 24650096
@@ -11809,10 +12142,17 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_MYOSOTIS's
     Drops:
       - Item: aegis_300667
         Rate: 1
         StealProtected: true
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: aegis_1001992
+        Rate: 500
+      - Item: aegis_1002018
+        Rate: 500
   - Id: 22507
     AegisName: CH1_RK
     Name: M.RK-4480
@@ -12421,6 +12761,7 @@ Body:
     AegisName: CH1_RK_1
     Name: M.RK-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 516663215
     BaseExp: 4644516
@@ -12447,10 +12788,15 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22526
     AegisName: CH1_MC_M_1
     Name: M.MC.M-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 282
     Hp: 583204061
     BaseExp: 4644516
@@ -12477,10 +12823,15 @@ Body:
     AttackMotion: 336
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22527
     AegisName: CH1_SC_1
     Name: M.SC-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 281
     Hp: 455879766
     BaseExp: 4644516
@@ -12507,10 +12858,15 @@ Body:
     AttackMotion: 336
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22528
     AegisName: CH1_RA_1
     Name: M.RA-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 282
     Hp: 486634384
     BaseExp: 4644516
@@ -12537,10 +12893,15 @@ Body:
     AttackMotion: 433
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22529
     AegisName: CH1_SO_1
     Name: M.SO-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 444691488
     BaseExp: 4644516
@@ -12567,10 +12928,15 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22530
     AegisName: CH1_AB_1
     Name: M.AB-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 516650486
     BaseExp: 4644516
@@ -12597,10 +12963,15 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22531
     AegisName: CH1_MI_D_1
     Name: M.MI.D-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 281
     Hp: 547567506
     BaseExp: 4644516
@@ -12627,10 +12998,15 @@ Body:
     AttackMotion: 385
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22532
     AegisName: CH1_GC_D_1
     Name: M.GC.D-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 473146930
     BaseExp: 4644516
@@ -12657,10 +13033,15 @@ Body:
     AttackMotion: 541
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22542
     AegisName: CH1_RG_1
     Name: M.RG-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 581844108
     BaseExp: 4644516
@@ -12687,10 +13068,15 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22543
     AegisName: CH1_MC_1
     Name: M.MC-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 516650486
     BaseExp: 4644516
@@ -12717,10 +13103,15 @@ Body:
     AttackMotion: 420
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22544
     AegisName: CH1_GN_1
     Name: M.GN-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 282
     Hp: 507177447
     BaseExp: 4644516
@@ -12747,10 +13138,15 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22545
     AegisName: CH1_GC_1
     Name: M.GC-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 473133453
     BaseExp: 4644516
@@ -12777,10 +13173,15 @@ Body:
     AttackMotion: 433
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22546
     AegisName: CH1_MI_1
     Name: M.MI-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 281
     Hp: 477657968
     BaseExp: 4644516
@@ -12807,10 +13208,15 @@ Body:
     AttackMotion: 433
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22547
     AegisName: CH1_SR_1
     Name: M.SR-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 282
     Hp: 583204061
     BaseExp: 4644516
@@ -12837,10 +13243,15 @@ Body:
     AttackMotion: 336
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22548
     AegisName: CH1_WL_1
     Name: M.WL-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 283
     Hp: 444691488
     BaseExp: 4644516
@@ -12867,10 +13278,15 @@ Body:
     AttackMotion: 541
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22549
     AegisName: CH1_WA_1
     Name: M.WA-0001
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-280)
+    # Divine Pride shows no drop chance for Yggdrasilberry; estimated from drops of the same item type
     Level: 281
     Hp: 497846677
     BaseExp: 4644516
@@ -12897,6 +13313,10 @@ Body:
     AttackMotion: 336
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CH1_ABYSS_KNIGHT's
+    Drops:
+      - Item: Yggdrasilberry
+        Rate: 2750
   - Id: 22669
     AegisName: G_CH1_RK_ER
     Name: M.RK-ERROR
@@ -14205,6 +14625,7 @@ Body:
     AegisName: CP_ABI_RAKEHAND
     Name: Rakehand
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Sticky_Mucus, ABI_Ground_Rune_Ore, ABI_Ground_Essence, Dimension_Energy_BL, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 177225054
     BaseExp: 17826210
@@ -14231,6 +14652,18 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_RAKEHAND's
+    Drops:
+      - Item: Sticky_Mucus
+        Rate: 500
+      - Item: ABI_Ground_Rune_Ore
+        Rate: 500
+      - Item: ABI_Ground_Essence
+        Rate: 500
+      - Item: Dimension_Energy_BL
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
   - Id: 22730
     AegisName: ABI_GOAT
     Name: Goat
@@ -14337,6 +14770,7 @@ Body:
     AegisName: CP_ABI_LETTERSTER
     Name: Letterster
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Ground_Rune_Ore; estimated from drops of the same item type
     Level: 278
     Hp: 191885536
     BaseExp: 18373568
@@ -14363,10 +14797,15 @@ Body:
     AttackMotion: 769
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_LETTERSTER's
+    Drops:
+      - Item: ABI_Ground_Rune_Ore
+        Rate: 500
   - Id: 22739
     AegisName: ABI_VENENUM2
     Name: Venenum2
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, aegis_1002679, aegis_1002842, ABI_Lava_Rune_Ore, Frontier_Magic_Dust, ABI_Lava_Essence; estimated from drops of the same item type
     Level: 278
     Hp: 112254574
     BaseExp: 12420562
@@ -14393,10 +14832,28 @@ Body:
     AttackMotion: 794
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_FLAMEBULL's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: aegis_1002679
+        Rate: 500
+      - Item: aegis_1002842
+        Rate: 500
+      - Item: ABI_Lava_Rune_Ore
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: ABI_Lava_Essence
+        Rate: 500
+        StealProtected: true
   - Id: 22740
     AegisName: CP_ABI_VENENUM2
     Name: Venenum2
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Lava_Essence, Frontier_Magic_Dust, ABI_Lava_Rune_Ore, aegis_1002679, Shadowdecon, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 278
     Hp: 196456996
     BaseExp: 18630844
@@ -14423,10 +14880,27 @@ Body:
     AttackMotion: 794
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_FLAMEBULL's
+    Drops:
+      - Item: ABI_Lava_Essence
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: ABI_Lava_Rune_Ore
+        Rate: 500
+      - Item: aegis_1002679
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
   - Id: 22741
     AegisName: ABI_DOLORIAN
     Name: Dolorian
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Etel_Dust, Shadowdecon, Brigan; estimated from drops of the same item type
     Level: 277
     Hp: 91905004
     BaseExp: 12149268
@@ -14453,10 +14927,21 @@ Body:
     AttackMotion: 1250
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_DARK_FRAME's
+    Drops:
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Brigan
+        Rate: 500
   - Id: 22742
     AegisName: CP_ABI_DOLORIAN
     Name: Dolorian
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Brigan, Etel_Dust, Frontier_Magic_Dust, Chaotic_Rune; estimated from drops of the same item type
     Level: 277
     Hp: 160842989
     BaseExp: 18223902
@@ -14483,10 +14968,21 @@ Body:
     AttackMotion: 1250
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_DARK_FRAME's
+    Drops:
+      - Item: Brigan
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Chaotic_Rune
+        Rate: 500
   - Id: 22743
     AegisName: ABI_LISTENER
     Name: Listener
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Rent_Spell_Book; estimated from drops of the same item type
     Level: 279
     Hp: 101579528
     BaseExp: 12428424
@@ -14513,10 +15009,17 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_NECROMANCER's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Rent_Spell_Book
+        Rate: 500
   - Id: 22744
     AegisName: CP_ABI_LISTENER
     Name: Listener
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Chaotic_Rune, Rent_Spell_Book, Shadowdecon, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 279
     Hp: 177775440
     BaseExp: 18642634
@@ -14543,10 +15046,23 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_NECROMANCER's
+    Drops:
+      - Item: Chaotic_Rune
+        Rate: 500
+      - Item: Rent_Spell_Book
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
   - Id: 22745
     AegisName: ABI_GASTER
     Name: Gaster
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Zelunium, Shadowdecon, Soft_Feather, Etel_Dust, Chaotic_Rune; estimated from drops of the same item type
     Level: 276
     Hp: 87869090
     BaseExp: 11895400
@@ -14573,10 +15089,24 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_PLASMA_ARCH's
+    Drops:
+      - Item: Zelunium
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Soft_Feather
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Chaotic_Rune
+        Rate: 500
+        StealProtected: true
   - Id: 22746
     AegisName: CP_ABI_GASTER
     Name: Gaster
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Soft_Feather; estimated from drops of the same item type
     Level: 276
     Hp: 153780100
     BaseExp: 17843100
@@ -14603,10 +15133,17 @@ Body:
     AttackMotion: 649
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_PLASMA_ARCH's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Soft_Feather
+        Rate: 500
   - Id: 22747
     AegisName: ABI_FROZENWOLF
     Name: Frozenwolf
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Etel_Dust, Zelunium, Skull, Dimension_Energy_BL, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 110345041
     BaseExp: 11895400
@@ -14633,10 +15170,26 @@ Body:
     AttackMotion: 420
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_DARK_PRIEST's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Skull
+        Rate: 500
+      - Item: Dimension_Energy_BL
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+        StealProtected: true
   - Id: 22748
     AegisName: CP_ABI_FROZENWOLF
     Name: Frozenwolf
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for aegis_1001990, Zelunium, Etel_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 193114450
     BaseExp: 17843100
@@ -14663,10 +15216,19 @@ Body:
     AttackMotion: 420
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_FIRELOOP's
+    Drops:
+      - Item: aegis_1001990
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22749
     AegisName: ABI_ICE_GHOST
     Name: Ice Ghost
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Shadowdecon, Rent_Spell_Book; estimated from drops of the same item type
     Level: 279
     Hp: 100521547
     BaseExp: 12407008
@@ -14693,10 +15255,17 @@ Body:
     AttackMotion: 336
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_NECROMANCER's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Rent_Spell_Book
+        Rate: 500
   - Id: 22750
     AegisName: CP_ABI_ICE_GHOST
     Name: Ice Ghost
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Chaotic_Rune, Rent_Spell_Book, Shadowdecon, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 279
     Hp: 175923411
     BaseExp: 18610512
@@ -14723,10 +15292,23 @@ Body:
     AttackMotion: 1053
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_NECROMANCER's
+    Drops:
+      - Item: Chaotic_Rune
+        Rate: 500
+      - Item: Rent_Spell_Book
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
   - Id: 22751
     AegisName: ABI_ICEWIND1
     Name: Icewind1
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Ground_Rune_Ore; estimated from drops of the same item type
     Level: 278
     Hp: 109982707
     BaseExp: 12237450
@@ -14753,10 +15335,15 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_LETTERSTER's
+    Drops:
+      - Item: ABI_Ground_Rune_Ore
+        Rate: 500
   - Id: 22752
     AegisName: CP_ABI_ICEWIND1
     Name: Icewind1
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Lava_Essence, Frontier_Magic_Dust, ABI_Lava_Rune_Ore, aegis_1002679, Shadowdecon, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 278
     Hp: 192477456
     BaseExp: 18356174
@@ -14783,10 +15370,27 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_FLAMEBULL's
+    Drops:
+      - Item: ABI_Lava_Essence
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: ABI_Lava_Rune_Ore
+        Rate: 500
+      - Item: aegis_1002679
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
   - Id: 22753
     AegisName: ABI_ICYBLAST
     Name: Icyblast
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for Etel_Dust, Frontier_Magic_Dust, ABI_Lava_Rune_Ore, BurningSkin, ABI_Lava_Essence; estimated from drops of the same item type
     Level: 277
     Hp: 107236719
     BaseExp: 11933752
@@ -14813,10 +15417,23 @@ Body:
     AttackMotion: 962
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_FULBUK's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: ABI_Lava_Rune_Ore
+        Rate: 500
+      - Item: BurningSkin
+        Rate: 500
+      - Item: ABI_Lava_Essence
+        Rate: 500
   - Id: 22754
     AegisName: CP_ABI_ICYBLAST
     Name: Icyblast
     # Divine Pride shows no magicAttackRange, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-265)
+    # Divine Pride shows no drop chance for ABI_Lava_Essence, BurningSkin, ABI_Lava_Rune_Ore, Frontier_Magic_Dust, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 277
     Hp: 187674143
     BaseExp: 17900628
@@ -14843,6 +15460,20 @@ Body:
     AttackMotion: 962
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_FULBUK's
+    Drops:
+      - Item: ABI_Lava_Essence
+        Rate: 500
+      - Item: BurningSkin
+        Rate: 500
+      - Item: ABI_Lava_Rune_Ore
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
   - Id: 22771
     AegisName: VR_COPO
     Name: Vr Copo
@@ -15069,6 +15700,7 @@ Body:
     AegisName: VR_UNF_FLOWER
     Name: Vr Unf Flower
     # Divine Pride shows no str, agi, vit, int, dex, luk, attackRange, magicAttackRange, baseExperience, jobExperience, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 223-228)
+    # Divine Pride shows no drop chance for Etel_Dust, Zelunium_Ore; estimated from drops of the same item type
     Level: 224
     Hp: 23017872
     BaseExp: 439231
@@ -15095,6 +15727,12 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are VR_CALMARING's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium_Ore
+        Rate: 500
   - Id: 22779
     AegisName: VR_CALMARING
     Name: Vr Calmaring
@@ -15331,6 +15969,18 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_HILL_WIND's
+    Drops:
+      - Item: Harpy's_Feather
+        Rate: 2000
+      - Item: Harpy's_Claw
+        Rate: 1500
+      - Item: Shining_Crystal
+        Rate: 2000
+      - Item: Shadowdecon
+        Rate: 17
+      - Item: Shadowdecon_Ore
+        Rate: 180
   - Id: 22786
     AegisName: VR_CST_MANDRA
     Name: Vr Cst Mandra
@@ -15361,6 +16011,18 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_HILL_WIND's
+    Drops:
+      - Item: Harpy's_Feather
+        Rate: 2000
+      - Item: Harpy's_Claw
+        Rate: 1500
+      - Item: Shining_Crystal
+        Rate: 2000
+      - Item: Shadowdecon
+        Rate: 17
+      - Item: Shadowdecon_Ore
+        Rate: 180
   - Id: 22787
     AegisName: VR_CST_MIMIC
     Name: Vr Cst Mimic
@@ -15391,6 +16053,18 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_HILL_WIND's
+    Drops:
+      - Item: Harpy's_Feather
+        Rate: 2000
+      - Item: Harpy's_Claw
+        Rate: 1500
+      - Item: Shining_Crystal
+        Rate: 2000
+      - Item: Shadowdecon
+        Rate: 17
+      - Item: Shadowdecon_Ore
+        Rate: 180
   - Id: 22789
     AegisName: VR_CST_WOLF
     Name: Vr Cst Wolf
@@ -15421,6 +16095,18 @@ Body:
     AttackMotion: 671
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_CORNUS's
+    Drops:
+      - Item: Mystic_Horn
+        Rate: 4000
+      - Item: Soft_Feather
+        Rate: 1500
+      - Item: Fresh_Pear
+        Rate: 2000
+      - Item: Shadowdecon
+        Rate: 17
+      - Item: Shadowdecon_Ore
+        Rate: 180
   - Id: 22790
     AegisName: VR_CST_KOBOLD
     Name: Vr Cst Kobold
@@ -15451,6 +16137,18 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_ANCIENT_MUMMY's
+    Drops:
+      - Item: Rotten_Bandage
+        Rate: 2207
+      - Item: Evil_Black_Bid
+        Rate: 2000
+      - Item: Silver_Ring
+        Rate: 50
+      - Item: Zelunium
+        Rate: 17
+      - Item: Zelunium_Ore
+        Rate: 180
   - Id: 22791
     AegisName: VR_CST_G_SPIDER
     Name: Vr Cst G Spider
@@ -15481,6 +16179,18 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_ANCIENT_MUMMY's
+    Drops:
+      - Item: Rotten_Bandage
+        Rate: 2207
+      - Item: Evil_Black_Bid
+        Rate: 2000
+      - Item: Silver_Ring
+        Rate: 50
+      - Item: Zelunium
+        Rate: 17
+      - Item: Zelunium_Ore
+        Rate: 180
   - Id: 22793
     AegisName: VR_CST_GARGOYLE
     Name: Vr Cst Gargoyle
@@ -15511,6 +16221,18 @@ Body:
     AttackMotion: 671
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_CORNUS's
+    Drops:
+      - Item: Mystic_Horn
+        Rate: 4000
+      - Item: Soft_Feather
+        Rate: 1500
+      - Item: Fresh_Pear
+        Rate: 2000
+      - Item: Shadowdecon
+        Rate: 17
+      - Item: Shadowdecon_Ore
+        Rate: 180
   - Id: 22794
     AegisName: VR_CST_BEHOLDER
     Name: Vr Cst Beholder
@@ -15541,6 +16263,18 @@ Body:
     AttackMotion: 671
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_CORNUS's
+    Drops:
+      - Item: Mystic_Horn
+        Rate: 4000
+      - Item: Soft_Feather
+        Rate: 1500
+      - Item: Fresh_Pear
+        Rate: 2000
+      - Item: Shadowdecon
+        Rate: 17
+      - Item: Shadowdecon_Ore
+        Rate: 180
   - Id: 22795
     AegisName: VR_CST_MINOROUS
     Name: Vr Cst Minorous
@@ -15571,6 +16305,18 @@ Body:
     AttackMotion: 671
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ECO_RHYNCHO's
+    Drops:
+      - Item: Karvodailnirol
+        Rate: 10
+      - Item: Cool_Liquid
+        Rate: 2000
+      - Item: Starsand_Of_Witch
+        Rate: 1250
+      - Item: Shadowdecon
+        Rate: 17
+      - Item: Shadowdecon_Ore
+        Rate: 180
   - Id: 22797
     AegisName: ABI_WRAITH_DEAD
     Name: Wraith Dead
@@ -16560,6 +17306,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are HARDROCK_TITAN's
+    Drops:
+      - Item: Evil_Minded_Ruby
+        Rate: 2350
+      - Item: Great_Nature
+        Rate: 250
+      - Item: Stone_Heart
+        Rate: 2500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Shadowdecon
+        Rate: 25
   - Id: 22825
     AegisName: VR_CHIMERA
     Name: Vr Chimera
@@ -16590,6 +17352,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are HARDROCK_TITAN's
+    Drops:
+      - Item: Evil_Minded_Ruby
+        Rate: 2350
+      - Item: Great_Nature
+        Rate: 250
+      - Item: Stone_Heart
+        Rate: 2500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Shadowdecon
+        Rate: 25
   - Id: 22826
     AegisName: VR_GARGOYLE
     Name: Vr Gargoyle
@@ -16620,6 +17398,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are PUNCH_BUG's
+    Drops:
+      - Item: Fresh_Pear
+        Rate: 2250
+      - Item: Worm_Peelings
+        Rate: 250
+      - Item: Solid_Peeling
+        Rate: 3250
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22827
     AegisName: VR_KHALITZBURG
     Name: Vr Khalitzburg
@@ -16650,6 +17444,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are PUNCH_BUG's
+    Drops:
+      - Item: Fresh_Pear
+        Rate: 2250
+      - Item: Worm_Peelings
+        Rate: 250
+      - Item: Solid_Peeling
+        Rate: 3250
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22828
     AegisName: VR_KNIGHT_OF_ABYSS
     Name: Vr Knight Of Abyss
@@ -16680,6 +17490,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are AFERDE's
+    Drops:
+      - Item: Slicky_Fluid
+        Rate: 2250
+      - Item: Short_Leg
+        Rate: 2668
+      - Item: Zargon
+        Rate: 600
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22829
     AegisName: VR_RAYDRIC
     Name: Vr Raydric
@@ -16710,6 +17536,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are PUNCH_BUG's
+    Drops:
+      - Item: Fresh_Pear
+        Rate: 2250
+      - Item: Worm_Peelings
+        Rate: 250
+      - Item: Solid_Peeling
+        Rate: 3250
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22830
     AegisName: VR_RAYDRIC_ARCHER
     Name: Vr Raydric Archer
@@ -16740,6 +17582,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are PUNCH_BUG's
+    Drops:
+      - Item: Fresh_Pear
+        Rate: 2250
+      - Item: Worm_Peelings
+        Rate: 250
+      - Item: Solid_Peeling
+        Rate: 3250
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22831
     AegisName: VR_ANCIENT_WORM
     Name: Vr Ancient Worm
@@ -16770,6 +17628,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are HARDROCK_TITAN's
+    Drops:
+      - Item: Evil_Minded_Ruby
+        Rate: 2350
+      - Item: Great_Nature
+        Rate: 250
+      - Item: Stone_Heart
+        Rate: 2500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Shadowdecon
+        Rate: 25
   - Id: 22832
     AegisName: VR_CATERPILLAR
     Name: Vr Caterpillar
@@ -16800,6 +17674,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are HARDROCK_TITAN's
+    Drops:
+      - Item: Evil_Minded_Ruby
+        Rate: 2350
+      - Item: Great_Nature
+        Rate: 250
+      - Item: Stone_Heart
+        Rate: 2500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Shadowdecon
+        Rate: 25
   - Id: 22833
     AegisName: VR_CREMY_FEAR
     Name: Vr Cremy Fear
@@ -16830,6 +17720,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are PUNCH_BUG's
+    Drops:
+      - Item: Fresh_Pear
+        Rate: 2250
+      - Item: Worm_Peelings
+        Rate: 250
+      - Item: Solid_Peeling
+        Rate: 3250
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
   - Id: 22834
     AegisName: VR_GIANT_HONET
     Name: Vr Giant Honet
@@ -16860,6 +17766,22 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are HARDROCK_TITAN's
+    Drops:
+      - Item: Evil_Minded_Ruby
+        Rate: 2350
+      - Item: Great_Nature
+        Rate: 250
+      - Item: Stone_Heart
+        Rate: 2500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Shadowdecon
+        Rate: 25
   - Id: 22835
     AegisName: VR_GIANT_SPIDER
     Name: Vr Giant Spider
@@ -16890,10 +17812,27 @@ Body:
     AttackMotion: 658
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are HARDROCK_TITAN's
+    Drops:
+      - Item: Evil_Minded_Ruby
+        Rate: 2350
+      - Item: Great_Nature
+        Rate: 250
+      - Item: Stone_Heart
+        Rate: 2500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Shadowdecon
+        Rate: 25
   - Id: 22836
     AegisName: ABI_ALIOT
     Name: Aliot
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, Zelunium, Rotten_Bandage; estimated from drops of the same item type
     Level: 279
     Hp: 93027802
     BaseExp: 12428424
@@ -16920,10 +17859,21 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_EVIL_DRUID's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Rotten_Bandage
+        Rate: 500
   - Id: 22837
     AegisName: CP_ABI_ALIOT
     Name: Aliot
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Rotten_Bandage, Shadowdecon, Etel_Dust; estimated from drops of the same item type
     Level: 279
     Hp: 162811171
     BaseExp: 18642634
@@ -16950,10 +17900,19 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_EVIL_DRUID's
+    Drops:
+      - Item: Rotten_Bandage
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22838
     AegisName: ABI_ARCHDAM
     Name: Archdam
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Earthworm_Peeling; estimated from drops of the same item type
     Level: 277
     Hp: 101838249
     BaseExp: 12032054
@@ -16980,10 +17939,15 @@ Body:
     AttackMotion: 962
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_HODE's
+    Drops:
+      - Item: Earthworm_Peeling
+        Rate: 500
   - Id: 22839
     AegisName: CP_ABI_ARCHDAM
     Name: Archdam
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for ABI_Ground_Rune_Ore, Chaotic_Essence, Etel_Dust, Earthworm_Peeling; estimated from drops of the same item type
     Level: 277
     Hp: 178228333
     BaseExp: 18048080
@@ -17010,10 +17974,21 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_HODE's
+    Drops:
+      - Item: ABI_Ground_Rune_Ore
+        Rate: 500
+      - Item: Chaotic_Essence
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Earthworm_Peeling
+        Rate: 500
   - Id: 22840
     AegisName: ABI_ALARM
     Name: Alarm
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Dimension_Energy_YL, Etel_Dust, Blaze_Stone, Shadowdecon, Zelunium; estimated from drops of the same item type
     Level: 276
     Hp: 98973661
     BaseExp: 11867260
@@ -17040,10 +18015,23 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_BURNING_KNIGHT's
+    Drops:
+      - Item: Dimension_Energy_YL
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Blaze_Stone
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
   - Id: 22841
     AegisName: CP_ABI_ALARM
     Name: Alarm
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Zelunium, Blaze_Stone, Etel_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 173218385
     BaseExp: 17800890
@@ -17070,10 +18058,19 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_BURNING_KNIGHT's
+    Drops:
+      - Item: Zelunium
+        Rate: 500
+      - Item: Blaze_Stone
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22842
     AegisName: ABI_DIMIK
     Name: Dimik
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Etel_Dust, Shadowdecon, Brigan; estimated from drops of the same item type
     Level: 278
     Hp: 87582634
     BaseExp: 12137552
@@ -17100,10 +18097,21 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_DARK_FRAME's
+    Drops:
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Brigan
+        Rate: 500
   - Id: 22843
     AegisName: CP_ABI_DIMIK
     Name: Dimik
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Brigan, Etel_Dust, Frontier_Magic_Dust, Chaotic_Rune; estimated from drops of the same item type
     Level: 278
     Hp: 153277027
     BaseExp: 18206328
@@ -17130,10 +18138,21 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_DARK_FRAME's
+    Drops:
+      - Item: Brigan
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Chaotic_Rune
+        Rate: 500
   - Id: 22844
     AegisName: ABI_HARPY
     Name: Harpy
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Shadowdecon, Soft_Feather, Zelunium, Etel_Dust, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 84320337
     BaseExp: 11884140
@@ -17160,10 +18179,23 @@ Body:
     AttackMotion: 862
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_HAPPY_GIVER's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Soft_Feather
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
   - Id: 22845
     AegisName: CP_ABI_HARPY
     Name: Harpy
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Etel_Dust, Zelunium, Soft_Feather; estimated from drops of the same item type
     Level: 276
     Hp: 147569712
     BaseExp: 17826210
@@ -17190,10 +18222,19 @@ Body:
     AttackMotion: 1149
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_HAPPY_GIVER's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Soft_Feather
+        Rate: 500
   - Id: 22846
     AegisName: ABI_MENBLATT
     Name: Menblatt
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Shadowdecon, Zelunium, Etel_Dust, Skel_Bone; estimated from drops of the same item type
     Level: 278
     Hp: 91300562
     BaseExp: 12049550
@@ -17220,10 +18261,21 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_HELL_POODLE's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Skel_Bone
+        Rate: 500
   - Id: 22847
     AegisName: CP_ABI_MENBLATT
     Name: Menblatt
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Skel_Bone, Etel_Dust, Zelunium, Shadowdecon; estimated from drops of the same item type
     Level: 278
     Hp: 159791757
     BaseExp: 18639314
@@ -17250,10 +18302,21 @@ Body:
     AttackMotion: 719
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_HELL_POODLE's
+    Drops:
+      - Item: Skel_Bone
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
   - Id: 22848
     AegisName: ABI_LUCIOLA_VESPA
     Name: Luciola Vespa
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, Zelunium, Rotten_Bandage; estimated from drops of the same item type
     Level: 279
     Hp: 96875145
     BaseExp: 12185522
@@ -17280,10 +18343,21 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_EVIL_DRUID's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Rotten_Bandage
+        Rate: 500
   - Id: 22849
     AegisName: CP_ABI_LUCIOLA_VESPA
     Name: Luciola Vespa
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Rotten_Bandage, Shadowdecon, Etel_Dust; estimated from drops of the same item type
     Level: 279
     Hp: 169547569
     BaseExp: 18278284
@@ -17310,10 +18384,19 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_EVIL_DRUID's
+    Drops:
+      - Item: Rotten_Bandage
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22850
     AegisName: ABI_WOOTAN_SHOOTER
     Name: Wootan Shooter
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for Etel_Dust, Frontier_Magic_Dust, ABI_Lava_Rune_Ore, BurningSkin, ABI_Lava_Essence; estimated from drops of the same item type
     Level: 277
     Hp: 110142058
     BaseExp: 12141610
@@ -17340,10 +18423,23 @@ Body:
     AttackMotion: 481
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_FULBUK's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: ABI_Lava_Rune_Ore
+        Rate: 500
+      - Item: BurningSkin
+        Rate: 500
+      - Item: ABI_Lava_Essence
+        Rate: 500
   - Id: 22851
     AegisName: CP_ABI_WOOTAN_SHOOTER
     Name: Wootan Shooter
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-278)
+    # Divine Pride shows no drop chance for ABI_Lava_Essence, BurningSkin, ABI_Lava_Rune_Ore, Frontier_Magic_Dust, Etel_Dust, Zelunium; estimated from drops of the same item type
     Level: 277
     Hp: 192759302
     BaseExp: 18212416
@@ -17370,10 +18466,25 @@ Body:
     AttackMotion: 769
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_FULBUK's
+    Drops:
+      - Item: ABI_Lava_Essence
+        Rate: 500
+      - Item: BurningSkin
+        Rate: 500
+      - Item: ABI_Lava_Rune_Ore
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
   - Id: 22852
     AegisName: ABI_TIYANAK
     Name: Tiyanak
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Frontier_Magic_Dust, Etel_Dust, Shadowdecon, Brigan; estimated from drops of the same item type
     Level: 277
     Hp: 85938968
     BaseExp: 12158396
@@ -17400,10 +18511,21 @@ Body:
     AttackMotion: 1010
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_DARK_FRAME's
+    Drops:
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Brigan
+        Rate: 500
   - Id: 22853
     AegisName: CP_ABI_TIYANAK
     Name: Tiyanak
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Brigan, Etel_Dust, Frontier_Magic_Dust, Chaotic_Rune; estimated from drops of the same item type
     Level: 277
     Hp: 150401219
     BaseExp: 18237592
@@ -17430,10 +18552,21 @@ Body:
     AttackMotion: 1010
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_DARK_FRAME's
+    Drops:
+      - Item: Brigan
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+      - Item: Chaotic_Rune
+        Rate: 500
   - Id: 22854
     AegisName: ABI_ZENORC
     Name: Zenorc
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Shadowdecon, Zelunium, Etel_Dust, Skel_Bone; estimated from drops of the same item type
     Level: 278
     Hp: 93667841
     BaseExp: 12328086
@@ -17460,10 +18593,21 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_HELL_POODLE's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Skel_Bone
+        Rate: 500
   - Id: 22855
     AegisName: CP_ABI_ZENORC
     Name: Zenorc
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Skel_Bone, Etel_Dust, Zelunium, Shadowdecon; estimated from drops of the same item type
     Level: 278
     Hp: 163928646
     BaseExp: 18492128
@@ -17490,10 +18634,21 @@ Body:
     AttackMotion: 1010
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_HELL_POODLE's
+    Drops:
+      - Item: Skel_Bone
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
   - Id: 22856
     AegisName: ABI_TWIN_CAPUT1
     Name: Twin Caput1
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for Shadowdecon, Etel_Dust, Zelunium, Skull, Dimension_Energy_BL, Frontier_Magic_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 108066018
     BaseExp: 12061966
@@ -17520,10 +18675,26 @@ Body:
     AttackMotion: 613
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_DARK_PRIEST's
+    Drops:
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Skull
+        Rate: 500
+      - Item: Dimension_Energy_BL
+        Rate: 500
+      - Item: Frontier_Magic_Dust
+        Rate: 500
+        StealProtected: true
   - Id: 22857
     AegisName: CP_ABI_TWIN_CAPUT1
     Name: Twin Caput1
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-277)
+    # Divine Pride shows no drop chance for aegis_1001990, Zelunium, Etel_Dust; estimated from drops of the same item type
     Level: 276
     Hp: 189127223
     BaseExp: 18092948
@@ -17550,10 +18721,19 @@ Body:
     AttackMotion: 781
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_FIRELOOP's
+    Drops:
+      - Item: aegis_1001990
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 22858
     AegisName: ABI_WAKWAK
     Name: Wakwak
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Etel_Dust, Shadowdecon, Zelunium, Rotten_Bandage; estimated from drops of the same item type
     Level: 279
     Hp: 93015269
     BaseExp: 12529632
@@ -17580,10 +18760,21 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are ABI_EVIL_DRUID's
+    Drops:
+      - Item: Etel_Dust
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Zelunium
+        Rate: 500
+      - Item: Rotten_Bandage
+        Rate: 500
   - Id: 22859
     AegisName: CP_ABI_WAKWAK
     Name: Wakwak
     # Divine Pride shows no magicAttackRange, speed, attackSpeed, range; medians of the 7 normal monsters nearest in level and HP that show them (levels 262-279)
+    # Divine Pride shows no drop chance for Rotten_Bandage, Shadowdecon, Etel_Dust; estimated from drops of the same item type
     Level: 279
     Hp: 162785950
     BaseExp: 18794448
@@ -17610,6 +18801,14 @@ Body:
     AttackMotion: 575
     DamageMotion: 480
     Ai: 04
+    # Divine Pride shows no drops but the card: the others are CP_ABI_EVIL_DRUID's
+    Drops:
+      - Item: Rotten_Bandage
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 500
+      - Item: Etel_Dust
+        Rate: 500
   - Id: 23060
     AegisName: EP20_ARMOERDCOPO
     Name: Armored Copo
