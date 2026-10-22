@@ -210,6 +210,7 @@ OnPCLoginEvent:
 	skill "TST_PROBE", 10, 3;
 	percentheal 100, 100;
 	.@red0 = countitem(501);
+	.@zeny0 = Zeny;
 	getmapxy(.@m$, .@px, .@py, BL_PC);
 	detachrid;
 	monster .@m$, .@px + 3, .@py, "--en--", 25994, 1;
@@ -227,6 +228,7 @@ OnPCLoginEvent:
 	attachrid(.@aid);
 	debugmes "S|probe_spend " + (.@hp0 - Hp) + " " + (.@sp0 - Sp);
 	debugmes "S|probe_potions " + (countitem(501) - .@red0);
+	debugmes "S|probe_zeny " + (Zeny - .@zeny0);
 	debugmes "S|probe_falcon " + checkfalcon();
 	debugmes "S|probe_coldbolt " + getskilllv("MG_COLDBOLT");
 	detachrid;

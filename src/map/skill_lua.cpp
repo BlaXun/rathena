@@ -2123,6 +2123,18 @@ int32 lua_hit_give_item(lua_State* state) {
 	return 0;
 }
 
+// c:give_zeny(amount, {who}) -- zeny for a player, the caster by default,
+// logged as a script's. Nothing for anything else; never past MAX_ZENY.
+int32 lua_hit_give_zeny(lua_State* state) {
+	s_skill_lua_hit& hit = hit_or_error(state, "give_zeny");
+	s_skill_lua_action action = { SKILL_LUA_GIVE_ZENY };
+
+	action.val1 = static_cast<int32>(std::clamp<lua_Integer>(luaL_checkinteger(state, 2), 1, MAX_ZENY));
+	action.unit_id = unit_arg(state, 3, hit, "caster");
+	hit.actions.push_back(action);
+	return 0;
+}
+
 // c:cut_cooldown("GC_CROSSIMPACT", ms, {who}) -- that skill's cooldown, for
 // the caster (default), ends that much sooner. A player's, a homunculus's
 // or a mercenary's.
@@ -2261,6 +2273,7 @@ void register_context_methods() {
 		{ "cut_delay", lua_hit_cut_delay },       { "cut_cooldown", lua_hit_cut_cooldown },
 		{ "cooldown", lua_hit_cooldown },
 		{ "give_item", lua_hit_give_item },       { "take_item", lua_hit_take_item },
+		{ "give_zeny", lua_hit_give_zeny },
 		{ "hurt", lua_hit_hurt },                 { "spend", lua_hit_spend },
 		{ "spheres", lua_hit_spheres },           { "slide", lua_hit_slide },
 		{ "knockback", lua_hit_knockback },       { "interrupt", lua_hit_interrupt },
@@ -5139,6 +5152,10 @@ void skill_lua_apply(std::unique_ptr<s_skill_lua_hit>& hit) {
 			case SKILL_LUA_GIVE_ITEM:
 				if (map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr; sd != nullptr)
 					give_item(*sd, static_cast<t_itemid>(action.type), action.val1, action.flag != 0);
+				break;
+			case SKILL_LUA_GIVE_ZENY:
+				if (map_session_data* sd = bl != nullptr ? BL_CAST(BL_PC, bl) : nullptr; sd != nullptr)
+					pc_getzeny(sd, action.val1, LOG_TYPE_SCRIPT);
 				break;
 			case SKILL_LUA_DAMAGE:
 				if (bl != nullptr && !status_isdead(*bl) && action.hp > 0) {
