@@ -274,9 +274,9 @@
  * unit:party(range) and unit:in_skill_area(skill, owner); has_status() also
  * knows a mod's statuses. Every hook sees c.pvp, c.gvg and c.bg. Further
  * actions: c:cut_delay(ms, who), c:cut_cooldown(skill, ms, who),
- * c:give_item(item, amount, who), c:hurt(hp, who). Everything a hook asks
- * for happens after the hook has run; for on_kill, on_death and a status's
- * on_start and on_end, a moment later.
+ * c:give_item(item, amount, who), c:give_zeny(amount, who), c:hurt(hp,
+ * who). Everything a hook asks for happens after the hook has run; for
+ * on_kill, on_death and a status's on_start and on_end, a moment later.
  *
  * The rest of the toolkit, for reworking whole classes:
  *
@@ -364,6 +364,7 @@ enum e_skill_lua_action : uint8 {
 	SKILL_LUA_MOUNT,          ///< a mount, falcon or cart on or off
 	SKILL_LUA_TELEPORT,       ///< to a random cell of the map, as Teleport does
 	SKILL_LUA_COOLDOWN,       ///< a skill's cooldown started, as a use would
+	SKILL_LUA_GIVE_ZENY,      ///< zeny for a player
 };
 
 /// One thing an on_hit hook asked for. Units are kept by id, never by
@@ -373,7 +374,7 @@ struct s_skill_lua_action {
 	int32 unit_id = 0;  ///< who it happens to
 	int32 type = 0;     ///< STATUS, END_STATUS, STATUS_VAL: the sc_type; CAST, ATTACK, CUT_COOLDOWN, COOLDOWN, COPY_SKILL, ITEMSKILL, PLACE_UNIT: the skill id; *_STATUS: the mod status; GIVE_ITEM, TAKE_ITEM: the item id; SUMMON: the monster id; END_UNIT: the group id; MOUNT: what (e_skill_lua_mount)
 	int32 rate = 0;     ///< STATUS: chance out of 10000; STATUS_VAL: which value (1..4)
-	int32 val1 = 0;     ///< STATUS: val1; CAST, ATTACK, COPY_SKILL, ITEMSKILL, PLACE_UNIT: the skill level; *_STATUS: stacks (-1: all); GIVE_ITEM, TAKE_ITEM, SUMMON: amount; SPHERES: how many (negative: lost); KNOCKBACK: cells; STATUS_VAL: the value; PRODUCE_MENU: the recipes' item level
+	int32 val1 = 0;     ///< STATUS: val1; CAST, ATTACK, COPY_SKILL, ITEMSKILL, PLACE_UNIT: the skill level; *_STATUS: stacks (-1: all); GIVE_ITEM, TAKE_ITEM, SUMMON: amount; GIVE_ZENY: zeny; SPHERES: how many (negative: lost); KNOCKBACK: cells; STATUS_VAL: the value; PRODUCE_MENU: the recipes' item level
 	int64 duration = 0; ///< STATUS, APPLY_STATUS, CUT_DELAY, CUT_COOLDOWN, COOLDOWN, SUMMON, PLACE_UNIT, EXPIRE, SPHERES, in milliseconds
 	int64 hp = 0, sp = 0;  ///< HEAL, SPEND; DAMAGE: hp
 	int32 source_id = 0;  ///< APPLY_STATUS: who applied it; REMOVE_STATUS: only theirs, unless 0

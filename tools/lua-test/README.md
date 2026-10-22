@@ -13,7 +13,7 @@ since it needs a database and the app checkout.
 
 | Suite | Loads | Covers | Checks |
 |---|---|---|---|
-| `custom-skills` | `examples/mods/custom-skills` (a Guillotine Cross rework), and the test mods `zz-observe`, `zz-first` and `zz-probe` | taking skills away and refunding them; each kind of custom skill; passives; a mod's statuses with stacks, decay and caps; the hook chains and their priorities; and, through `zz-probe`'s probe skills, the queries, actions and hooks the example has no use for, down to a status kept over a logout (the client logs out and back in) | 106, renewal and pre-renewal |
+| `custom-skills` | `examples/mods/custom-skills` (a Guillotine Cross rework), and the test mods `zz-observe`, `zz-first` and `zz-probe` | taking skills away and refunding them; each kind of custom skill; passives; a mod's statuses with stacks, decay and caps; the hook chains and their priorities; and, through `zz-probe`'s probe skills, the queries, actions and hooks the example has no use for, down to a status kept over a logout (the client logs out and back in) | 107, renewal and pre-renewal |
 | `third-class-sampler` | `examples/mods/third-class-sampler` (about twenty skills of the thirteen third classes with a new effect on their own IDs), and the test mod `zz-watch` | each of those effects, from the outside | 43, renewal only |
 
 ## What you need
@@ -40,7 +40,7 @@ tools/lua-test/run.sh third-class-sampler
 ```
 
 Each suite takes about two minutes. The output is one line per check and a
-total (`106 passed, 0 failed`, `43/43 passed`). The exit status is 0 when every
+total (`107 passed, 0 failed`, `43/43 passed`). The exit status is 0 when every
 check passed. The world and its logs stay in `tools/lua-test/work`
 (`log/map.out` is what the checker reads) until the next run.
 

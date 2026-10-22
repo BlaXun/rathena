@@ -51,6 +51,7 @@ skill("TST_PROBE", {
       c:spheres(3, "caster")
       c:give_item("RED_POTION", 3)
       c:take_item("RED_POTION", 2)
+      c:give_zeny(1234)
       c:spend(100, 10)
       c:mount("falcon", true)
       c:copy_skill("MG_COLDBOLT", 3)
