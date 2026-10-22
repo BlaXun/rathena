@@ -79,6 +79,8 @@ def item_names(root):
 
 ITEM_TYPES = {}
 DROP_ESTIMATE = {}
+ALL_RECORDS = []                            # every Divine Pride record read, for borrow_drops
+SPAWN_MAPS = collections.defaultdict(set)   # monster id -> maps World Sync spawns it on
 
 
 def item_types(root):
@@ -110,6 +112,58 @@ def estimated_chance(item_id, level):
     t = ITEM_TYPES.get(item_id, 'Etc')
     band = 'hi' if level >= 200 else 'lo'
     return DROP_ESTIMATE.get((t, band)) or DROP_ESTIMATE.get((t, None)) or DROP_ESTIMATE.get(('Etc', None), 0.01)
+
+
+def spawn_maps(root):
+    """The maps each monster spawns on, from World Sync's own spawns (npc/re/world_sync/spawns.txt)."""
+    out = collections.defaultdict(set)
+    p = os.path.join(root, 'npc', 're', 'world_sync', 'spawns.txt')
+    if os.path.exists(p):
+        for line in open(p, encoding='utf-8', errors='replace'):
+            m = re.match(r'([^,\s/]+),\d+,\d+(?:,\d+,\d+)?\t(?:boss_)?monster\t[^\t]*\t(\d+),', line)
+            if m:
+                out[int(m.group(2))].add(m.group(1))
+    return out
+
+
+def real_drops(d):
+    """A record's drops other than its card."""
+    return [x for x in (d.get('drops') or []) if ITEM_TYPES.get(x.get('itemId')) != 'Card']
+
+
+def borrow_drops(d, mid):
+    """Divine Pride shows no drops but the card for many newer monsters, so killing them gave nothing
+    (Yorker Worker: 230 on jor_base). Such a record borrows the non-card drops of its closest
+    relative that shows some: the base form of a "Strong" CP_ variant, else the monster nearest in
+    level among those spawning on one of its maps, else the same-class monster nearest in level
+    and HP. Only for monsters World Sync spawns on its maps: quest, instance and summoned ones
+    (HIDDEN_MOB2, G_CRAB, RUNAWAY_BOOK...) stay as Divine Pride shows them. Returns the relative's
+    AegisName, or None."""
+    if real_drops(d) or mid not in SPAWN_MAPS:
+        return None
+    lv, hp = int(d.get('level') or 1), int(d.get('health') or 0)
+    have = [p for p in ALL_RECORDS if p.get('id') != mid and real_drops(p)]
+    spr = str(d.get('spriteName') or '').upper()
+    donor = None
+    if spr.startswith('CP_'):
+        donor = next((p for p in have if str(p.get('spriteName') or '').upper() == spr[3:]), None)
+    if not donor:
+        maps = SPAWN_MAPS.get(mid, set())
+        near = [p for p in have if SPAWN_MAPS.get(p.get('id'), set()) & maps]
+        if near:
+            donor = min(near, key=lambda p: (abs(int(p.get('level') or 1) - lv), int(p.get('id') or 0)))
+    if not donor:
+        same = [p for p in have if mob_class(p) == mob_class(d)] or have
+
+        def dist(p):
+            h = int(p.get('health') or 0)
+            return (abs(int(p.get('level') or 1) - lv) / 10.0 + (abs(math.log2(hp / float(h))) if hp > 0 and h > 0 else 0),
+                    int(p.get('id') or 0))
+        donor = min(same, key=dist) if same else None
+    if not donor:
+        return None
+    d['drops'] = list(d.get('drops') or []) + [dict(x) for x in real_drops(donor)]
+    return str(donor.get('spriteName') or donor.get('id')).upper()
 
 
 def mob_db(root):
@@ -366,6 +420,10 @@ def convert(mid, d, nv, items, report, pool=()):
                 e.append('        StealProtected: true')
             out += e
         return ['    %s:' % label] + out if out else []
+    borrowed = borrow_drops(d, mid)
+    if borrowed:
+        L.append("    # Divine Pride shows no drops but the card: the others are %s's" % borrowed)
+        report['monsters with drops borrowed from a relative'].append('%d %s <- %s' % (mid, aegis, borrowed))
     L += drops(d.get('mvpDrops'), 'MvpDrops')
     L += drops(d.get('drops'), 'Drops')
     if estimated:
@@ -499,6 +557,7 @@ def main():
                               'AegisName already used (skipped)', 'no English name (AegisName used)',
                               'monsters with values estimated from similar ones',
                               'drop chances estimated (Divine Pride shows none)',
+                              'monsters with drops borrowed from a relative',
                               'names shortened to 23 characters',
                               'skill rows whose skill the skill db lacks (left out)',
                               'drops whose item the item db lacks (left out)',
@@ -509,6 +568,8 @@ def main():
     entries, skill_rows = [], []
     pool = [json.load(open(p)) for p in glob.glob(os.path.join(a.records, '*.json'))]
     DROP_ESTIMATE.update(drop_estimates(pool))
+    ALL_RECORDS[:] = pool
+    SPAWN_MAPS.update(spawn_maps(root))
     pool = [d for d in pool if complete(d)]
     for mid in sorted(set(ids)):
         if mid in have:
